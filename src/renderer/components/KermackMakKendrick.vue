@@ -5,28 +5,28 @@
                 <div>
                     <b-row>
                         <b-col sm="4">
-                            <label>Prey</label>
+                            <label>S</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="prey" placeholder="Prey" type="number"></b-form-input>
+                            <b-form-input v-model.number="S" placeholder="S" type="number"></b-form-input>
                         </b-col>
                     </b-row>
 
                     <b-row>
                         <b-col sm="4">
-                            <label>Predator</label>
+                            <label>I</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="predator" placeholder="Predator" type="number"></b-form-input>
+                            <b-form-input v-model.number="I" placeholder="I" type="number"></b-form-input>
                         </b-col>
                     </b-row>
 
                     <b-row>
                         <b-col sm="4">
-                            <label>Alpha</label>
+                            <label>R</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="alpha" placeholder="Alpha" type="number" step="0.01"
+                            <b-form-input v-model.number="R" placeholder="R" type="number" step="0.01"
                                           min="0.00"
                                           max="1000.00"></b-form-input>
                         </b-col>
@@ -34,10 +34,10 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>Gamma 1</label>
+                            <label>b</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="gamma1" placeholder="Gamma 1" type="number" step="0.01"
+                            <b-form-input v-model.number="b" placeholder="b" type="number" step="0.01"
                                           min="0.00"
                                           max="1000.00"></b-form-input>
                         </b-col>
@@ -45,10 +45,10 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>Beta</label>
+                            <label>m</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="beta" placeholder="Beta" type="number" step="0.01" min="0.00"
+                            <b-form-input v-model.number="m" placeholder="m" type="number" step="0.01" min="0.00"
                                           max="1000.00"></b-form-input>
                         </b-col>
 
@@ -56,10 +56,10 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>Gamma 2</label>
+                            <label>q</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="gamma2" placeholder="Gamma 2" type="number" step="0.01"
+                            <b-form-input v-model.number="q" placeholder="q" type="number" step="0.01"
                                           min="0.00"
                                           max="1000.00"></b-form-input>
                         </b-col>
@@ -87,7 +87,7 @@
                         </b-col>
                     </b-row>
 
-                    <b-button variant="outline-primary" v-on:click="calculateLotkaVolterra">
+                    <b-button variant="outline-primary" v-on:click="calculateKermackMakKendrick">
                         Calculate
                     </b-button>
                 </div>
@@ -102,31 +102,31 @@
 </template>
 
 <script>
-    import {lotkaVolterra} from "../assets/lotkaVolterra";
     import {calculatePath} from "../assets/gpaphUtils";
+    import {kermackMakKendrick} from "../assets/kermackMakKendrick";
     import VueApexCharts from 'vue-apexcharts'
 
     export default {
-        name: "LotkaVolterra",
+        name: "KermackMakKendrick",
         components: {
             apexchart: VueApexCharts
         },
         data() {
             return {
-                prey: 1.8,
-                predator: 1.8,
-                alpha: 0.6666,
-                gamma1: 1.3333,
-                beta: 1,
-                gamma2: 1,
+                S: 10,
+                I: 2,
+                R: 1,
+                b: 0.2,
+                m: 1,
+                q: 0.4,
+                dataS: [],
+                dataI: [],
+                dataR: [],
                 time: 30,
                 timeStep: 0.1,
-                dataPrey: [],
-                dataPredator: [],
-                timeArray: [],
-                line: '',
-                linePrey: '',
-                linePredator: '',
+                lineS: '',
+                lineI: '',
+                lineR: '',
                 chartOptions: {
                     chart: {
                         zoom: {
@@ -147,59 +147,50 @@
             }
         },
         methods: {
-            calculateLotkaVolterra() {
-                const result = lotkaVolterra(this.prey, this.predator, this.alpha, this.beta, this.gamma1, this.gamma2)
+            calculateKermackMakKendrick() {
                 this.calculateForTime(this.time)
-                this.linePrey = calculatePath(this.dataPrey)
-                this.linePredator = calculatePath(this.dataPredator)
+                this.lineS = calculatePath(this.dataS)
+                this.lineI = calculatePath(this.dataI)
+                this.lineR = calculatePath(this.dataR)
                 this.series = [
                     {
-                        name: "Prey population",
-                        data: this.dataPrey
+                        name: "S",
+                        data: this.dataS
                     },
                     {
-                        name: "Predator population",
-                        data: this.dataPredator
+                        name: "I",
+                        data: this.dataI
+                    },
+                    {
+                        name: "R",
+                        data: this.dataR
                     }
                 ]
-                this.chartOptions.xaxis = this.timeArray
             },
             calculateForTime(t) {
-                this.dataPrey = []
-                this.dataPredator = []
-                this.timeArray = []
-                let x = this.prey
-                let y = this.predator
-                this.dataPrey.push([0, x])
-                this.dataPredator.push([0, y])
-                this.timeArray.push(0)
-                for (let i = 1; i < t; i += this.timeStep) {
-                    let res = lotkaVolterra(x, y, this.alpha, this.beta, this.gamma1, this.gamma2)
-                    x = x + this.timeStep * res.prey
-                    y = y + this.timeStep * res.predator
-                    this.dataPrey.push([i, x])
-                    this.dataPredator.push([i, y])
+                this.dataS = []
+                this.dataI = []
+                this.dataR = []
+                let s = this.S
+                let i = this.I
+                let r = this.R
+                this.dataS.push([0, s])
+                this.dataI.push([0, i])
+                this.dataI.push([0, r])
+                for (let j = 1; j < t; j += this.timeStep) {
+                    let res = kermackMakKendrick(s, i, r, this.b, this.m, this.q)
+                    s = s + this.timeStep * res.ds
+                    i = i + this.timeStep * res.di
+                    r = r + this.timeStep * res.dr
+                    this.dataS.push([j, s])
+                    this.dataI.push([j, i])
+                    this.dataR.push([j, r])
                 }
             },
         }
     }
 </script>
 
-<style lang="sass" scoped>
-    svg
-        margin: 25px
+<style scoped>
 
-        path
-            fill: none
-            stroke: #76BF8A
-            stroke-width: 1px
-
-        .path-predator
-            stroke: lightcoral
-
-        .path-prey
-            stroke: gold
-
-        .chart
-        width: 100%
 </style>
