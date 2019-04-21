@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h2>Kermack-MakKendrick model</h2>
         <b-row>
             <b-col sm="3">
                 <div>
@@ -8,7 +9,7 @@
                             <label>S</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="S" placeholder="S" type="number"></b-form-input>
+                            <b-form-input placeholder="S" type="number" v-model.number="S"></b-form-input>
                         </b-col>
                     </b-row>
 
@@ -17,7 +18,7 @@
                             <label>I</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="I" placeholder="I" type="number"></b-form-input>
+                            <b-form-input placeholder="I" type="number" v-model.number="I"></b-form-input>
                         </b-col>
                     </b-row>
 
@@ -26,9 +27,9 @@
                             <label>R</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="R" placeholder="R" type="number" step="0.01"
-                                          min="0.00"
-                                          max="1000.00"></b-form-input>
+                            <b-form-input max="1000.00" min="0.00" placeholder="R" step="0.01"
+                                          type="number"
+                                          v-model.number="R"></b-form-input>
                         </b-col>
                     </b-row>
 
@@ -37,9 +38,9 @@
                             <label>b</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="b" placeholder="b" type="number" step="0.01"
-                                          min="0.00"
-                                          max="1000.00"></b-form-input>
+                            <b-form-input max="1000.00" min="0.00" placeholder="b" step="0.01"
+                                          type="number"
+                                          v-model.number="b"></b-form-input>
                         </b-col>
                     </b-row>
 
@@ -48,8 +49,8 @@
                             <label>m</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="m" placeholder="m" type="number" step="0.01" min="0.00"
-                                          max="1000.00"></b-form-input>
+                            <b-form-input max="1000.00" min="0.00" placeholder="m" step="0.01" type="number"
+                                          v-model.number="m"></b-form-input>
                         </b-col>
 
                     </b-row>
@@ -59,9 +60,9 @@
                             <label>q</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="q" placeholder="q" type="number" step="0.01"
-                                          min="0.00"
-                                          max="1000.00"></b-form-input>
+                            <b-form-input max="1000.00" min="0.00" placeholder="q" step="0.01"
+                                          type="number"
+                                          v-model.number="q"></b-form-input>
                         </b-col>
                     </b-row>
 
@@ -70,8 +71,8 @@
                             <label>Time</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="time" placeholder="Time" type="number" step="0.01" min="0.00"
-                                          max="1000.00"></b-form-input>
+                            <b-form-input max="1000.00" min="0.00" placeholder="Time" step="0.01" type="number"
+                                          v-model.number="time"></b-form-input>
                         </b-col>
                     </b-row>
 
@@ -80,21 +81,25 @@
                             <label>Time step</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input v-model.number="timeStep" placeholder="Time step" type="number"
+                            <b-form-input max="1000.00" min="0.00" placeholder="Time step"
                                           step="0.00000001"
-                                          min="0.00"
-                                          max="1000.00"></b-form-input>
+                                          type="number"
+                                          v-model.number="timeStep"></b-form-input>
                         </b-col>
                     </b-row>
-
-                    <b-button variant="outline-primary" v-on:click="calculateKermackMakKendrick">
+                    <div style="margin-top: 10px">
+                    <b-button v-on:click="calculateKermackMakKendrick" variant="outline-primary">
                         Calculate
                     </b-button>
+                    <b-button v-on:click="saveData" variant="outline-primary">
+                        Save
+                    </b-button>
+                    </div>
                 </div>
             </b-col>
             <b-col sm="9">
                 <div>
-                    <apexchart width="700" type="area" :options="chartOptions" :series="series"></apexchart>
+                    <apexchart :options="chartOptions" :series="series" type="area" width="700"></apexchart>
                 </div>
             </b-col>
         </b-row>
@@ -105,6 +110,7 @@
     import {calculatePath} from "../assets/gpaphUtils";
     import {kermackMakKendrick} from "../assets/kermackMakKendrick";
     import VueApexCharts from 'vue-apexcharts'
+    import {createWorkbook, saveWorkbook, createWorkSheet} from "../assets/xlsx_utils";
 
     export default {
         name: "KermackMakKendrick",
@@ -148,10 +154,10 @@
         },
         methods: {
             calculateKermackMakKendrick() {
-                this.calculateForTime(this.time)
-                this.lineS = calculatePath(this.dataS)
-                this.lineI = calculatePath(this.dataI)
-                this.lineR = calculatePath(this.dataR)
+                this.calculateForTime(this.time);
+                this.lineS = calculatePath(this.dataS);
+                this.lineI = calculatePath(this.dataI);
+                this.lineR = calculatePath(this.dataR);
                 this.series = [
                     {
                         name: "S",
@@ -168,25 +174,42 @@
                 ]
             },
             calculateForTime(t) {
-                this.dataS = []
-                this.dataI = []
-                this.dataR = []
-                let s = this.S
-                let i = this.I
-                let r = this.R
-                this.dataS.push([0, s])
-                this.dataI.push([0, i])
-                this.dataI.push([0, r])
+                this.dataS = [];
+                this.dataI = [];
+                this.dataR = [];
+                let s = this.S;
+                let i = this.I;
+                let r = this.R;
+                this.dataS.push([0, s]);
+                this.dataI.push([0, i]);
+                this.dataI.push([0, r]);
                 for (let j = 1; j < t; j += this.timeStep) {
-                    let res = kermackMakKendrick(s, i, r, this.b, this.m, this.q)
-                    s = s + this.timeStep * res.ds
-                    i = i + this.timeStep * res.di
-                    r = r + this.timeStep * res.dr
-                    this.dataS.push([j, s])
-                    this.dataI.push([j, i])
+                    let res = kermackMakKendrick(s, i, r, this.b, this.m, this.q);
+                    s = s + this.timeStep * res.ds;
+                    i = i + this.timeStep * res.di;
+                    r = r + this.timeStep * res.dr;
+                    this.dataS.push([j, s]);
+                    this.dataI.push([j, i]);
                     this.dataR.push([j, r])
                 }
             },
+            saveData() {
+                var wb = createWorkbook();
+                // add dataS
+                var data = Array.from(this.dataS);
+                data.splice(0, 0, ["S", "time"]);
+                wb = createWorkSheet(wb, data, "dataS");
+                // add dataI
+                data = Array.from(this.dataI);
+                data.splice(0, 0, ["I", "time"]);
+                wb = createWorkSheet(wb, data, "dataI");
+                // add dataR
+                data = Array.from(this.dataR);
+                data.splice(0, 0, ["R", "time"]);
+                wb = createWorkSheet(wb, data, "dataR");
+                // save
+                saveWorkbook("test", wb);
+            }
         }
     }
 </script>

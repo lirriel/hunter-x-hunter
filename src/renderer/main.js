@@ -9,18 +9,23 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueApexCharts from 'vue-apexcharts'
+import VueSidebarMenu from 'vue-sidebar-menu'
+import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+import '@fortawesome/fontawesome-free/css/all.css'
+import '@fortawesome/fontawesome-svg-core'
 
-Vue.use(BootstrapVue)
-Vue.use('apexchart', VueApexCharts)
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
-Vue.http = Vue.prototype.$http = axios
+Vue.use(VueSidebarMenu);
+Vue.use(BootstrapVue);
+Vue.use('apexchart', VueApexCharts);
+if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
+Vue.http = Vue.prototype.$http = axios;
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
-  components: { App },
-  router,
-  store,
-  template: '<App/>'
-}).$mount('#app')
+    components: {App},
+    router,
+    store,
+    template: '<App/>'
+}).$mount('#app');

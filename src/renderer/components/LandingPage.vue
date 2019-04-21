@@ -1,16 +1,7 @@
 <template>
     <div id="wrapper">
         <main>
-            <div class="left-side">
-                <span class="title">
-                    Lotka-Volterra Model
-                </span>
-                <LotkaVolterra></LotkaVolterra>
-                <span class="title">
-                    Kermack-MakKendrick Model
-                </span>
-                <KermackMakKendrick></KermackMakKendrick>
-            </div>
+            <b-btn v-on:click="writeFile()"></b-btn>
         </main>
     </div>
 </template>
@@ -19,6 +10,7 @@
     import SystemInformation from './LandingPage/SystemInformation'
     import LotkaVolterra from './LotkaVolterra'
     import KermackMakKendrick from './KermackMakKendrick'
+    import {readXlsxWorkbook, saveWorkbook} from "../assets/xlsx_utils";
 
     export default {
         name: 'landing-page',
@@ -30,6 +22,11 @@
         methods: {
             open(link) {
                 this.$electron.shell.openExternal(link)
+            },
+            writeFile() {
+                var workbook = readXlsxWorkbook();
+                console.log(workbook);
+                saveWorkbook(workbook);
             }
         }
     }
