@@ -33,6 +33,26 @@ export function lotkaVolterraWithFiniteCapacity(x, y, a, b, g1, g2, K) {
     }
 }
 
+// include logistic growth
+// http://www.cds.caltech.edu/~murray/amwiki/index.php/Predator_prey
+export function lotkaVolterraContiniousTime(H, L, r, k, a, c, b, d) {
+    return {
+        prey: r * H * (1 - H / k) - a * H * L / (c + H),
+        predator: b * a * H * L / (c + H) - d * L
+    }
+}
+
+export function lotkaVolterraContiniousTimeEquilibrium(r, k, a, c, b, d) {
+    return [
+        [0, 0],
+        [k, 0],
+        [
+            c * d / (a * b - d),
+            b * c * r * (a * b * k - c * d - d * k) / (Math.pow(a * b - d, 2) * k)
+        ]
+    ]
+}
+
 export function phasePortrait(x0, y0, x, y, alpha, beta) {
     var x_rate = x0 / x;
     var y_rate = y0 / y;

@@ -108,7 +108,11 @@
 </template>
 
 <script>
-    import {lotkaVolterra} from "../assets/lotkaVolterra";
+    import {
+        lotkaVolterra,
+        lotkaVolterraContiniousTime,
+        lotkaVolterraWithFiniteCapacity
+    } from "../assets/lotkaVolterra";
     import {calculatePath} from "../assets/gpaphUtils";
     import VueApexCharts from 'vue-apexcharts'
     import BehaviourDiargam from './BehaviourDiargam'
@@ -190,6 +194,8 @@
 
                 for (let i = this.timeStep; i < t; i += this.timeStep) {
                     let res = lotkaVolterra(x, y, this.alpha, this.beta, this.gamma1, this.gamma2);
+                    // let res = lotkaVolterraContiniousTime(x, y, 1.6, 125, 3.2, 50, 0.6, 0.56);
+                    // default x=y=20
 
                     x = x + this.timeStep * res.prey;
                     y = y + this.timeStep * res.predator;
