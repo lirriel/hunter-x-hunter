@@ -10,6 +10,7 @@
     import SystemInformation from './LandingPage/SystemInformation'
     import LotkaVolterra from './LotkaVolterra'
     import KermackMakKendrick from './KermackMakKendrick'
+    import JacobMonod from './JacobMonod'
     import {readXlsxWorkbook, saveWorkbook} from "../assets/xlsx_utils";
 
     export default {
@@ -17,7 +18,8 @@
         components: {
             SystemInformation,
             LotkaVolterra,
-            KermackMakKendrick
+            KermackMakKendrick,
+            JacobMonod
         },
         methods: {
             open(link) {

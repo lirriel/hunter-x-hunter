@@ -21,6 +21,11 @@ export default new Router({
       component: require('@/components/LotkaVolterra').default
     },
     {
+      path: '/jacob-monod',
+      name: 'JacobMonod',
+      component: require('@/components/JacobMonod').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

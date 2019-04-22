@@ -30,6 +30,11 @@
                         title: 'Kermack-MakKendrick',
                         icon: 'fa fa-procedures'
                     },
+                    {
+                        href: '/jacob-monod',
+                        title: 'Jacob-Monod',
+                        icon: 'fa fa-bug'
+                    },
                 ],
                 props: {
                     menu: {

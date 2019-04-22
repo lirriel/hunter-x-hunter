@@ -6,28 +6,63 @@
                 <div>
                     <b-row>
                         <b-col sm="4">
-                            <label>Prey</label>
+                            <label>Bacteria biomass</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input placeholder="Prey" type="number" v-model.number="prey"></b-form-input>
+                            <b-form-input max="1000.00" min="0.00" placeholder="Bacteria" step="0.01"
+                                          type="number" v-model.number="x"></b-form-input>
                         </b-col>
                     </b-row>
 
                     <b-row>
                         <b-col sm="4">
-                            <label>Predator</label>
+                            <label>S</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input placeholder="Predator" type="number" v-model.number="predator"></b-form-input>
+                            <b-form-input max="1000.00" min="0.00" placeholder="S" step="0.01" type="number"
+                                          v-model.number="s"></b-form-input>
                         </b-col>
                     </b-row>
 
                     <b-row>
                         <b-col sm="4">
-                            <label>Alpha</label>
+                            <label>S-input</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Alpha" step="0.01"
+                            <b-form-input max="1000.00" min="0.00" placeholder="S-in" step="0.01"
+                                          type="number"
+                                          v-model.number="sIn"></b-form-input>
+                        </b-col>
+                    </b-row>
+
+                    <b-row>
+                        <b-col sm="4">
+                            <label>q</label>
+                        </b-col>
+                        <b-col sm="8">
+                            <b-form-input max="1000.00" min="0.00" placeholder="q" step="0.01"
+                                          type="number"
+                                          v-model.number="q"></b-form-input>
+                        </b-col>
+                    </b-row>
+
+                    <b-row>
+                        <b-col sm="4">
+                            <label>dr</label>
+                        </b-col>
+                        <b-col sm="8">
+                            <b-form-input max="1000.00" min="0.00" placeholder="dr" step="0.01" type="number"
+                                          v-model.number="dr"></b-form-input>
+                        </b-col>
+
+                    </b-row>
+
+                    <b-row>
+                        <b-col sm="4">
+                            <label>alpha</label>
+                        </b-col>
+                        <b-col sm="8">
+                            <b-form-input max="1000.00" min="0.00" placeholder="alpha" step="0.01"
                                           type="number"
                                           v-model.number="alpha"></b-form-input>
                         </b-col>
@@ -35,34 +70,23 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>Gamma 1</label>
+                            <label>K</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Gamma 1" step="0.01"
+                            <b-form-input max="1000.00" min="0.00" placeholder="k" step="0.01"
                                           type="number"
-                                          v-model.number="gamma1"></b-form-input>
+                                          v-model.number="k"></b-form-input>
                         </b-col>
                     </b-row>
 
                     <b-row>
                         <b-col sm="4">
-                            <label>Beta</label>
+                            <label>mu-Max</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Beta" step="0.01" type="number"
-                                          v-model.number="beta"></b-form-input>
-                        </b-col>
-
-                    </b-row>
-
-                    <b-row>
-                        <b-col sm="4">
-                            <label>Gamma 2</label>
-                        </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Gamma 2" step="0.01"
+                            <b-form-input max="1000.00" min="0.00" placeholder="muMax" step="0.01"
                                           type="number"
-                                          v-model.number="gamma2"></b-form-input>
+                                          v-model.number="muMax"></b-form-input>
                         </b-col>
                     </b-row>
 
@@ -88,7 +112,7 @@
                         </b-col>
                     </b-row>
                     <div style="margin-top: 10px">
-                        <b-button v-on:click="calculateLotkaVolterra" variant="outline-primary">
+                        <b-button v-on:click="calculateJMonod" variant="outline-primary">
                             Calculate
                         </b-button>
                         <b-button v-on:click="saveData" variant="outline-primary">
@@ -107,32 +131,29 @@
 </template>
 
 <script>
-    import {lotkaVolterra} from "../assets/lotkaVolterra";
-    import {calculatePath} from "../assets/gpaphUtils";
     import VueApexCharts from 'vue-apexcharts'
-    import {createWorkbook, createWorkSheet, saveWorkbook} from "../assets/xlsx_utils";
+    import {jacobMonod} from "../assets/jacobMonod";
 
     export default {
-        name: "LotkaVolterra",
+        name: "JacobMonod",
         components: {
             apexchart: VueApexCharts
         },
         data() {
             return {
-                prey: 1.8,
-                predator: 1.8,
-                alpha: 0.6666,
-                gamma1: 1.3333,
-                beta: 1,
-                gamma2: 1,
-                time: 30,
-                timeStep: 0.1,
-                dataPrey: [],
-                dataPredator: [],
+                x: 12,
+                s: 1,
+                sIn: 0.2,
+                q: 1.3,
+                dr: 0.002,
+                alpha: 0.001,
+                k: 3,
+                muMax: 3,
+                dataX: [],
+                dataS: [],
                 timeArray: [],
-                line: '',
-                linePrey: '',
-                linePredator: '',
+                time: 20,
+                timeStep: 0.2,
                 chartOptions: {
                     chart: {
                         zoom: {
@@ -153,49 +174,47 @@
             }
         },
         methods: {
-            calculateLotkaVolterra() {
-                const result = lotkaVolterra(this.prey, this.predator, this.alpha, this.beta, this.gamma1, this.gamma2);
+            calculateJMonod() {
                 this.calculateForTime(this.time);
-                this.linePrey = calculatePath(this.dataPrey);
-                this.linePredator = calculatePath(this.dataPredator);
                 this.series = [
                     {
-                        name: "Prey population",
-                        data: this.dataPrey
+                        name: "Bacteria biomass",
+                        data: this.dataX
                     },
                     {
-                        name: "Predator population",
-                        data: this.dataPredator
+                        name: "S",
+                        data: this.dataS
                     }
                 ];
             },
             calculateForTime(t) {
-                this.dataPrey = [];
-                this.dataPredator = [];
-                this.timeArray = [];
-                let x = this.prey;
-                let y = this.predator;
-                this.dataPrey.push([0, x]);
-                this.dataPredator.push([0, y]);
-                this.timeArray.push(0);
-                for (let i = 1; i < t; i += this.timeStep) {
-                    let res = lotkaVolterra(x, y, this.alpha, this.beta, this.gamma1, this.gamma2);
-                    x = x + this.timeStep * res.prey;
-                    y = y + this.timeStep * res.predator;
-                    this.dataPrey.push([i, x]);
-                    this.dataPredator.push([i, y])
+                this.dataX = [];
+                this.dataS = [];
+                let xValue = this.x;
+                let sValue = this.s;
+                this.dataX.push([0, xValue]);
+                this.dataS.push([0, sValue]);
+                for (let j = 1; j < t; j += this.timeStep) {
+                    let res = jacobMonod(xValue, this.s, this.sIn, this.q, this.dr, this.alpha, this.standardMuFunction);
+                    xValue = xValue + this.timeStep * res.dx;
+                    sValue = sValue + this.timeStep * res.ds;
+                    this.dataX.push([j, xValue]);
+                    this.dataS.push([j, sValue])
                 }
+            },
+            standardMuFunction(_s) {
+                return this.muMax * _s / (_s + this.k);
             },
             saveData() {
                 var wb = createWorkbook();
-                // add data prey
-                var data = Array.from(this.dataPrey);
-                data.splice(0, 0, ["prey amount", "time"]);
-                wb = createWorkSheet(wb, data, "prey");
-                // add dataI
-                data = Array.from(this.dataPredator);
-                data.splice(0, 0, ["predator amount", "time"]);
-                wb = createWorkSheet(wb, data, "predator");
+                // add data X
+                var data = Array.from(this.dataX);
+                data.splice(0, 0, ["bacteria biomass", "time"]);
+                wb = createWorkSheet(wb, data, "biomass change");
+                // add data S
+                data = Array.from(this.dataS);
+                data.splice(0, 0, ["output S", "time"]);
+                wb = createWorkSheet(wb, data, "output S");
                 // save
                 saveWorkbook("test", wb);
             }
@@ -203,21 +222,6 @@
     }
 </script>
 
-<style lang="sass" scoped>
-    svg
-        margin: 25px
+<style scoped>
 
-        path
-            fill: none
-            stroke: #76BF8A
-            stroke-width: 1px
-
-        .path-predator
-            stroke: lightcoral
-
-        .path-prey
-            stroke: gold
-
-        .chart
-        width: 100%
 </style>
