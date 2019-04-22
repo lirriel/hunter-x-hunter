@@ -103,6 +103,7 @@
                 </div>
             </b-col>
         </b-row>
+        <behaviour-diargam :series="seriesBehave"></behaviour-diargam>
     </div>
 </template>
 
@@ -110,12 +111,14 @@
     import {lotkaVolterra} from "../assets/lotkaVolterra";
     import {calculatePath} from "../assets/gpaphUtils";
     import VueApexCharts from 'vue-apexcharts'
+    import BehaviourDiargam from './BehaviourDiargam'
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../assets/xlsx_utils";
 
     export default {
         name: "LotkaVolterra",
         components: {
-            apexchart: VueApexCharts
+            apexchart: VueApexCharts,
+            BehaviourDiargam
         },
         data() {
             return {
@@ -129,10 +132,9 @@
                 timeStep: 0.1,
                 dataPrey: [],
                 dataPredator: [],
+                dataBehave: [],
                 timeArray: [],
                 line: '',
-                linePrey: '',
-                linePredator: '',
                 chartOptions: {
                     chart: {
                         zoom: {
@@ -149,15 +151,14 @@
                         curve: "smooth"
                     },
                 },
-                series: []
+                series: [],
+                seriesBehave: []
             }
         },
         methods: {
             calculateLotkaVolterra() {
                 const result = lotkaVolterra(this.prey, this.predator, this.alpha, this.beta, this.gamma1, this.gamma2);
                 this.calculateForTime(this.time);
-                this.linePrey = calculatePath(this.dataPrey);
-                this.linePredator = calculatePath(this.dataPredator);
                 this.series = [
                     {
                         name: "Prey population",
@@ -168,22 +169,35 @@
                         data: this.dataPredator
                     }
                 ];
+                this.seriesBehave = [
+                    {
+                        name: "Behaviour",
+                        data: this.dataBehave
+                    }
+                ]
             },
             calculateForTime(t) {
                 this.dataPrey = [];
                 this.dataPredator = [];
-                this.timeArray = [];
+                this.dataBehave = [];
+
                 let x = this.prey;
                 let y = this.predator;
+
                 this.dataPrey.push([0, x]);
                 this.dataPredator.push([0, y]);
-                this.timeArray.push(0);
-                for (let i = 1; i < t; i += this.timeStep) {
+                this.dataBehave.push([y, x]);
+
+                for (let i = this.timeStep; i < t; i += this.timeStep) {
                     let res = lotkaVolterra(x, y, this.alpha, this.beta, this.gamma1, this.gamma2);
+
                     x = x + this.timeStep * res.prey;
                     y = y + this.timeStep * res.predator;
+
                     this.dataPrey.push([i, x]);
-                    this.dataPredator.push([i, y])
+                    this.dataPredator.push([i, y]);
+
+                    this.dataBehave.push([y, x])
                 }
             },
             saveData() {

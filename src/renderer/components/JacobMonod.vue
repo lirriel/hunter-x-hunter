@@ -127,17 +127,20 @@
                 </div>
             </b-col>
         </b-row>
+        <behaviour-diargam :series="seriesBehave"></behaviour-diargam>
     </div>
 </template>
 
 <script>
     import VueApexCharts from 'vue-apexcharts'
+    import BehaviourDiargam from './BehaviourDiargam'
     import {jacobMonod} from "../assets/jacobMonod";
 
     export default {
         name: "JacobMonod",
         components: {
-            apexchart: VueApexCharts
+            apexchart: VueApexCharts,
+            BehaviourDiargam
         },
         data() {
             return {
@@ -151,6 +154,7 @@
                 muMax: 3,
                 dataX: [],
                 dataS: [],
+                dataXToS: [],
                 timeArray: [],
                 time: 20,
                 timeStep: 0.2,
@@ -170,7 +174,8 @@
                         curve: "smooth"
                     },
                 },
-                series: []
+                series: [],
+                seriesBehave: []
             }
         },
         methods: {
@@ -186,20 +191,36 @@
                         data: this.dataS
                     }
                 ];
+                this.seriesBehave = [
+                    {
+                        name: "Bacteria behave",
+                        data: this.dataXToS
+                    }
+                ]
             },
             calculateForTime(t) {
                 this.dataX = [];
                 this.dataS = [];
+
+                this.dataXToS = [];
+
                 let xValue = this.x;
                 let sValue = this.s;
+
                 this.dataX.push([0, xValue]);
                 this.dataS.push([0, sValue]);
-                for (let j = 1; j < t; j += this.timeStep) {
+
+                this.dataXToS.push([sValue, xValue]);
+
+                for (let j = this.timeStep; j < t; j += this.timeStep) {
                     let res = jacobMonod(xValue, this.s, this.sIn, this.q, this.dr, this.alpha, this.standardMuFunction);
                     xValue = xValue + this.timeStep * res.dx;
+
                     sValue = sValue + this.timeStep * res.ds;
                     this.dataX.push([j, xValue]);
-                    this.dataS.push([j, sValue])
+                    this.dataS.push([j, sValue]);
+
+                    this.dataXToS.push([sValue, xValue]);
                 }
             },
             standardMuFunction(_s) {

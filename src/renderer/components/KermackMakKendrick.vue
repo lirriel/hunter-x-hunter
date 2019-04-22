@@ -88,12 +88,12 @@
                         </b-col>
                     </b-row>
                     <div style="margin-top: 10px">
-                    <b-button v-on:click="calculateKermackMakKendrick" variant="outline-primary">
-                        Calculate
-                    </b-button>
-                    <b-button v-on:click="saveData" variant="outline-primary">
-                        Save
-                    </b-button>
+                        <b-button v-on:click="calculateKermackMakKendrick" variant="outline-primary">
+                            Calculate
+                        </b-button>
+                        <b-button v-on:click="saveData" variant="outline-primary">
+                            Save
+                        </b-button>
                     </div>
                 </div>
             </b-col>
@@ -103,6 +103,7 @@
                 </div>
             </b-col>
         </b-row>
+        <behaviour-diargam :series="seriesBehave"></behaviour-diargam>
     </div>
 </template>
 
@@ -110,12 +111,14 @@
     import {calculatePath} from "../assets/gpaphUtils";
     import {kermackMakKendrick} from "../assets/kermackMakKendrick";
     import VueApexCharts from 'vue-apexcharts'
-    import {createWorkbook, saveWorkbook, createWorkSheet} from "../assets/xlsx_utils";
+    import BehaviourDiargam from './BehaviourDiargam'
+    import {createWorkbook, createWorkSheet, saveWorkbook} from "../assets/xlsx_utils";
 
     export default {
         name: "KermackMakKendrick",
         components: {
-            apexchart: VueApexCharts
+            apexchart: VueApexCharts,
+            BehaviourDiargam
         },
         data() {
             return {
@@ -128,6 +131,9 @@
                 dataS: [],
                 dataI: [],
                 dataR: [],
+                dataSToI: [],
+                dataSToR: [],
+                dataIToR: [],
                 time: 30,
                 timeStep: 0.1,
                 lineS: '',
@@ -149,15 +155,13 @@
                         curve: "smooth"
                     },
                 },
-                series: []
+                series: [],
+                seriesBehave: []
             }
         },
         methods: {
             calculateKermackMakKendrick() {
                 this.calculateForTime(this.time);
-                this.lineS = calculatePath(this.dataS);
-                this.lineI = calculatePath(this.dataI);
-                this.lineR = calculatePath(this.dataR);
                 this.series = [
                     {
                         name: "S",
@@ -171,26 +175,53 @@
                         name: "R",
                         data: this.dataR
                     }
+                ];
+                this.seriesBehave = [
+                    {
+                        name: "S to I",
+                        data: this.dataSToI
+                    },
+                    {
+                        name: "S to R",
+                        data: this.dataSToR
+                    },
+                    {
+                        name: "I to R",
+                        data: this.dataIToR
+                    }
                 ]
             },
             calculateForTime(t) {
                 this.dataS = [];
                 this.dataI = [];
                 this.dataR = [];
+
+                this.dataSToI = [];
+                this.dataSToR = [];
+                this.dataIToR = [];
+
                 let s = this.S;
                 let i = this.I;
                 let r = this.R;
+
                 this.dataS.push([0, s]);
                 this.dataI.push([0, i]);
-                this.dataI.push([0, r]);
-                for (let j = 1; j < t; j += this.timeStep) {
+                this.dataR.push([0, r]);
+
+                for (let j = this.timeStep; j < t; j += this.timeStep) {
                     let res = kermackMakKendrick(s, i, r, this.b, this.m, this.q);
+
                     s = s + this.timeStep * res.ds;
                     i = i + this.timeStep * res.di;
                     r = r + this.timeStep * res.dr;
+
                     this.dataS.push([j, s]);
                     this.dataI.push([j, i]);
-                    this.dataR.push([j, r])
+                    this.dataR.push([j, r]);
+
+                    this.dataSToI.push([i, s]);
+                    this.dataSToR.push([r, s]);
+                    this.dataIToR.push([r, i]);
                 }
             },
             saveData() {
