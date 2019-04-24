@@ -6,7 +6,7 @@
                 <div>
                     <b-row>
                         <b-col sm="4">
-                            <label>S</label>
+                            <label>Susceptible</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input placeholder="S" type="number" v-model.number="S"></b-form-input>
@@ -15,7 +15,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>I</label>
+                            <label>Infected</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input placeholder="I" type="number" v-model.number="I"></b-form-input>
@@ -24,7 +24,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>R</label>
+                            <label>Recovered</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="R" step="0.01"
@@ -35,7 +35,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>b</label>
+                            <label>Chance to be infected</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="b" step="0.01"
@@ -46,7 +46,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>m</label>
+                            <label>Birth rate</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="m" step="0.01" type="number"
@@ -57,7 +57,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>q</label>
+                            <label>Chance to be recovered</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="q" step="0.01"
@@ -122,20 +122,20 @@
         },
         data() {
             return {
-                S: 10,
+                S: 1000,
                 I: 2,
-                R: 1,
-                b: 0.2,
+                R: 0,
+                b: 0.01,
+                q: 0.8,
                 m: 1,
-                q: 0.4,
                 dataS: [],
                 dataI: [],
                 dataR: [],
                 dataSToI: [],
                 dataSToR: [],
                 dataIToR: [],
-                time: 30,
-                timeStep: 0.1,
+                time: 2,
+                timeStep: 0.01,
                 lineS: '',
                 lineI: '',
                 lineR: '',
@@ -147,9 +147,6 @@
                     },
                     dataLabels: {
                         enabled: false
-                    },
-                    xaxis: {
-                        categories: this.timeArray
                     },
                     stroke: {
                         curve: "smooth"
@@ -164,15 +161,15 @@
                 this.calculateForTime(this.time);
                 this.series = [
                     {
-                        name: "S",
+                        name: "Susceptible",
                         data: this.dataS
                     },
                     {
-                        name: "I",
+                        name: "Infected",
                         data: this.dataI
                     },
                     {
-                        name: "R",
+                        name: "Recovered",
                         data: this.dataR
                     }
                 ];

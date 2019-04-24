@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>Lotka-Volterra model</h2>
+        <h2>J.Monod Chemostat model</h2>
         <b-row>
             <b-col sm="3">
                 <div>
@@ -16,7 +16,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>S</label>
+                            <label>Nutrient (S)</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="S" step="0.01" type="number"
@@ -26,7 +26,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>S-input</label>
+                            <label>Input nutrient flow(S-input)</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="S-in" step="0.01"
@@ -48,7 +48,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>dr</label>
+                            <label>Dilution rate (dr)</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="dr" step="0.01" type="number"
@@ -59,7 +59,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>alpha</label>
+                            <label>Growth rate uptake (alpha)</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="alpha" step="0.01"
@@ -70,7 +70,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>K</label>
+                            <label>Saturation const (K)</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="k" step="0.01"
@@ -81,7 +81,7 @@
 
                     <b-row>
                         <b-col sm="4">
-                            <label>mu-Max</label>
+                            <label>mu-Max growth rate</label>
                         </b-col>
                         <b-col sm="8">
                             <b-form-input max="1000.00" min="0.00" placeholder="muMax" step="0.01"
@@ -145,18 +145,18 @@
         data() {
             return {
                 x: 12,
-                s: 1,
-                sIn: 0.2,
+                s: 4,
+                sIn: 0.9,
                 q: 1.3,
-                dr: 0.002,
-                alpha: 0.001,
-                k: 3,
-                muMax: 3,
+                dr: 0.2,
+                alpha: 0.45,
+                k: 0.3,
+                muMax: 0.9,
                 dataX: [],
                 dataS: [],
                 dataXToS: [],
                 timeArray: [],
-                time: 20,
+                time: 5,
                 timeStep: 0.2,
                 chartOptions: {
                     chart: {
@@ -213,14 +213,16 @@
                 this.dataXToS.push([sValue, xValue]);
 
                 for (let j = this.timeStep; j < t; j += this.timeStep) {
-                    let res = jacobMonod(xValue, this.s, this.sIn, this.q, this.dr, this.alpha, this.standardMuFunction);
-                    xValue = xValue + this.timeStep * res.dx;
+                    let res = jacobMonod(xValue, sValue, this.sIn, this.q, this.dr, this.alpha, this.standardMuFunction);
 
+                    xValue = xValue + this.timeStep * res.dx;
                     sValue = sValue + this.timeStep * res.ds;
+
                     this.dataX.push([j, xValue]);
                     this.dataS.push([j, sValue]);
 
-                    this.dataXToS.push([sValue, xValue]);
+                    // this.dataXToS.push([sValue, xValue]);
+                    this.dataXToS.push([xValue, sValue]);
                 }
             },
             standardMuFunction(_s) {

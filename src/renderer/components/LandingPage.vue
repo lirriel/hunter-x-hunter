@@ -1,8 +1,12 @@
 <template>
-    <div id="wrapper">
-        <main>
-            <b-btn v-on:click="writeFile()"></b-btn>
-        </main>
+<!--    <div id="wrapper">-->
+<!--        <main>-->
+<!--        <v-btn v-on:click="writeFile"></v-btn>-->
+<!--        </main>-->
+<!---->
+<!--    </div>-->
+    <div>
+        <predator-prey-app></predator-prey-app>
     </div>
 </template>
 
@@ -10,8 +14,9 @@
     import SystemInformation from './LandingPage/SystemInformation'
     import LotkaVolterra from './LotkaVolterra'
     import KermackMakKendrick from './KermackMakKendrick'
+    import PredatorPreyApp from './PredatorPreyApp'
     import JacobMonod from './JacobMonod'
-    import {readXlsxWorkbook, saveWorkbook} from "../assets/xlsx_utils";
+    import VueP5 from 'vue-p5';
 
     export default {
         name: 'landing-page',
@@ -19,16 +24,27 @@
             SystemInformation,
             LotkaVolterra,
             KermackMakKendrick,
-            JacobMonod
+            JacobMonod,
+            PredatorPreyApp,
+            VueP5
         },
         methods: {
             open(link) {
                 this.$electron.shell.openExternal(link)
             },
             writeFile() {
-                var workbook = readXlsxWorkbook();
-                console.log(workbook);
-                saveWorkbook(workbook);
+                // let environment = new Environment(200, 14, 39, 50);
+                // environment.run()
+
+                // var workbook = readXlsxWorkbook();
+                // console.log(workbook);
+                // saveWorkbook(workbook);
+            },
+            start() {
+                STATE['numPredators'] = prompt("Enter initial number of panthers:");
+                STATE['numPrey'] = prompt("Enter initial number of bunnies:");
+                initializeBoard();
+                predatorSetup();
             }
         }
     }

@@ -3,7 +3,7 @@
         <sidebar-menu :collapsed="true"
                       :menu="menu"
                       :show-one-child="true"
-                      />
+        ></sidebar-menu>
         <div style="margin-left: 100px; margin-top: 20px">
             <router-view></router-view>
         </div>
@@ -12,7 +12,7 @@
 
 <script>
     export default {
-        name: 'hunter1',
+        name: 'hunter-x-hunter',
         data() {
             return {
                 menu: [
@@ -35,6 +35,11 @@
                         title: 'Jacob-Monod',
                         icon: 'fa fa-bug'
                     },
+                    {
+                        href: '/game',
+                        title: 'Game',
+                        icon: 'fa fa-chess-board'
+                    }
                 ],
                 props: {
                     menu: {
@@ -77,34 +82,54 @@
 
 <style lang="scss">
     @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600');
+
     body,
     html {
         margin: 0;
         padding: 0;
     }
+
     body {
         font-family: 'Source Sans Pro', sans-serif;
-        background-color: #f2f4f7;
+        background-color: #f77070;
     }
+
+    label {
+        color: black;
+    }
+
+    h2, h3, h4 {
+        color: black;
+    }
+
+    #b-row {
+        margin-top: 10px;
+    }
+
     #demo {
         padding-left: 350px;
     }
+
     #demo.collapsed {
         padding-left: 50px;
     }
+
     .demo {
         padding: 50px;
     }
+
     .badge-danger {
         background-color: #ff2a2a;
-        color: #fff;
+        color: #ff30aa;
     }
+
     .container {
         max-width: 600px;
     }
+
     pre {
         color: #2a2a2e;
-        background: #fff;
+        background: #ff2f7e;
         border-radius: 2px;
         padding: 10px;
         overflow: auto;

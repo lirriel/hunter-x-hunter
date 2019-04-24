@@ -26,6 +26,11 @@ export default new Router({
       component: require('@/components/JacobMonod').default
     },
     {
+       path: '/game',
+      name: 'Game',
+      component: require('@/components/PredatorPreyApp').default
+    } ,
+    {
       path: '*',
       redirect: '/'
     }
