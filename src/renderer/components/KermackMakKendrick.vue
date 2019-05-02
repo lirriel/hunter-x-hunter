@@ -111,7 +111,7 @@
     import {calculatePath} from "../assets/gpaphUtils";
     import {kermackMakKendrick} from "../assets/kermackMakKendrick";
     import VueApexCharts from 'vue-apexcharts'
-    import BehaviourDiargam from './BehaviourDiargam'
+    import BehaviourDiargam from './diagrams/BehaviourDiargam'
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../assets/xlsx_utils";
 
     export default {

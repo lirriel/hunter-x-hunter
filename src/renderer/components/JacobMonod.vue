@@ -133,7 +133,7 @@
 
 <script>
     import VueApexCharts from 'vue-apexcharts'
-    import BehaviourDiargam from './BehaviourDiargam'
+    import BehaviourDiargam from './diagrams/BehaviourDiargam'
     import {jacobMonod} from "../assets/jacobMonod";
 
     export default {

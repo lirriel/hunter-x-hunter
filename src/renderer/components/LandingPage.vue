@@ -1,10 +1,4 @@
 <template>
-<!--    <div id="wrapper">-->
-<!--        <main>-->
-<!--        <v-btn v-on:click="writeFile"></v-btn>-->
-<!--        </main>-->
-<!---->
-<!--    </div>-->
     <div>
         <predator-prey-app></predator-prey-app>
     </div>
@@ -135,4 +129,14 @@
         color: #42b983;
         background-color: transparent;
     }
+
+    .apexcharts-tooltip {
+        background: #f3f3f3;
+        color: black;
+    }
+
+    .b-row {
+        margin-bottom: 10px;
+    }
+
 </style>

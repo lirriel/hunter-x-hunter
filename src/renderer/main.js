@@ -14,7 +14,12 @@ import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-svg-core'
 import VueP5 from 'vue-p5';
+import jsPDF from 'jspdf';
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
+Vue.use(PerfectScrollbar);
+Vue.use(jsPDF);
 Vue.use(VueSidebarMenu);
 Vue.use(BootstrapVue);
 Vue.use('apexchart', VueApexCharts);
