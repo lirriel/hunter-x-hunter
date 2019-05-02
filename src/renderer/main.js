@@ -17,7 +17,9 @@ import VueP5 from 'vue-p5';
 import jsPDF from 'jspdf';
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
+import VueDragResize from 'vue-drag-resize'
 
+Vue.component('vue-drag-resize', VueDragResize);
 Vue.use(PerfectScrollbar);
 Vue.use(jsPDF);
 Vue.use(VueSidebarMenu);

@@ -14,13 +14,17 @@
                 <div>
                     <b-row>
                         <b-col>
-                            <basic-chart-box :chart-options="chartOptions" :series="series.series"/>
+                            <basic-chart-box id="currentChart" :chart-options="chartOptions"
+                                             :series="series"/>
                         </b-col>
-                        <div v-for="(s, ind) in seriesCompare" :key="ind"
-                             v-if="compareFlag">
+                    </b-row>
+                    <b-row>
+                        <div v-for="s in seriesCompare"
+                             v-if="compareFlag" id="seriesCompare">
                             <b-col>
-                                <basic-chart-box :chart-options="chartOptions" :series="s.series"
-                                                 style="width: 600px;"/>
+                                <label>{{s.params}}</label>
+                                <basic-chart-box :chart-options="chartOptions"
+                                                 :series="s.series"/>
                             </b-col>
                         </div>
                     </b-row>
@@ -90,6 +94,7 @@
         data() {
             return {
                 compareFlag: false,
+                currentParams: null,
                 dataPrey: [],
                 compareDataPrey: [],
                 dataPredator: [],
@@ -221,7 +226,8 @@
         },
         methods: {
             onSeries(data) {
-                this.series = data
+                this.series = data.series;
+                this.currentParams = data.params;
             },
             onBehaviour(data) {
                 this.seriesBehave = data
@@ -232,9 +238,10 @@
             onCompare(data) {
                 this.compareFlag = true;
                 this.seriesCompare.push(data);
+                console.log(this.seriesCompare);
             },
             onSavePdf() {
-                saveIdAsPdf("seriesCharts", "test")
+                saveIdAsPdf("currentChart", "test", this.modelType, this.currentParams);
             }
         }
     }

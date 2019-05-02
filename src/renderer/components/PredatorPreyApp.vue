@@ -2,12 +2,13 @@
     <div>
         <b-row>
             <b-col sm="4">
-                    <app-controller
-                            :is-running="isRunning"
-                            @send="delegate($event)"
-                            @params="onParams"
-                            style="height: 500px; margin-left: 40px"
-                    ></app-controller>
+                <app-controller
+                        :is-running="isRunning"
+                        @send="delegate($event)"
+                        @params="onParams"
+                        @type="onModelType"
+                        style="height: 500px; margin-left: 40px"
+                ></app-controller>
             </b-col>
             <b-col sm="8">
                 <transition mode="out-in" name="fade">
@@ -53,6 +54,7 @@
         data() {
             return {
                 message: '',
+                modelType: '',
                 importToken: '',
                 exportToken: '',
                 params: null,
@@ -158,6 +160,9 @@
         methods: {
             onParams(data) {
                 this.params = data;
+            },
+            onModelType(data) {
+                this.modelType = data;
             },
             onSeries(data) {
                 this.series = data.series;

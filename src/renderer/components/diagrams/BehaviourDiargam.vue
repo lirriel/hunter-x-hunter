@@ -31,19 +31,12 @@
                     dataLabels: {
                         enabled: false
                     },
-                    // markers: {
-                    //     size: [0.3, 5],
-                    //     colors: ['pink'],
-                    //     hover: {
-                    //         size: 3
-                    //     }
-                    // },
                     fill: {
                         type: 'gradient',
                         gradient: {
                             shade: 'dark',
                             gradientToColors: [ '#000000'],
-                            shadeIntensity: 1,
+                            shadeIntensity: 4,
                             type: 'vertical',
                             stops: [0, 100, 100, 100]
                         },
@@ -60,7 +53,7 @@
                     },
                     stroke: {
                         curve: "straight",
-                        width: 1
+                        width: 2
                     },
                 }
             }
