@@ -3,153 +3,95 @@
         <h2>Kermack-MakKendrick model</h2>
         <b-row>
             <b-col sm="3">
-                <div>
-                    <b-row>
-                        <b-col sm="4">
-                            <label>Susceptible</label>
-                        </b-col>
-                        <b-col sm="8">
-                            <b-form-input placeholder="S" type="number" v-model.number="S"></b-form-input>
-                        </b-col>
-                    </b-row>
-
-                    <b-row>
-                        <b-col sm="4">
-                            <label>Infected</label>
-                        </b-col>
-                        <b-col sm="8">
-                            <b-form-input placeholder="I" type="number" v-model.number="I"></b-form-input>
-                        </b-col>
-                    </b-row>
-
-                    <b-row>
-                        <b-col sm="4">
-                            <label>Recovered</label>
-                        </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="R" step="0.01"
-                                          type="number"
-                                          v-model.number="R"></b-form-input>
-                        </b-col>
-                    </b-row>
-
-                    <b-row>
-                        <b-col sm="4">
-                            <label>Chance to be infected</label>
-                        </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="b" step="0.01"
-                                          type="number"
-                                          v-model.number="b"></b-form-input>
-                        </b-col>
-                    </b-row>
-
-                    <b-row>
-                        <b-col sm="4">
-                            <label>Birth rate</label>
-                        </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="m" step="0.01" type="number"
-                                          v-model.number="m"></b-form-input>
-                        </b-col>
-
-                    </b-row>
-
-                    <b-row>
-                        <b-col sm="4">
-                            <label>Chance to be recovered</label>
-                        </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="q" step="0.01"
-                                          type="number"
-                                          v-model.number="q"></b-form-input>
-                        </b-col>
-                    </b-row>
-
-                    <b-row>
-                        <b-col sm="4">
-                            <label>Time</label>
-                        </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Time" step="0.01" type="number"
-                                          v-model.number="time"></b-form-input>
-                        </b-col>
-                    </b-row>
-
-                    <b-row>
-                        <b-col sm="4">
-                            <label>Time step</label>
-                        </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Time step"
-                                          step="0.00000001"
-                                          type="number"
-                                          v-model.number="timeStep"></b-form-input>
-                        </b-col>
-                    </b-row>
-                    <div style="margin-top: 10px">
-                        <b-button v-on:click="calculateKermackMakKendrick" variant="outline-primary">
-                            Calculate
-                        </b-button>
-                        <b-button v-on:click="saveData" variant="outline-primary">
-                            Save
-                        </b-button>
-                    </div>
-                </div>
+                <kermack-mac-kendrick-controller
+                        @series="onSeries"
+                        @seriesBehave="onSeriesBehave"/>
             </b-col>
             <b-col sm="9">
                 <div>
-                    <apexchart :options="chartOptions" :series="series" type="area" width="700"></apexchart>
+                    <basic-chart-box :chart-options="chartOptions" :series="series.series"/>
                 </div>
             </b-col>
         </b-row>
-        <behaviour-diargam :series="seriesBehave"></behaviour-diargam>
+        <behaviour-diargam :series="seriesBehave.series"/>
     </div>
 </template>
 
 <script>
-    import {calculatePath} from "../assets/gpaphUtils";
-    import {kermackMakKendrick} from "../assets/kermackMakKendrick";
     import VueApexCharts from 'vue-apexcharts'
-    import BehaviourDiargam from './BehaviourDiargam'
-    import {createWorkbook, createWorkSheet, saveWorkbook} from "../assets/xlsx_utils";
+    import BehaviourDiargam from './diagrams/BehaviourDiargam'
+    import KermackMacKendrickController from './control-panel/KermackMacKendrickController'
+    import BasicChartBox from './diagrams/BasicChartBox'
 
     export default {
         name: "KermackMakKendrick",
         components: {
             apexchart: VueApexCharts,
-            BehaviourDiargam
+            BehaviourDiargam,
+            KermackMacKendrickController,
+            BasicChartBox
         },
         data() {
             return {
-                S: 1000,
-                I: 2,
-                R: 0,
-                b: 0.01,
-                q: 0.8,
-                m: 1,
-                dataS: [],
-                dataI: [],
-                dataR: [],
-                dataSToI: [],
-                dataSToR: [],
-                dataIToR: [],
-                time: 2,
-                timeStep: 0.01,
-                lineS: '',
-                lineI: '',
-                lineR: '',
+                currentParams: {},
                 chartOptions: {
+                    title: {
+                        text: 'Infection population size'
+                    },
                     chart: {
                         zoom: {
                             enabled: true
                         },
                     },
+                    legend: {
+                        position: 'bottom',
+                        horizontalAlign: "left",
+                        offsetX: 10,
+                        onItemClick: {
+                            toggleDataSeries: true
+                        },
+                    },
+                    grid: {
+                        clipMarkers: false
+                    },
                     dataLabels: {
                         enabled: false
                     },
+                    tooltip: {
+                        x: {},
+                        y: {}
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: "#FF1654"
+                            },
+                            labels: {
+                                style: {
+                                    color: "#FF1654"
+                                },
+                                show: true,
+                                rotate: -45,
+                                rotateAlways: false,
+                                hideOverlappingLabels: true,
+                                showDuplicates: false,
+                                trim: true,
+                                formatter: function (value) {
+                                    return value.toFixed(2)
+                                }
+                            },
+                            title: {
+                                text: "Group size"
+                            }
+                        }
+                    ],
                     stroke: {
-                        curve: "smooth"
+                        curve: "straight",
+                        width: 1
                     },
                 },
                 series: [],
@@ -157,86 +99,12 @@
             }
         },
         methods: {
-            calculateKermackMakKendrick() {
-                this.calculateForTime(this.time);
-                this.series = [
-                    {
-                        name: "Susceptible",
-                        data: this.dataS
-                    },
-                    {
-                        name: "Infected",
-                        data: this.dataI
-                    },
-                    {
-                        name: "Recovered",
-                        data: this.dataR
-                    }
-                ];
-                this.seriesBehave = [
-                    {
-                        name: "S to I",
-                        data: this.dataSToI
-                    },
-                    {
-                        name: "S to R",
-                        data: this.dataSToR
-                    },
-                    {
-                        name: "I to R",
-                        data: this.dataIToR
-                    }
-                ]
+            onSeries(data) {
+                console.log(data);
+                this.series = data;
             },
-            calculateForTime(t) {
-                this.dataS = [];
-                this.dataI = [];
-                this.dataR = [];
-
-                this.dataSToI = [];
-                this.dataSToR = [];
-                this.dataIToR = [];
-
-                let s = this.S;
-                let i = this.I;
-                let r = this.R;
-
-                this.dataS.push([0, s]);
-                this.dataI.push([0, i]);
-                this.dataR.push([0, r]);
-
-                for (let j = this.timeStep; j < t; j += this.timeStep) {
-                    let res = kermackMakKendrick(s, i, r, this.b, this.m, this.q);
-
-                    s = s + this.timeStep * res.ds;
-                    i = i + this.timeStep * res.di;
-                    r = r + this.timeStep * res.dr;
-
-                    this.dataS.push([j, s]);
-                    this.dataI.push([j, i]);
-                    this.dataR.push([j, r]);
-
-                    this.dataSToI.push([i, s]);
-                    this.dataSToR.push([r, s]);
-                    this.dataIToR.push([r, i]);
-                }
-            },
-            saveData() {
-                var wb = createWorkbook();
-                // add dataS
-                var data = Array.from(this.dataS);
-                data.splice(0, 0, ["S", "time"]);
-                wb = createWorkSheet(wb, data, "dataS");
-                // add dataI
-                data = Array.from(this.dataI);
-                data.splice(0, 0, ["I", "time"]);
-                wb = createWorkSheet(wb, data, "dataI");
-                // add dataR
-                data = Array.from(this.dataR);
-                data.splice(0, 0, ["R", "time"]);
-                wb = createWorkSheet(wb, data, "dataR");
-                // save
-                saveWorkbook("test", wb);
+            onSeriesBehave(data) {
+                this.seriesBehave = data;
             }
         }
     }

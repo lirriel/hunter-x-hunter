@@ -6,8 +6,15 @@
             class="cell"></div>
 </template>
 <script>
+    import {Organism} from "../../assets/simulation/Organism";
+    import {Predator} from "../../assets/simulation/Predator";
+
     export default {
         props: {
+            organism: {
+                type: Organism,
+                default: null
+            },
             statusObj: {
                 default: function () {
                     return {
@@ -17,19 +24,19 @@
                 },
                 type: Object,
             },
-            xPos: {
-                default: -1,
-                type: Number,
-            },
-            yPos: {
-                default: -1,
-                type: Number,
-            },
-            isPredator: {
-                default: false,
-                type: Boolean,
-                required: false
-            },
+            // xPos: {
+            //     default: -1,
+            //     type: Number,
+            // },
+            // yPos: {
+            //     default: -1,
+            //     type: Number,
+            // },
+            // isPredator: {
+            //     default: false,
+            //     type: Boolean,
+            //     required: false
+            // },
             isMouseDown: {
                 default: false,
                 type: Boolean,
@@ -41,14 +48,6 @@
             };
         },
         methods: {
-            /**
-             * Checks if the cell has been clicked
-             * and switches its isAlive status.
-             * Also emits to the grid component for the
-             * drag and drop functionality.
-             *
-             * @param {boolean} bool - the isMouseDown boolean
-             */
             reborn: function (bool) {
                 if (bool) {
                     this.status.isAlive = !this.status.isAlive;
@@ -56,13 +55,21 @@
                 }
             },
             getCellStatusClass() {
-                if (this.status.isAlive && this.status.isPredator) {
-                    return 'predator'
-                } else if (this.status.isAlive && !this.status.isPredator) {
-                    return 'prey'
-                } else {
-                    return 'dead'
+                if (this.organism === null) {
+                    return 'dead';
                 }
+                if (this.organism instanceof Predator) {
+                    return 'predator';
+                } else {
+                    return 'prey';
+                }
+                // if (this.status.isAlive && this.status.isPredator) {
+                //     return 'predator'
+                // } else if (this.status.isAlive && !this.status.isPredator) {
+                //     return 'prey'
+                // } else {
+                //     return 'dead'
+                // }
             }
         },
     };

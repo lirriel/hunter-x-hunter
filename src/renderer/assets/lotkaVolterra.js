@@ -2,16 +2,23 @@
  * Basic Lotka-Volterra model
  * @param x prey
  * @param y predator
- * @param a alpha
- * @param b beta
- * @param g1 gamma1
- * @param g2 gamma2
+ * @param alpha alpha
+ * @param beta beta
+ * @param gamma1 gamma1
+ * @param gamma2 gamma2
  * @returns {{prey: number, predator: number}}
  */
-export function lotkaVolterra(x, y, a, b, g1, g2) {
+export function lotkaVolterra(x, y, alpha, gamma1, beta, gamma2) {
     return {
-        prey: x * (a - g1 * y),
-        predator: (g2 * x - b) * y
+        prey: x * (alpha - gamma1 * y),
+        predator: (gamma2 * x - beta) * y
+    }
+}
+
+export function rosenzweigMacArthur(x, y, k, m, c) {
+    return {
+        prey: x * (1 - x / k) - (m * x * y) / (1 + x),
+        predator: -c * y + (m * x * y) / (1 + x)
     }
 }
 
@@ -35,10 +42,10 @@ export function lotkaVolterraWithFiniteCapacity(x, y, a, b, g1, g2, K) {
 
 // include logistic growth
 // http://www.cds.caltech.edu/~murray/amwiki/index.php/Predator_prey
-export function lotkaVolterraContiniousTime(H, L, r, k, a, c, b, d) {
+export function lotkaVolterraContiniousTime(x, y, r, k, a, c, b, d) {
     return {
-        prey: r * H * (1 - H / k) - a * H * L / (c + H),
-        predator: b * a * H * L / (c + H) - d * L
+        prey: r * x * (1 - x / k) - a * x * y / (c + x),
+        predator: b * a * x * y / (c + x) - d * y
     }
 }
 
