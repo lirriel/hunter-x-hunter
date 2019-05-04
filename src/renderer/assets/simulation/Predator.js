@@ -1,4 +1,4 @@
-import {Organism, randomInteger, turnStep} from "./Organism";
+import {Organism, randomInteger, removeOrganism, turnStep} from "./Organism";
 import {Prey} from "./Prey";
 
 export class Predator extends Organism {
@@ -31,15 +31,13 @@ export class Predator extends Organism {
             }
         }
         var turnPosition = turnStep(moveNumber, this.x, this.y);
-        // console.log("move instinct " + turnPosition.x + " " + turnPosition.y);
         this.setPosition(turnPosition.x, turnPosition.y);
     }
 
     movePredator(organisms, maxX, maxY) {
         this.tickAge();
         if (this.age > this.lifespan || this.hunger <= 0) {
-            console.log("died")
-            organisms = organisms.splice(organisms.indexOf(this), 1);
+            organisms = removeOrganism(organisms, this);
             return;
         }
         var currentPredator = this;
@@ -52,7 +50,8 @@ export class Predator extends Organism {
                 preyFlag = true;
                 var distance = organism.calculateDistanceWith(currentPredator);
                 if (distance <= Math.sqrt(2)) {
-                    organisms = organisms.splice(organisms.indexOf(organism), 1);
+                    organisms = removeOrganism(organisms, organism);
+                    // organisms = organisms.splice(organisms.indexOf(organism), 1);
                     currentPredator.hunger = Predator.hungerSteps;
                     currentPredator.feedPreyTimer++;
                     if (currentPredator.feedPreyTimer >= currentPredator.feedPreyCount) {
@@ -64,7 +63,6 @@ export class Predator extends Organism {
                                 currentPredator.adulthoodAge, currentPredator.birthPeriod,
                                 currentPredator.feedPreyCount, position.x, position.y);
                             organisms.push(newPredator);
-                            console.log("born")
                             currentPredator.feedPreyTimer = 0;
                         }
                     }

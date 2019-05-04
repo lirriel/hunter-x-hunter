@@ -163,6 +163,13 @@
                         >
                             Random seed
                         </b-button>
+                        <b-button
+                                class="button"
+                                v-on:click="send('saveData')"
+                                variant="outline-warning"
+                        >
+                            Save xlsx
+                        </b-button>
                     </b-row>
                 </div>
             </b-col>
@@ -182,7 +189,7 @@
             return {
                 simulationParams: {
                     preyLifespan: 60,
-                    preyAdulthoodAge: 6,
+                    preyAdulthoodAge: 3,
                     preyBirthPeriod: 2,
 
                     predatorLifespan: 100,
@@ -193,7 +200,7 @@
                     hungerSteps: 8,
                     ///////////////////////////////////////////////////////////////////////////
                     isAliveProbability: 0.4,
-                    isPredatorProbability: 0.1,
+                    isPredatorProbability: 0.2,
 
                     ////////////////////////////////////////////////////////////////////////////
                     width: 40,
@@ -213,6 +220,7 @@
 <style scoped>
     .button {
         margin-right: 10px;
+        margin-bottom: 5px;
     }
 
     label {

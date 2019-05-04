@@ -18,7 +18,9 @@ import jsPDF from 'jspdf';
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 import VueDragResize from 'vue-drag-resize'
+import VModal from 'vue-js-modal'
 
+Vue.use(VModal);
 Vue.component('vue-drag-resize', VueDragResize);
 Vue.use(PerfectScrollbar);
 Vue.use(jsPDF);

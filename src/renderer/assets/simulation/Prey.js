@@ -1,4 +1,4 @@
-import {Organism, randomInteger} from "./Organism";
+import {Organism, randomInteger, removeOrganism} from "./Organism";
 
 export class Prey extends Organism {
     constructor(lifespan, adulthoodAge, birthPeriod, x, y) {
@@ -8,7 +8,8 @@ export class Prey extends Organism {
     movePrey(organisms, maxX, maxY) {
         this.tickAge();
         if (this.age > this.lifespan) {
-            organisms = organisms.splice(organisms.indexOf(this), 1);
+            organisms = removeOrganism(organisms, this);
+            // organisms = organisms.splice(organisms.indexOf(this), 1);
             return;
         }
         let surrounding = this.checkCoordinates(organisms, maxX, maxY);

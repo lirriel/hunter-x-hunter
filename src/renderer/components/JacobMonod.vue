@@ -7,11 +7,17 @@
             </b-col>
             <b-col sm="9">
                 <div>
-                    <basic-chart-box :chart-options="chartOptions" :series="series.series"/>
+                    <basic-chart-box :chart-options="chartOptions" :series="series.series" id="jmSeries"/>
                 </div>
             </b-col>
         </b-row>
-        <behaviour-diargam :series="seriesBehave.series"/>
+        <b-row>
+            <b-tabs style="width: 700px">
+                <b-tab title="Behaviour" active>
+                    <behaviour-diargam :series="seriesBehave.series" id="jmBehave"/>
+                </b-tab>
+            </b-tabs>
+        </b-row>
     </div>
 </template>
 
@@ -33,7 +39,7 @@
             return {
                 chartOptions: {
                     title: {
-                        text: 'Infection population size'
+                        text: 'Chemostat biomass and bacteria size'
                     },
                     chart: {
                         zoom: {
@@ -82,7 +88,34 @@
                                 }
                             },
                             title: {
-                                text: "Group size"
+                                text: "bacteria"
+                            }
+                        },
+                        {
+                            opposite: true,
+                            axisTicks: {
+                                show: true
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: "#247BA0"
+                            },
+                            labels: {
+                                style: {
+                                    color: "#247BA0"
+                                },
+                                show: true,
+                                rotate: -45,
+                                rotateAlways: false,
+                                hideOverlappingLabels: true,
+                                showDuplicates: false,
+                                trim: true,
+                                formatter: function (value) {
+                                    return value.toFixed(2);
+                                }
+                            },
+                            title: {
+                                text: "nutrient"
                             }
                         }
                     ],
@@ -91,6 +124,7 @@
                         width: 1
                     },
                 },
+
                 series: [],
                 seriesBehave: []
             }

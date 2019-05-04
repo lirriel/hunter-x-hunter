@@ -20,16 +20,14 @@
                             :params="params"
                             @series="onSeries"/>
                 </transition>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-col>
-                <div style="width: 500px;">
-                    <basic-chart-box :chart-options="chartOptions" :series="series"/>
-                </div>
-            </b-col>
-            <b-col>
-                <behaviour-diargam :series="seriesBehave"></behaviour-diargam>
+                <b-tabs style="width: 700px">
+                    <b-tab title="Size change" active>
+                        <basic-chart-box :chart-options="chartOptions" :series="series" id="simulationSeries"/>
+                    </b-tab>
+                    <b-tab title="Behaviour">
+                        <behaviour-diargam :series="seriesBehave" id="simulationBehave"></behaviour-diargam>
+                    </b-tab>
+                </b-tabs>
             </b-col>
         </b-row>
     </div>

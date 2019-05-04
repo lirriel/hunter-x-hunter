@@ -2,14 +2,14 @@
     <div class="shadow p-3 mb-5 bg-white rounded">
         <b-form-select :options="lvModelTypes" v-model="currentType" style="margin-bottom: 20px"/>
 
-        <div v-if="isLotkaVolterra">
+        <div v-if="isLotkaVolterra || isLotkaVolterraQuadratic">
             <b-row>
                 <b-col sm="4">
                     <label>Prey</label>
                 </b-col>
                 <b-col sm="6">
                     <b-form-input placeholder="Prey" type="number"
-                                  v-model.number="experimentLotkaVolterra.prey"></b-form-input>
+                                  v-model.number="prey"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -19,7 +19,7 @@
                 </b-col>
                 <b-col sm="6">
                     <b-form-input placeholder="Predator" type="number"
-                                  v-model.number="experimentLotkaVolterra.predator"></b-form-input>
+                                  v-model.number="predator"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -30,7 +30,7 @@
                 <b-col sm="6">
                     <b-form-input max="1000.00" min="0.00" placeholder="Alpha" step="0.01"
                                   type="number"
-                                  v-model.number="experimentLotkaVolterra.alpha"></b-form-input>
+                                  v-model.number="experimentLotkaVolterra.a"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -41,7 +41,7 @@
                 <b-col sm="6">
                     <b-form-input max="1000.00" min="0.00" placeholder="Gamma 1" step="0.01"
                                   type="number"
-                                  v-model.number="experimentLotkaVolterra.gamma1"></b-form-input>
+                                  v-model.number="experimentLotkaVolterra.g1"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -52,7 +52,7 @@
                 <b-col sm="6">
                     <b-form-input max="1000.00" min="0.00" placeholder="Beta" step="0.01"
                                   type="number"
-                                  v-model.number="experimentLotkaVolterra.beta"></b-form-input>
+                                  v-model.number="experimentLotkaVolterra.b"></b-form-input>
                 </b-col>
 
             </b-row>
@@ -64,7 +64,7 @@
                 <b-col sm="6">
                     <b-form-input max="1000.00" min="0.00" placeholder="Gamma 2" step="0.01"
                                   type="number"
-                                  v-model.number="experimentLotkaVolterra.gamma2"></b-form-input>
+                                  v-model.number="experimentLotkaVolterra.g2"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -197,7 +197,7 @@
                 </b-col>
                 <b-col sm="6">
                     <b-form-input placeholder="Prey" type="number"
-                                  v-model.number="experimentLotkaVolterraContTime.prey"></b-form-input>
+                                  v-model.number="prey"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -207,7 +207,7 @@
                 </b-col>
                 <b-col sm="6">
                     <b-form-input placeholder="Predator" type="number"
-                                  v-model.number="experimentLotkaVolterraContTime.predator"></b-form-input>
+                                  v-model.number="predator"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -307,7 +307,7 @@
                 </b-col>
                 <b-col sm="6">
                     <b-form-input placeholder="Prey" type="number"
-                                  v-model.number="experimentRosenzweigMacArthur.prey"></b-form-input>
+                                  v-model.number="prey"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -317,7 +317,7 @@
                 </b-col>
                 <b-col sm="6">
                     <b-form-input placeholder="Predator" type="number"
-                                  v-model.number="experimentRosenzweigMacArthur.predator"></b-form-input>
+                                  v-model.number="predator"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -377,6 +377,83 @@
                 </b-col>
             </b-row>
         </div>
+        <div v-if="isLotkaVolterraContiniousTimeAlleeEffect">
+            <b-row>
+                <b-col sm="4">
+                    <label>Prey</label>
+                </b-col>
+                <b-col sm="6">
+                    <b-form-input placeholder="Prey" type="number"
+                                  v-model.number="prey"></b-form-input>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col sm="4">
+                    <label>Predator</label>
+                </b-col>
+                <b-col sm="6">
+                    <b-form-input placeholder="Predator" type="number"
+                                  v-model.number="predator"></b-form-input>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col sm="4">
+                    <label>(r)</label>
+                </b-col>
+                <b-col sm="6">
+                    <b-form-input max="1000.00" min="0.00" step="0.01" type="number"
+                                  v-model.number="experimentLotkaVolterraContiniousTimeAlleeEffect.r"></b-form-input>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col sm="4">
+                    <label>(a)</label>
+                </b-col>
+                <b-col sm="6">
+                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                                  type="number"
+                                  v-model.number="experimentLotkaVolterraContiniousTimeAlleeEffect.a"></b-form-input>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col sm="4">
+                    <label>(b)</label>
+                </b-col>
+                <b-col sm="6">
+                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                                  type="number"
+                                  v-model.number="experimentLotkaVolterraContiniousTimeAlleeEffect.b"/>
+                </b-col>
+
+            </b-row>
+
+            <b-row>
+                <b-col sm="4">
+                    <label>Time</label>
+                </b-col>
+                <b-col sm="6">
+                    <b-form-input max="1000.00" min="0.00" placeholder="Time" step="0.01"
+                                  type="number"
+                                  v-model.number="time"></b-form-input>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col sm="4">
+                    <label>Time step</label>
+                </b-col>
+                <b-col sm="6">
+                    <b-form-input max="1000.00" min="0.00" placeholder="Time step"
+                                  step="0.00000001"
+                                  type="number"
+                                  v-model.number="timeStep"></b-form-input>
+                </b-col>
+            </b-row>
+        </div>
         <div style="margin-top: 10px">
             <b-button v-on:click="calculateLotkaVolterra" variant="outline-primary">
                 Calculate
@@ -388,21 +465,39 @@
             <b-button v-on:click="compare" variant="outline-warning">
                 Compare
             </b-button>
+            <b-button v-on:click="getBifurcationD" variant="outline-warning">generate</b-button>
         </div>
+        <div style="margin-top: 20px">
+            <b-button v-b-modal.modal-test-compare variant="outline-primary">Hold test</b-button>
+        </div>
+        <b-modal size="xl" id="modal-test-compare" title="parameter run test">
+            <comparison-test-modal :params="currentExperimentParams"
+                                   :model="currentModel"
+                                   :prey="prey"
+                                   :predator="predator"
+                                   :time="time"
+                                   :time-step="timeStep"
+            />
+        </b-modal>
     </div>
 </template>
 
 <script>
     import {
-        lotkaVolterra,
-        lotkaVolterraContiniousTime,
-        lotkaVolterraWithFiniteCapacity,
-        rosenzweigMacArthur
+        BasicLotkaVolterra,
+        LotkaVolterraContiniousTimeAlleeEffect,
+        LotkaVolterraContiniousTimeFiniteCapacity,
+        LotkaVolterraFiniteCapacity,
+        RosenzweigMacArthur,
     } from "../../assets/lotkaVolterra";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
+    import ComparisonTestModal from './ComparisonTestModal'
 
     export default {
         name: "LotkaVolterraControlPanel",
+        components: {
+            ComparisonTestModal
+        },
         data() {
             return {
                 lvModelTypes: [
@@ -410,15 +505,16 @@
                     'Lotka-Volterra with continuous time',
                     'Rosenzweig and MacArthur model',
                     'Lotka-Volterra finite capacity',
+                    'Lotka-Volterra Continious Time with Allee Effect'
                 ],
-                currentType: 'Lotka-Volterra',
+                currentType: '',
                 experimentLotkaVolterra: {
                     prey: 20,
                     predator: 3,
-                    alpha: 0.9,
-                    gamma1: 0.3,
-                    beta: 0.6,
-                    gamma2: 0.06,
+                    a: 0.9,
+                    g1: 0.3,
+                    b: 0.6,
+                    g2: 0.06,
                 },
                 experimentLotkaVolterraFiniteCapacity: {
                     prey: 20,
@@ -431,6 +527,8 @@
                 },
                 time: 10,
                 timeStep: 0.1,
+                prey: 10,
+                predator: 10,
                 experimentLotkaVolterraContTime: {
                     prey: 20,
                     predator: 3,
@@ -448,6 +546,13 @@
                     m: 3,
                     c: 4
                 },
+                experimentLotkaVolterraContiniousTimeAlleeEffect: {
+                    prey: 0.005,
+                    predator: 0.01,
+                    r: 2.5,
+                    a: 17,
+                    b: 0.05
+                },
                 compareFlag: false,
                 dataPrey: [],
                 compareDataPrey: [],
@@ -455,20 +560,24 @@
                 compareDataPredator: [],
                 dataBehave: [],
                 dataBifurcation: [],
-                timeArray: [],
                 series: [],
                 seriesCompare: [],
                 seriesBehave: [],
                 seriesBifurcation: [],
                 selectParameter: ['alpha', 'beta', 'gamma1', 'gamma2'],
                 bifurcationParam: 'alpha',
-                bifurcationStartValue: 0,
-                bifurcationMaxValue: 10,
-                bifurcationStep: 1,
-                isLotkaVolterra: true,
+                bifurcationStartValue: 0.0001,
+                bifurcationMaxValue: 5,
+                bifurcationStep: 0.001,
+                isLotkaVolterra: false,
                 isLotkaVolterraContTime: false,
                 isRosenzweigMacArthur: false,
-                isLotkaVolterraFiniteCapacity: false
+                isLotkaVolterraFiniteCapacity: false,
+                isLotkaVolterraQuadratic: false,
+                isLotkaVolterraContiniousTimeAlleeEffect: false,
+                ////////////////////////////////
+                currentModel: null,
+                currentExperimentParams: null,
             }
         },
         watch: {
@@ -476,23 +585,75 @@
                 this.isRosenzweigMacArthur =
                     this.isLotkaVolterra =
                         this.isLotkaVolterraContTime =
-                            this.isLotkaVolterraFiniteCapacity = false;
-                if (data === this.lvModelTypes[0]) {
-                    this.isLotkaVolterra = true;
-                }
-                if (data === this.lvModelTypes[1]) {
-                    this.isLotkaVolterraContTime = true;
-                }
-                if (data === this.lvModelTypes[2]) {
-                    this.isRosenzweigMacArthur = true;
-                }
-                if (data === this.lvModelTypes[3]) {
-                    this.isLotkaVolterraFiniteCapacity = true;
-                }
+                            this.isLotkaVolterraFiniteCapacity =
+                                this.isLotkaVolterraQuadratic =
+                                    this.isLotkaVolterraContiniousTimeAlleeEffect = false;
+
+                this.assignParams(data);
             }
         },
         methods: {
+            assignParams(data) {
+                if (data === this.lvModelTypes[0]) {
+                    this.isLotkaVolterra = true;
+                    this.currentModel = new BasicLotkaVolterra(
+                        this.experimentLotkaVolterra.a,
+                        this.experimentLotkaVolterra.g1,
+                        this.experimentLotkaVolterra.b,
+                        this.experimentLotkaVolterra.g2
+                    );
+                    this.predator = this.experimentLotkaVolterra.predator;
+                    this.predator = this.experimentLotkaVolterra.predator;
+                    this.currentExperimentParams = this.experimentLotkaVolterra;
+                }
+                if (data === this.lvModelTypes[1]) {
+                    this.isLotkaVolterraContTime = true;
+                    this.currentModel = new LotkaVolterraContiniousTimeFiniteCapacity(
+                        this.experimentLotkaVolterraContTime.r,
+                        this.experimentLotkaVolterraContTime.k,
+                        this.experimentLotkaVolterraContTime.a,
+                        this.experimentLotkaVolterraContTime.c,
+                        this.experimentLotkaVolterraContTime.b,
+                        this.experimentLotkaVolterraContTime.d);
+                    this.prey = this.experimentLotkaVolterraContTime.prey;
+                    this.predator = this.experimentLotkaVolterraContTime.predator;
+                    this.currentExperimentParams = this.experimentLotkaVolterraContTime;
+                }
+                if (data === this.lvModelTypes[2]) {
+                    this.isRosenzweigMacArthur = true;
+                    this.currentModel = new RosenzweigMacArthur(
+                        this.experimentRosenzweigMacArthur.k,
+                        this.experimentRosenzweigMacArthur.m,
+                        this.experimentRosenzweigMacArthur.c);
+                    this.prey = this.experimentRosenzweigMacArthur.prey;
+                    this.predator = this.experimentRosenzweigMacArthur.predator;
+                    this.currentExperimentParams = this.experimentRosenzweigMacArthur;
+                }
+                if (data === this.lvModelTypes[3]) {
+                    this.isLotkaVolterraFiniteCapacity = true;
+                    this.currentModel = new LotkaVolterraFiniteCapacity(
+                        this.experimentLotkaVolterraFiniteCapacity.a,
+                        this.experimentLotkaVolterraFiniteCapacity.g1,
+                        this.experimentLotkaVolterraFiniteCapacity.b,
+                        this.experimentLotkaVolterraFiniteCapacity.g2,
+                        this.experimentLotkaVolterraFiniteCapacity.K);
+                    this.prey = this.experimentLotkaVolterraFiniteCapacity.prey;
+                    this.predator = this.experimentLotkaVolterraFiniteCapacity.predator;
+                    this.currentExperimentParams = this.experimentLotkaVolterraFiniteCapacity;
+                }
+                if (data === this.lvModelTypes[4]) {
+                    this.isLotkaVolterraContiniousTimeAlleeEffect = true;
+                    this.currentModel = new LotkaVolterraContiniousTimeAlleeEffect(
+                        this.experimentLotkaVolterraContiniousTimeAlleeEffect.r,
+                        this.experimentLotkaVolterraContiniousTimeAlleeEffect.a,
+                        this.experimentLotkaVolterraContiniousTimeAlleeEffect.b);
+                    this.prey = this.experimentLotkaVolterraContiniousTimeAlleeEffect.prey;
+                    this.predator = this.experimentLotkaVolterraContiniousTimeAlleeEffect.predator;
+                    this.currentExperimentParams = this.experimentLotkaVolterraContiniousTimeAlleeEffect;
+                }
+            },
             calculateLotkaVolterra() {
+                this.assignParams(this.currentType);
                 this.calculateForTime(this.time);
                 this.series = [
                     {
@@ -506,17 +667,26 @@
                 ];
                 this.$emit('series', {series: this.series, params: this.experimentLotkaVolterra});
                 this.$emit('modelType', this.currentType);
+                let vArray = [];
+                for (let i = 0; i < this.dataBehave.length; i++) {
+                    // let v = this.currentModel.phaseSpacePlot(
+                    //     this.dataBehave[i][0],
+                    //     this.dataBehave[i][1]
+                    // );
+                    // vArray.push([this.dataBehave[i][1], this.dataBehave[i][0], v]);
+                }
+                let eq = this.currentModel.getEquilibrium();
+                console.log(eq);
                 this.seriesBehave = [
                     {
                         name: "Behaviour",
+                        type: 'line',
                         data: this.dataBehave
                     },
                     {
                         name: "Equilibrium Points",
-                        type: 'scatter',
-                        data: [[0, 0],
-                            // [this.alpha / this.gamma1, this.beta / this.gamma2]
-                        ]
+                        type: 'line',
+                        data: eq
                     }
                 ];
                 this.$emit('behaviour', this.seriesBehave);
@@ -526,84 +696,42 @@
                 this.dataPredator = [];
                 this.dataBehave = [];
 
-                let x = 0;
-                let y = 0;
-
-                if (this.isLotkaVolterra === true) {
-                    x = this.experimentLotkaVolterra.prey;
-                    y = this.experimentLotkaVolterra.predator;
-                } else if (this.isLotkaVolterraFiniteCapacity === true) {
-                    x = this.experimentLotkaVolterraFiniteCapacity.prey;
-                    y = this.experimentLotkaVolterraFiniteCapacity.predator;
-                } else if (this.isLotkaVolterraContTime === true) {
-                    x = this.experimentLotkaVolterraContTime.prey;
-                    y = this.experimentLotkaVolterraContTime.predator;
-                } else if (this.isRosenzweigMacArthur === true) {
-                    x = this.experimentRosenzweigMacArthur.prey;
-                    y = this.experimentRosenzweigMacArthur.predator;
-                }
+                let x = this.prey;
+                let y = this.predator;
 
                 this.dataPrey.push([0, x]);
                 this.dataPredator.push([0, y]);
                 this.dataBehave.push([y, x]);
 
                 for (let i = this.timeStep; i < t; i += this.timeStep) {
-                    var res = null;
-                    if (this.isLotkaVolterra === true) {
-                        res = lotkaVolterra(x, y,
-                            this.experimentLotkaVolterra.alpha,
-                            this.experimentLotkaVolterra.gamma1,
-                            this.experimentLotkaVolterra.beta,
-                            this.experimentLotkaVolterra.gamma2);
-                    } else if (this.isLotkaVolterraFiniteCapacity === true) {
-                        res = lotkaVolterraWithFiniteCapacity(x, y,
-                            this.experimentLotkaVolterraFiniteCapacity.a,
-                            this.experimentLotkaVolterraFiniteCapacity.g1,
-                            this.experimentLotkaVolterraFiniteCapacity.b,
-                            this.experimentLotkaVolterraFiniteCapacity.g2,
-                            this.experimentLotkaVolterraFiniteCapacity.K);
-                    } else if (this.isLotkaVolterraContTime === true) {
-                        res = lotkaVolterraContiniousTime(x, y,
-                            this.experimentLotkaVolterraContTime.r,
-                            this.experimentLotkaVolterraContTime.k,
-                            this.experimentLotkaVolterraContTime.a,
-                            this.experimentLotkaVolterraContTime.c,
-                            this.experimentLotkaVolterraContTime.b,
-                            this.experimentLotkaVolterraContTime.d);
-                    } else if (this.isRosenzweigMacArthur === true) {
-                        res = rosenzweigMacArthur(x, y,
-                            this.experimentRosenzweigMacArthur.k,
-                            this.experimentRosenzweigMacArthur.m,
-                            this.experimentRosenzweigMacArthur.c)
-                    }
-
-                    x = x + this.timeStep * res.prey;
-                    y = y + this.timeStep * res.predator;
+                    let res = this.currentModel.calculateModel(x, y);
+                    x += this.timeStep * res.prey;
+                    y += this.timeStep * res.predator;
 
                     this.dataPrey.push([i, x]);
                     this.dataPredator.push([i, y]);
-
-                    this.dataBehave.push([y, x])
+                    this.dataBehave.push([x, y])
                 }
             },
             getBifurcationD() {
                 this.dataBifurcation = [];
                 var x = this.prey;
-                var y = 0;
+                var y = this.predator;
                 for (var i = this.bifurcationStartValue; i <= this.bifurcationMaxValue; i += this.bifurcationStep) {
                     var res = {prey: 0, predator: 0};
                     if (this.bifurcationParam === 'alpha') {
-                        res = rosenzweigMacArthur(x, y, this.gamma1, i, this.beta);
-                        // res = lotkaVolterra(x, 0, i, this.gamma1, this.beta, this.gamma2);
-                        // res = lotkaVolterraContiniousTime(x, y, 1.6, 125, i, 50, 0.6, 0.56);
+                        res = this.currentModel.calculateModel(x, y);
                     } else if (this.bifurcationParam === 'beta') {
-                        res = lotkaVolterra(x, 0, this.alpha, this.gamma1, i, this.gamma2);
+                        res = this.currentModel.calculateModel(x, y);
+                        // res = BasicLotkaVolterra.calculateModel(x, 0, this.alpha, this.gamma1, i, this.gamma2);
                         // res = lotkaVolterraContiniousTime(x, y, 1.6, 125, 3.2, i, 0.6, 0.56);
                     } else if (this.bifurcationParam === 'gamma1') {
-                        res = lotkaVolterra(x, 0, this.alpha, i, this.beta, this.gamma2);
+                        res = this.currentModel.calculateModel(x, y);
+                        // res = BasicLotkaVolterra.calculateModel(x, 0, this.alpha, i, this.beta, this.gamma2);
                         // res = lotkaVolterraContiniousTime(x, y, 1.6, 125, 3.2, 50, i, 0.56);
                     } else if (this.bifurcationParam === 'gamma2') {
-                        res = lotkaVolterra(x, 0, this.alpha, this.gamma1, this.beta, i);
+                        res = this.currentModel.calculateModel(x, y);
+                        // res = BasicLotkaVolterra.calculateModel(x, 0, this.alpha, this.gamma1, this.beta, i);
                         // res = lotkaVolterraContiniousTime(x, y, 1.6, 125, 3.2, 50, 0.6, i);
                     }
                     x = x + res.prey;
@@ -642,10 +770,10 @@
                     }
                 ];
                 var curParams = null;
-                if (this.isLotkaVolterra === true) {
+                if (this.isLotkaVolterra === true || this.isLotkaVolterraQuadratic) {
                     curParams = this.experimentLotkaVolterra;
                 } else if (this.isLotkaVolterraFiniteCapacity === true) {
-                    curParams =  this.experimentLotkaVolterraFiniteCapacity;
+                    curParams = this.experimentLotkaVolterraFiniteCapacity;
                 } else if (this.isLotkaVolterraContTime === true) {
                     curParams = this.experimentLotkaVolterraContTime;
                 } else if (this.isRosenzweigMacArthur === true) {
@@ -668,4 +796,5 @@
     .b-row {
         margin-bottom: 10px;
     }
+
 </style>

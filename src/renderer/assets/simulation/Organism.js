@@ -64,33 +64,6 @@ export class Organism {
                     }
                 }
             }
-            /*if (surroundingArray[0] === true
-                && ((current.x - 1) === organism.x) && ((current.y - 1) === organism.y)) {
-                surroundingArray[0] = false;
-            }
-            if (surroundingArray[1] === true
-                && (current.x === organism.x) && ((current.y - 1) === organism.y)) {
-                surroundingArray[1] = false;
-            }
-            if (surroundingArray[2] === true
-                &&((current.x + 1) === organism.x) && ((current.y - 1) === organism.y)) {
-                surroundingArray[2] = false;
-            }
-            if (((current.x + 1) === organism.x) && (current.y === organism.y)) {
-                surroundingArray[3] = false;
-            }
-            if (((current.x + 1) === organism.x) && ((current.y + 1) === organism.y)) {
-                surroundingArray[4] = false;
-            }
-            if ((current.x === organism.x) && ((current.y + 1) === organism.y)) {
-                surroundingArray[5] = false;
-            }
-            if (((current.x - 1) === organism.x) && ((current.y + 1) === organism.y)) {
-                surroundingArray[6] = false;
-            }
-            if (((current.x - 1) === organism.x) && (current.y === organism.y)) {
-                surroundingArray[7] = false;
-            }*/
         });
         return surroundingArray;
     }
@@ -163,4 +136,8 @@ export function turnStep(caseNumber, x, y) {
         default:
     }
     return {x: newX, y: newY}
+}
+
+export function removeOrganism(organisms, organism) {
+    return organisms.splice(organisms.indexOf(organism), 1);
 }

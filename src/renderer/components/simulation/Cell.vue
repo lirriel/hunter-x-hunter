@@ -8,6 +8,8 @@
 <script>
     import {Organism} from "../../assets/simulation/Organism";
     import {Predator} from "../../assets/simulation/Predator";
+    import {Prey} from "../../assets/simulation/Prey";
+    import {Person} from "../../assets/simulation/Person";
 
     export default {
         props: {
@@ -60,8 +62,10 @@
                 }
                 if (this.organism instanceof Predator) {
                     return 'predator';
-                } else {
+                } else if (this.organism instanceof Prey) {
                     return 'prey';
+                } else if (this.organism instanceof Person) {
+                    return 'human';
                 }
                 // if (this.status.isAlive && this.status.isPredator) {
                 //     return 'predator'
@@ -97,6 +101,10 @@
 
     .prey {
         background-color: #38eea4 !important;
+    }
+
+    .human {
+        background-color: #eec72c !important;
     }
 
     .dead {

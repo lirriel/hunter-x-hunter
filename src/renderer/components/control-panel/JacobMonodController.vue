@@ -119,7 +119,7 @@
 </template>
 
 <script>
-    import {jacobMonod} from "../../assets/jacobMonod";
+    import {JacobMonod} from "../../assets/jacobMonod";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
 
     export default {
@@ -144,20 +144,29 @@
                 seriesBehave: [],
                 time: 5,
                 timeStep: 0.2,
+
+                model: null,
                 ///////////////////////////////////
                 isJMonod: true
             }
         },
         methods: {
             calculateJMonod() {
+                this.model = new JacobMonod(
+                    this.expJMonod.sIn,
+                    this.expJMonod.q,
+                    this.expJMonod.dr,
+                    this.expJMonod.alpha,
+                    this.standardMuFunction
+                );
                 this.calculateForTime(this.time);
                 this.series = [
                     {
-                        name: "Bacteria biomass",
+                        name: "bacteria",
                         data: this.dataX
                     },
                     {
-                        name: "S",
+                        name: "nutrient",
                         data: this.dataS
                     }
                 ];
@@ -189,25 +198,16 @@
                 this.dataXToS.push([sValue, xValue]);
 
                 for (let j = this.timeStep; j < t; j += this.timeStep) {
-                    let res = null;
-                    if (this.isJMonod === true) {
-                        res = jacobMonod(xValue, sValue,
-                            this.expJMonod.sIn,
-                            this.expJMonod.q,
-                            this.expJMonod.dr,
-                            this.expJMonod.alpha,
-                            this.standardMuFunction
-                        );
-                    }
+                    let res = this.model.calculateModel(xValue, sValue);
 
-                    xValue = xValue + this.timeStep * res.dx;
-                    sValue = sValue + this.timeStep * res.ds;
+                    xValue += this.timeStep * res.dx;
+                    sValue += this.timeStep * res.ds;
 
                     this.dataX.push([j, xValue]);
                     this.dataS.push([j, sValue]);
 
                     // this.dataXToS.push([sValue, xValue]);
-                    this.dataXToS.push([xValue, sValue]);
+                    this.dataXToS.push([sValue, xValue]);
                 }
             },
             standardMuFunction(_s) {

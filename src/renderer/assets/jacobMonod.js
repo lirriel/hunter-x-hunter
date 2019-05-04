@@ -1,11 +1,19 @@
-export function jacobMonod(x, s, sIn, q, dr, alpha, mFunc) {
-    console.log(mFunc(s))
-    return  {
-        dx: mFunc(s) * x - dr * x,
-        ds: - alpha * mFunc(s) * x - dr * s + dr * sIn
-    }
-}
+import {Model} from "./lotkaVolterra";
 
-export function standardMuFunction(_s) {
-    return this.muMax * _s / (_s + this.k);
+export class JacobMonod extends Model{
+    constructor(sIn, q, dr, alpha, mFunc) {
+        super();
+        this.sIn = sIn;
+        this.q = q;
+        this.dr = dr;
+        this.alpha = alpha;
+        this.mFunc= mFunc;
+    }
+
+    calculateModel(x, s) {
+        return  {
+            dx: this.mFunc(s) * x - this.dr * x,
+            ds: - this.alpha * this.mFunc(s) * x - this.dr * s + this.dr * this.sIn
+        }
+    }
 }

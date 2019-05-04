@@ -1,13 +1,14 @@
 <template>
     <div class="shadow p-3 mb-5 bg-white rounded">
-        <div v-if="isKermackMakKendrick">
+        <b-form-select :options="modelTypes" v-model="currentType" style="margin-bottom: 20px"/>
+        <div>
             <b-row>
                 <b-col sm="4">
                     <label>Susceptible</label>
                 </b-col>
                 <b-col sm="8">
                     <b-form-input placeholder="S" type="number"
-                                  v-model.number="expKermackMcKendrick.S"></b-form-input>
+                                  v-model.number="S"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -17,18 +18,18 @@
                 </b-col>
                 <b-col sm="8">
                     <b-form-input placeholder="I" type="number"
-                                  v-model.number="expKermackMcKendrick.I"></b-form-input>
+                                  v-model.number="I"></b-form-input>
                 </b-col>
             </b-row>
 
-            <b-row>
+            <b-row v-if="isKermackMakKendrick">
                 <b-col sm="4">
                     <label>Recovered</label>
                 </b-col>
                 <b-col sm="8">
                     <b-form-input max="1000.00" min="0.00" placeholder="R" step="0.01"
                                   type="number"
-                                  v-model.number="expKermackMcKendrick.R"></b-form-input>
+                                  v-model.number="R"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -100,32 +101,70 @@
 </template>
 
 <script>
-    import {kermackMakKendrick} from "../../assets/kermackMakKendrick";
+    import {
+        KermackMakKendrick,
+        KermackMakKendrickSIS
+    } from "../../assets/kermackMakKendrick";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
 
     export default {
         name: "KermackMacKendrickController",
         data() {
             return {
+                S: 100,
+                I: 10,
+                R: 20,
                 expKermackMcKendrick: {
                     S: 1000,
                     I: 2,
-                    R: 0,
+                    R: 10,
                     b: 0.01,
                     q: 0.8,
                     m: 1
                 },
+                modelTypes: ["SIR", "SIS"],
+                currentType: "",
+                currentModel: null,
+
+                isSIR: false,
+                isSIS: false,
+
                 time: 2,
                 timeStep: 0.01,
+
                 dataS: [],
                 dataI: [],
                 dataR: [],
+
                 dataSToI: [],
                 dataSToR: [],
                 dataIToR: [],
 
-                ////////////////////////
-                isKermackMakKendrick: true,
+                isKermackMakKendrick: false,
+            }
+        },
+        watch: {
+            currentType: function (data) {
+                this.isKermackMakKendrick = false;
+                if (data === this.modelTypes[0]) {
+                    this.isKermackMakKendrick = true;
+                    this.currentModel = new KermackMakKendrick(
+                        this.expKermackMcKendrick.b,
+                        this.expKermackMcKendrick.m,
+                        this.expKermackMcKendrick.q
+                    );
+                    this.R = this.expKermackMcKendrick.R;
+                }
+                if (data === this.modelTypes[1]) {
+                    this.currentModel = new KermackMakKendrickSIS(
+                        this.expKermackMcKendrick.b,
+                        this.expKermackMcKendrick.m,
+                        this.expKermackMcKendrick.q
+                    );
+                    this.R = 0;
+                }
+                this.I = this.expKermackMcKendrick.I;
+                this.S = this.expKermackMcKendrick.S;
             }
         },
         methods: {
@@ -138,26 +177,20 @@
                 this.dataSToR = [];
                 this.dataIToR = [];
 
-                let s = this.expKermackMcKendrick.S;
-                let i = this.expKermackMcKendrick.I;
-                let r = this.expKermackMcKendrick.R;
+                let s = this.S;
+                let i = this.I;
+                let r = this.R;
 
                 this.dataS.push([0, s]);
                 this.dataI.push([0, i]);
                 this.dataR.push([0, r]);
 
                 for (let j = this.timeStep; j < t; j += this.timeStep) {
-                    let res = null;
-                    if (this.isKermackMakKendrick === true) {
-                        res = kermackMakKendrick(s, i, r,
-                            this.expKermackMcKendrick.b,
-                            this.expKermackMcKendrick.m,
-                            this.expKermackMcKendrick.q);
-                    }
+                    let res = this.currentModel.calculateModel(s, i, r);
 
-                    s = s + this.timeStep * res.ds;
-                    i = i + this.timeStep * res.di;
-                    r = r + this.timeStep * res.dr;
+                    s += this.timeStep * res.ds;
+                    i +=this.timeStep * res.di;
+                    r += this.timeStep * res.dr;
 
                     this.dataS.push([j, s]);
                     this.dataI.push([j, i]);
@@ -187,6 +220,8 @@
                 let _params = null;
                 if (this.isKermackMakKendrick === true) {
                     _params = this.expKermackMcKendrick;
+                } else {
+                    _params = this.expKermackMcKendrickSIS;
                 }
                 this.$emit('series', {series: this.series, params: _params});
                 this.seriesBehave = [

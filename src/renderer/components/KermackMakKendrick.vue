@@ -9,11 +9,17 @@
             </b-col>
             <b-col sm="9">
                 <div>
-                    <basic-chart-box :chart-options="chartOptions" :series="series.series"/>
+                    <basic-chart-box :chart-options="chartOptions" :series="series.series" id="kmkSeries"/>
                 </div>
             </b-col>
         </b-row>
-        <behaviour-diargam :series="seriesBehave.series"/>
+        <b-row>
+            <b-tabs style="width: 700px">
+                <b-tab title="Behaviour" active>
+                    <behaviour-diargam :series="seriesBehave.series" id="kmkBehave"/>
+                </b-tab>
+            </b-tabs>
+        </b-row>
     </div>
 </template>
 

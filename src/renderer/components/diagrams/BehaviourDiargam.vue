@@ -1,32 +1,45 @@
 <template>
-    <b-row>
-        <b-col sm="3"></b-col>
-        <b-col sm="9">
-            <basic-chart-box :series="series" :chart-options="chartOptions" :type="type"></basic-chart-box>
-        </b-col>
-    </b-row>
+    <basic-chart-box :series="series" :chart-options="chartOptions"/>
 </template>
 
 <script>
     import VueApexCharts from 'vue-apexcharts'
     import BasicChartBox from './BasicChartBox'
+
     export default {
         name: "BehaviourDiargam",
         props: {
             series: Array,
         },
         components: {
-          apexchart: VueApexCharts,
+            apexchart: VueApexCharts,
             BasicChartBox
         },
         data() {
             return {
-                type: 'line',
                 chartOptions: {
                     chart: {
                         zoom: {
                             enabled: true
                         },
+                    },
+                    xaxis: {
+                        title: {
+                            text: "Prey",
+                            style: {
+                                color: "#883157",
+                                fontSize: "14px"
+                            }
+                        }
+                    },
+                    yaxis: {
+                        title: {
+                            text: "Predator",
+                            style: {
+                                color: "#883157",
+                                fontSize: "14px"
+                            }
+                        }
                     },
                     dataLabels: {
                         enabled: false
@@ -35,7 +48,7 @@
                         type: 'gradient',
                         gradient: {
                             shade: 'dark',
-                            gradientToColors: [ '#000000'],
+                            gradientToColors: ['#000000'],
                             shadeIntensity: 4,
                             type: 'vertical',
                             stops: [0, 100, 100, 100]
@@ -53,9 +66,9 @@
                     },
                     stroke: {
                         curve: "straight",
-                        width: 2
-                    },
-                }
+                        width: [2, 0.5]
+                    }
+                },
             }
         }
     }

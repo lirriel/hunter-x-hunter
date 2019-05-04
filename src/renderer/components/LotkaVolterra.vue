@@ -14,15 +14,17 @@
                 <div>
                     <b-row>
                         <b-col>
-                            <basic-chart-box id="currentChart" :chart-options="chartOptions"
+                            <basic-chart-box style="width: 1000px" id="currentChart"
+                                             :chart-options="chartOptions"
                                              :series="series"/>
+
                         </b-col>
                     </b-row>
                     <b-row>
                         <div v-for="s in seriesCompare"
                              v-if="compareFlag" id="seriesCompare">
                             <b-col>
-                                <label>{{s.params}}</label>
+                                <label style="font-color: gray">{{s.params}}</label>
                                 <basic-chart-box :chart-options="chartOptions"
                                                  :series="s.series"/>
                             </b-col>
@@ -31,46 +33,25 @@
                 </div>
             </b-col>
         </b-row>
-        <behaviour-diargam :series="seriesBehave"></behaviour-diargam>
         <b-row>
-            <b-col sm="3">
-                <b-form-select :options="selectParameter" v-model="bifurcationParam"/>
-                <b-row>
-                    <b-col sm="4">
-                        <label>Start value</label>
-                    </b-col>
-                    <b-col sm="8">
-                        <b-form-input max="1000.00" min="0.00" placeholder="Start value" step="0.01"
-                                      type="number"
-                                      v-model.number="bifurcationStartValue"/>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col sm="4">
-                        <label>Max value</label>
-                    </b-col>
-                    <b-col sm="8">
-                        <b-form-input max="1000.00" min="0.00" placeholder="Max value" step="0.01"
-                                      type="number"
-                                      v-model.number="bifurcationMaxValue"/>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col sm="4">
-                        <label>Step</label>
-                    </b-col>
-                    <b-col sm="8">
-                        <b-form-input max="1000.00" min="0.0000" placeholder="step" step="0.000001"
-                                      type="number"
-                                      v-model.number="bifurcationStep"/>
-                    </b-col>
-                </b-row>
-                <!--<b-btn v-on:click="getBifurcationD">generate</b-btn>-->
-            </b-col>
-            <b-col sm="9">
-                <basic-chart-box :chart-options="bifurcationChartOptions"
-                                 :series="seriesBifurcation"/>
-            </b-col>
+            <b-tabs>
+                <b-tab title="Behaviour" active>
+                    <behaviour-diargam :series="seriesBehave" style="width: 800px"
+                                       id="lvBehave"></behaviour-diargam>
+                </b-tab>
+                <b-tab title="Bifurcation">
+                    <b-row>
+                        <b-col sm="3">
+                            <b-form-select :options="selectParameter" v-model="bifurcationParam"/>
+
+                        </b-col>
+                        <b-col sm="9" id="lvBifuraction">
+                            <basic-chart-box id="bfId" :chart-options="bifurcationChartOptions"
+                                             :series="seriesBifurcation" style="width: 800px"/>
+                        </b-col>
+                    </b-row>
+                </b-tab>
+            </b-tabs>
         </b-row>
         <div id="pdf"></div>
     </div>
@@ -233,6 +214,7 @@
                 this.seriesBehave = data
             },
             onBifurcation(data) {
+                console.log(data)
                 this.seriesBifurcation = data
             },
             onCompare(data) {
@@ -241,13 +223,34 @@
                 console.log(this.seriesCompare);
             },
             onSavePdf() {
-                saveIdAsPdf("currentChart", "test", this.modelType, this.currentParams);
+                if (this.compareFlag) {
+                    saveIdAsPdf(
+                        "currentChart",
+                        "test",
+                        this.modelType,
+                        this.currentParams,
+                        "seriesCompare",
+                        "lvBehave",
+                        "bfId"
+                    );
+                } else {
+                    saveIdAsPdf(
+                        "currentChart",
+                        "test",
+                        this.modelType,
+                        this.currentParams,
+                        null,
+                        "lvBehave",
+                        "bfId"
+                    );
+                }
             }
         }
     }
 </script>
 
 <style>
-
-
+    b-form-input {
+        margin-bottom: 10px
+    }
 </style>
