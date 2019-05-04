@@ -98,7 +98,7 @@
                 </b-col>
                 <b-col sm="6">
                     <b-form-input placeholder="Prey" type="number"
-                                  v-model.number="experimentLotkaVolterraFiniteCapacity.prey"></b-form-input>
+                                  v-model.number="prey"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -108,7 +108,7 @@
                 </b-col>
                 <b-col sm="6">
                     <b-form-input placeholder="Predator" type="number"
-                                  v-model.number="experimentLotkaVolterraFiniteCapacity.predator"></b-form-input>
+                                  v-model.number="predator"></b-form-input>
                 </b-col>
             </b-row>
 
@@ -602,8 +602,6 @@
                         this.experimentLotkaVolterra.b,
                         this.experimentLotkaVolterra.g2
                     );
-                    this.predator = this.experimentLotkaVolterra.predator;
-                    this.predator = this.experimentLotkaVolterra.predator;
                     this.currentExperimentParams = this.experimentLotkaVolterra;
                 }
                 if (data === this.lvModelTypes[1]) {
@@ -615,8 +613,6 @@
                         this.experimentLotkaVolterraContTime.c,
                         this.experimentLotkaVolterraContTime.b,
                         this.experimentLotkaVolterraContTime.d);
-                    this.prey = this.experimentLotkaVolterraContTime.prey;
-                    this.predator = this.experimentLotkaVolterraContTime.predator;
                     this.currentExperimentParams = this.experimentLotkaVolterraContTime;
                 }
                 if (data === this.lvModelTypes[2]) {
@@ -625,8 +621,6 @@
                         this.experimentRosenzweigMacArthur.k,
                         this.experimentRosenzweigMacArthur.m,
                         this.experimentRosenzweigMacArthur.c);
-                    this.prey = this.experimentRosenzweigMacArthur.prey;
-                    this.predator = this.experimentRosenzweigMacArthur.predator;
                     this.currentExperimentParams = this.experimentRosenzweigMacArthur;
                 }
                 if (data === this.lvModelTypes[3]) {
@@ -637,8 +631,6 @@
                         this.experimentLotkaVolterraFiniteCapacity.b,
                         this.experimentLotkaVolterraFiniteCapacity.g2,
                         this.experimentLotkaVolterraFiniteCapacity.K);
-                    this.prey = this.experimentLotkaVolterraFiniteCapacity.prey;
-                    this.predator = this.experimentLotkaVolterraFiniteCapacity.predator;
                     this.currentExperimentParams = this.experimentLotkaVolterraFiniteCapacity;
                 }
                 if (data === this.lvModelTypes[4]) {
@@ -647,8 +639,6 @@
                         this.experimentLotkaVolterraContiniousTimeAlleeEffect.r,
                         this.experimentLotkaVolterraContiniousTimeAlleeEffect.a,
                         this.experimentLotkaVolterraContiniousTimeAlleeEffect.b);
-                    this.prey = this.experimentLotkaVolterraContiniousTimeAlleeEffect.prey;
-                    this.predator = this.experimentLotkaVolterraContiniousTimeAlleeEffect.predator;
                     this.currentExperimentParams = this.experimentLotkaVolterraContiniousTimeAlleeEffect;
                 }
             },

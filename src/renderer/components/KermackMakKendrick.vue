@@ -106,10 +106,10 @@
         },
         methods: {
             onSeries(data) {
-                console.log(data);
                 this.series = data;
             },
             onSeriesBehave(data) {
+                console.log(data);
                 this.seriesBehave = data;
             }
         }

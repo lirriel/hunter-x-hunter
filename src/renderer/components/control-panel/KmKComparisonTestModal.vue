@@ -1,9 +1,9 @@
 <template>
-    <div id="experiment">
+    <div id="experiment-kmk">
         <b-row>
             <b-col sm="3">
                 <b-row style="margin-left: 10px; margin-top: 5px;">
-                    <b-form-select :options="paramsArray" v-model="currentParam"
+                    <b-form-select :options="params" v-model="currentParam"
                                    style="margin-bottom: 20px"/>
                     <b-row>
                         <b-col sm="4">
@@ -54,16 +54,16 @@
                     <basic-chart-box style="margin: 10px; width: 800px"
                                      :chart-options="chartOptions"
                                      :series="series"
-                                     id="experiment-series"/>
+                                     id="experiment-series-kmk"/>
                 </b-row>
                 <b-row>
-                    <behaviour-diargam id="experiment-behave" style="margin: 10px; width: 800px"
+                    <behaviour-diargam id="experiment-behave-kmk" style="margin: 10px; width: 800px"
                                        :series="seriesBehave"/>
                 </b-row>
             </b-col>
 
         </b-row>
-        <b-row style="margin-left: 5px" id="experiment-table">
+        <!--<b-row style="margin-left: 5px" id="experiment-table">
             <b-row>
                 <h3>Changing parameter {{currentParam}}</h3>
             </b-row>
@@ -96,7 +96,7 @@
                     </tbody>
                 </table>
             </b-row>
-        </b-row>
+        </b-row>-->
     </div>
 </template>
 
@@ -107,22 +107,25 @@
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
 
     export default {
-        name: "ComparisonTestModal",
+        name: "KmKComparisonTestModal",
         components: {
             BasicChartBox,
             BehaviourDiargam
         },
         props: {
             params: {
-                type: Object
+                type: Array
             },
             model: {
                 type: Object
             },
-            prey: {
+            i: {
                 type: Number
             },
-            predator: {
+            s: {
+                type: Number
+            },
+            r: {
                 type: Number
             },
             time: {
@@ -179,39 +182,24 @@
                         x: {},
                         y: {}
                     },
-                    /*xaxis: {
-                        title: {
-                            text: "Time",
-                            style: {
-                                color: "#883157",
-                                fontSize: "14px"
-                            }
-                        }
-                    },
-                    yaxis: {
-                        title: {
-                            text: "Population size",
-                            style: {
-                                color: "#883157",
-                                fontSize: "14px"
-                            }
-                        }
-                    },*/
                     stroke: {
                         curve: "straight",
                         width: 1
                     },
                 },
 
-                dataPrey: [],
-                dataPredator: [],
+                dataS: [],
+                dataI: [],
+                dataR: [],
 
                 series: []
             }
         },
         watch: {
             params: function (data) {
-                this.paramsArray = Object.keys(data)
+                // console.log("params")
+                // console.log(this.paramsArray)
+                // this.paramsArray = Object.keys(data)
             },
         },
         methods: {
@@ -223,60 +211,71 @@
 
                 for (let i = this.min; i < this.max; i += this.step) {
                     this.model[this.currentParam] = i;
-                    console.log(this.model[this.currentParam] + " " + this.model.a);
                     this.calculateForTime(i);
                 }
-                console.log(this.currentSeries);
                 this.series = this.currentSeries;
             },
             calculateForTime(ind) {
-                this.dataPrey = [];
-                this.dataPredator = [];
-                let dataBehave = [];
+                this.dataS = [];
+                this.dataI = [];
+                this.dataR = [];
 
-                let x = this.prey;
-                let y = this.predator;
+                let dataSToI = [];
+                let dataSToR = [];
+                let dataIToR = [];
 
-                this.dataPrey.push([0, x]);
-                this.dataPredator.push([0, y]);
-                dataBehave.push([x, y]);
+                let s = this.s;
+                let i = this.i;
+                let r = this.r;
 
-                for (let i = 0; i < this.time; i += this.timeStep) {
-                    let res = this.model.calculateModel(x, y);
-                    x += this.timeStep * res.prey;
-                    y += this.timeStep * res.predator;
+                this.dataS.push([0, s]);
+                this.dataI.push([0, i]);
+                this.dataR.push([0, r]);
 
-                    this.dataPrey.push([i, x]);
-                    this.dataPredator.push([i, y]);
-                    dataBehave.push([x, y])
+                for (let j = 0; j < this.time; j += this.timeStep) {
+                    let res = this.model.calculateModel(s, i, r);
+
+                    s += this.timeStep * res.ds;
+                    i += this.timeStep * res.di;
+                    r += this.timeStep * res.dr;
+
+                    this.dataS.push([j, s]);
+                    this.dataI.push([j, i]);
+                    this.dataR.push([j, r]);
+
+                    dataSToI.push([i, s]);
+                    dataSToR.push([r, s]);
+                    dataIToR.push([r, i]);
                 }
+
                 this.currentSeries.push({
-                    name: "Prey population - " + ind,
-                    data: [...this.dataPrey]
+                    name: "S - " + ind,
+                    data: [...this.dataS]
                 });
                 this.currentSeries.push({
-                    name: "Predator population - " + ind,
-                    data: [...this.dataPredator]
+                    name: "I - " + ind,
+                    data: [...this.dataI]
+                });
+                this.currentSeries.push({
+                    name: "R - " + ind,
+                    data: [...this.dataR]
                 });
                 this.seriesBehave.push({
                     name: "Behave - " + ind,
-                    data: [...dataBehave]
+                    data: [...dataSToI]
                 });
                 let eq = this.model.getEquilibrium();
-                // let t = [];
-                // let d = [];
-                for (let i = 0; i < eq.length; i++) {
-                    let el = eq[i];
-                    let q = this.model.jacobian(el[0], el[1]);
-                    // t.push(q);
-                    // d.push(this.model.jacobianAnalysis(q));
-                    this.equilibriumArray.push({
-                        paramValue: ind,
-                        eqPoint: [...el],
-                        jacobianMatrix: [...q],
-                        stability: this.model.jacobianAnalysis(q)
-                    })
-                }
+
+                // for (let i = 0; i < eq.length; i++) {
+                //     let el = eq[i];
+                //     let q = this.model.jacobian(el[0], el[1]);
+                //     this.equilibriumArray.push({
+                //         paramValue: ind,
+                //         eqPoint: [...el],
+                //         jacobianMatrix: [...q],
+                //         stability: this.model.jacobianAnalysis(q)
+                //     })
+                // }
             },
             saveExperiment() {
                 saveExperimentPdf(this.model);

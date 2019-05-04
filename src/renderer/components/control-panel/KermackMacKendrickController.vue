@@ -22,7 +22,7 @@
                 </b-col>
             </b-row>
 
-            <b-row v-if="isKermackMakKendrick">
+            <b-row v-if="isSIS">
                 <b-col sm="4">
                     <label>Recovered</label>
                 </b-col>
@@ -44,7 +44,7 @@
                 </b-col>
             </b-row>
 
-            <b-row>
+            <b-row v-if="!isBasicSIR">
                 <b-col sm="4">
                     <label>Birth rate</label>
                 </b-col>
@@ -97,18 +97,36 @@
                 Save
             </b-button>
         </div>
+        <div style="margin-top: 10px">
+            <div style="margin-top: 20px">
+                <b-button v-b-modal.modal-test-compare-kmk variant="outline-primary">Hold test</b-button>
+            </div>
+            <b-modal size="xl" id="modal-test-compare-kmk" title="parameter run test">
+                <km-k-comparison-test-modal :params="Object.keys(expKermackMcKendrick)"
+                                       :model="currentModel"
+                                       :s="S"
+                                       :i="I"
+                                       :r="R"
+                                       :time="time"
+                                       :time-step="timeStep"
+                />
+            </b-modal>
+        </div>
     </div>
 </template>
 
 <script>
     import {
+        BasicSIR,
         KermackMakKendrick,
         KermackMakKendrickSIS
     } from "../../assets/kermackMakKendrick";
+    import KmKComparisonTestModal from './KmKComparisonTestModal'
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
 
     export default {
         name: "KermackMacKendrickController",
+        components: {KmKComparisonTestModal},
         data() {
             return {
                 S: 100,
@@ -122,10 +140,11 @@
                     q: 0.8,
                     m: 1
                 },
-                modelTypes: ["SIR", "SIS"],
+                modelTypes: ["Basic SIR", "SIR with repeat infection", "SIS"],
                 currentType: "",
                 currentModel: null,
 
+                isBasicSIR: false,
                 isSIR: false,
                 isSIS: false,
 
@@ -145,8 +164,21 @@
         },
         watch: {
             currentType: function (data) {
-                this.isKermackMakKendrick = false;
+                this.update(data);
+            }
+        },
+        methods: {
+            update(data) {
+                this.isBasicSIR = this.isSIR = this.isSIS = false;
                 if (data === this.modelTypes[0]) {
+                    this.isBasicSIR = true;
+                    this.currentModel = new BasicSIR(
+                        this.expKermackMcKendrick.b,
+                        this.expKermackMcKendrick.q
+                    );
+                    this.R = 0;
+                }
+                if (data === this.modelTypes[1]) {
                     this.isKermackMakKendrick = true;
                     this.currentModel = new KermackMakKendrick(
                         this.expKermackMcKendrick.b,
@@ -155,7 +187,7 @@
                     );
                     this.R = this.expKermackMcKendrick.R;
                 }
-                if (data === this.modelTypes[1]) {
+                if (data === this.modelTypes[2]) {
                     this.currentModel = new KermackMakKendrickSIS(
                         this.expKermackMcKendrick.b,
                         this.expKermackMcKendrick.m,
@@ -165,9 +197,42 @@
                 }
                 this.I = this.expKermackMcKendrick.I;
                 this.S = this.expKermackMcKendrick.S;
-            }
-        },
-        methods: {
+            },
+            calculateKermackMakKendrick() {
+                this.update(this.currentType);
+                this.calculateForTime(this.time);
+                this.series = [
+                    {
+                        name: "Susceptible",
+                        data: this.dataS
+                    },
+                    {
+                        name: "Infected",
+                        data: this.dataI
+                    },
+                    {
+                        name: "Recovered",
+                        data: this.dataR
+                    }
+                ];
+                let _params = this.expKermackMcKendrick;
+                this.$emit('series', {series: this.series, params: _params});
+                this.seriesBehave = [
+                    {
+                        name: "S to I",
+                        data: this.dataSToI
+                    },
+                    {
+                        name: "S to R",
+                        data: this.dataSToR
+                    },
+                    {
+                        name: "I to R",
+                        data: this.dataIToR
+                    }
+                ];
+                this.$emit('seriesBehave', {series: this.seriesBehave, params: _params});
+            },
             calculateForTime(t) {
                 this.dataS = [];
                 this.dataI = [];
@@ -200,45 +265,6 @@
                     this.dataSToR.push([r, s]);
                     this.dataIToR.push([r, i]);
                 }
-            },
-            calculateKermackMakKendrick() {
-                this.calculateForTime(this.time);
-                this.series = [
-                    {
-                        name: "Susceptible",
-                        data: this.dataS
-                    },
-                    {
-                        name: "Infected",
-                        data: this.dataI
-                    },
-                    {
-                        name: "Recovered",
-                        data: this.dataR
-                    }
-                ];
-                let _params = null;
-                if (this.isKermackMakKendrick === true) {
-                    _params = this.expKermackMcKendrick;
-                } else {
-                    _params = this.expKermackMcKendrickSIS;
-                }
-                this.$emit('series', {series: this.series, params: _params});
-                this.seriesBehave = [
-                    {
-                        name: "S to I",
-                        data: this.dataSToI
-                    },
-                    {
-                        name: "S to R",
-                        data: this.dataSToR
-                    },
-                    {
-                        name: "I to R",
-                        data: this.dataIToR
-                    }
-                ];
-                this.$emit('seriesBehave', {series: this.seriesBehave, params: _params});
             },
             saveData() {
                 var wb = createWorkbook();

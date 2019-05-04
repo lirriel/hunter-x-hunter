@@ -1,19 +1,30 @@
 import {Model} from "./lotkaVolterra";
 
-export class JacobMonod extends Model{
-    constructor(sIn, q, dr, alpha, mFunc) {
+// https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4391987/
+export class JacobMonod extends Model {
+    /**
+     * @param sIn concentration of the limiting nutrient
+     * @param dr the culture dilution rate
+     * @param alpha The number of cells produced per mole of the limiting nutrient
+     * @param mMax half-maximal of hyperbolic function
+     * @param K substrate concentration
+     */
+    constructor(sIn, dr, alpha, mMax, K) {
         super();
         this.sIn = sIn;
-        this.q = q;
         this.dr = dr;
         this.alpha = alpha;
-        this.mFunc= mFunc;
+        this.mMax = mMax;
+        this.K = K;
     }
 
     calculateModel(x, s) {
-        return  {
-            dx: this.mFunc(s) * x - this.dr * x,
-            ds: - this.alpha * this.mFunc(s) * x - this.dr * s + this.dr * this.sIn
+        let f = this.mMax * s / (this.K + s);
+        return {
+            dx: f* x - this.dr * x,
+            ds: -this.alpha * f * x - this.dr * s + this.dr * this.sIn
         }
     }
+
+
 }
