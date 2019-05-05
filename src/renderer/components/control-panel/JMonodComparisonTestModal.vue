@@ -1,9 +1,9 @@
 <template>
-    <div id="experiment">
+    <div id="experiment-jm">
         <b-row>
             <b-col sm="3">
                 <b-row style="margin-left: 10px; margin-top: 5px;">
-                    <b-form-select :options="paramsArray" style="margin-bottom: 20px"
+                    <b-form-select :options="params" style="margin-bottom: 20px"
                                    v-model="currentParam"/>
                     <b-row>
                         <b-col sm="4">
@@ -38,6 +38,19 @@
                                           v-model.number="step"/>
                         </b-col>
                     </b-row>
+
+                    <b-row>
+                        <b-col sm="4">
+                            <label>Time index</label>
+                        </b-col>
+                        <b-col sm="8">
+                            <b-form-input max="1000.00" min="0.00" placeholder="Time index"
+                                          step="0.0001"
+                                          type="number"
+                                          v-model.number="timeIndex"/>
+                        </b-col>
+                    </b-row>
+
                     <b-button v-on:click="calculate" variant="outline-primary">
                         Calculate
                     </b-button>
@@ -45,7 +58,7 @@
                         Save pdf
                     </b-button>
                     <b-button v-on:click="saveExperimentXlsx" variant="outline-primary">
-                        Save table
+                        Save xlsx
                     </b-button>
                 </b-row>
             </b-col>
@@ -53,50 +66,23 @@
                 <b-row>
                     <basic-chart-box :chart-options="chartOptions"
                                      :series="series"
-                                     id="experiment-series"
+                                     id="experiment-series-jm"
                                      style="margin: 10px; width: 800px"/>
                 </b-row>
                 <b-row>
-                    <behaviour-diargam :series="seriesBehave" id="experiment-behave"
-                                       style="margin: 10px; width: 800px"/>
+                    <basic-chart-box :chart-options="chartOptionsBehave" :series="seriesBehave"
+                                     id="experiment-behave-jm"
+                                     style="margin: 10px; width: 800px"/>
+                </b-row>
+                <b-row>
+                    <basic-chart-box :chart-options="chartOptionsBehave" :series="seriesParameterToX"
+                                     id="experiment-param-jm"
+                                     style="margin: 10px; width: 800px"/>
                 </b-row>
             </b-col>
-
+            <b-col id="experiment-table-jm"/>
         </b-row>
-        <b-row id="experiment-table" style="margin-left: 5px">
-            <b-row>
-                <h3>Changing parameter {{currentParam}}</h3>
-            </b-row>
-            <br>
-            <b-row style="margin-top: 10px">
-                <table>
-                    <thead>
-                    <th>Parameter value</th>
-                    <th>Equilibrium point</th>
-                    <th>Jacobian matrix</th>
-                    <th>Stability</th>
-                    </thead>
-                    <tbody>
-                    <tr v-for="e in equilibriumArray">
-                        <td>{{e.paramValue}}</td>
-                        <td>{{e.eqPoint}}</td>
-                        <td>
-                            <table>
-                                <tbody>
-                                <tr v-for="entry in e.jacobianMatrix">
-                                    <td v-for="key in entry">
-                                        {{key}}
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                        <td>{{e.stability}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </b-row>
-        </b-row>
+        <div id="pdf"/>
     </div>
 </template>
 
@@ -107,22 +93,22 @@
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
 
     export default {
-        name: "ComparisonTestModal",
+        name: "JMonodComparisonTestModal",
         components: {
             BasicChartBox,
             BehaviourDiargam
         },
         props: {
             params: {
-                type: Object
+                type: Array
             },
             model: {
                 type: Object
             },
-            prey: {
+            x: {
                 type: Number
             },
-            predator: {
+            s: {
                 type: Number
             },
             time: {
@@ -134,13 +120,14 @@
         },
         data() {
             return {
+                timeIndex: 2,
                 currentParam: '',
-                paramsArray: [],
                 min: 0.1,
                 max: 0.7,
                 step: 0.1,
                 currentSeries: [],
                 seriesBehave: [],
+                seriesParameterToX: [],
                 equilibriumArray: [],
                 equilibrium: {
                     paramValue: 0,
@@ -154,19 +141,49 @@
                     jac: [],
                     descr: []
                 },
-
-                chartOptions: {
+                chartOptionsBehave: {
                     chart: {
                         zoom: {
                             enabled: true
                         },
                     },
-                    legend: {
-                        position: 'top',
-                        horizontalAlign: "left",
-                        offsetX: 10,
-                        onItemClick: {
-                            toggleDataSeries: true
+                    yaxis: {
+                        title: {
+                            text: "Nutrient",
+                            style: {
+                                color: "#883157",
+                                fontSize: "14px"
+                            }
+                        }
+                    },
+                    xaxis: {
+                        title: {
+                            text: "Bacteria",
+                            style: {
+                                color: "#883157",
+                                fontSize: "14px"
+                            }
+                        }
+                    },
+                    grid: {
+                        clipMarkers: false
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        x: {},
+                        y: {}
+                    },
+                    stroke: {
+                        curve: "straight",
+                        width: 1
+                    },
+                },
+                chartOptions: {
+                    chart: {
+                        zoom: {
+                            enabled: true
                         },
                     },
                     grid: {
@@ -186,96 +203,102 @@
                     },
                 },
 
-                dataPrey: [],
-                dataPredator: [],
+                dataX: [],
+                dataS: [],
 
                 series: []
             }
         },
-        watch: {
-            params: function (data) {
-                this.paramsArray = Object.keys(data)
-            },
-        },
         methods: {
             calculate() {
-                this.currentSeries = [];
+                this.series = [];
                 this.seriesBehave = [];
                 this.ev = [];
                 this.equilibriumArray = [];
 
+                let paramX = [];
+                let paramS = [];
+
                 for (let i = this.min; i < this.max; i += this.step) {
                     this.model[this.currentParam] = i;
-                    console.log(this.model[this.currentParam] + " " + this.model.a);
+                    if (this.currentParam === "s") {
+                        this.s = i;
+                    }
+                    if (this.currentParam === "x") {
+                        this.x = i;
+                    }
+
                     this.calculateForTime(i);
+                    paramX.push([i, this.dataX[this.timeIndex][1]]);
+                    paramS.push([i, this.dataS[this.timeIndex][1]]);
                 }
-                console.log(this.currentSeries);
-                this.series = this.currentSeries;
+                this.seriesParameterToX = [
+                    {
+                        name: "Nutrient",
+                        data: [...paramS]
+                    },
+                    {
+                        name: "Bacteria",
+                        data: [...paramX]
+                    }
+                ]
             },
             calculateForTime(ind) {
-                this.dataPrey = [];
-                this.dataPredator = [];
-                let dataBehave = [];
+                this.dataX = [];
+                this.dataS = [];
+                let dataXToS = [];
 
-                let x = this.prey;
-                let y = this.predator;
+                let xValue = this.x;
+                let sValue = this.s;
 
-                this.dataPrey.push([0, x]);
-                this.dataPredator.push([0, y]);
-                dataBehave.push([x, y]);
+                this.dataX.push([0, xValue]);
+                this.dataS.push([0, sValue]);
 
-                for (let i = 0; i < this.time; i += this.timeStep) {
-                    let res = this.model.calculateModel(x, y);
-                    x += this.timeStep * res.prey;
-                    y += this.timeStep * res.predator;
+                dataXToS.push([xValue, sValue]);
 
-                    this.dataPrey.push([i, x]);
-                    this.dataPredator.push([i, y]);
-                    dataBehave.push([x, y])
+                for (let j = 0; j < this.time; j += this.timeStep) {
+                    let res = this.model.calculateModel(xValue, sValue);
+
+                    xValue += this.timeStep * res.dx;
+                    sValue += this.timeStep * res.ds;
+
+                    this.dataX.push([j, xValue]);
+                    this.dataS.push([j, sValue]);
+
+                    dataXToS.push([xValue, sValue]);
                 }
-                this.currentSeries.push({
-                    name: "Prey population - " + ind,
-                    data: [...this.dataPrey]
+
+                this.series.push({
+                    name: "Bacteria - " + ind,
+                    data: [...this.dataX]
                 });
-                this.currentSeries.push({
-                    name: "Predator population - " + ind,
-                    data: [...this.dataPredator]
+                this.series.push({
+                    name: "Nutrient - " + ind,
+                    data: [...this.dataS]
                 });
+
                 this.seriesBehave.push({
-                    name: "Behave - " + ind,
-                    data: [...dataBehave]
-                });
-                let eq = this.model.getEquilibrium();
-                for (let i = 0; i < eq.length; i++) {
-                    let el = eq[i];
-                    let q = this.model.jacobian(el[0], el[1]);
-                    this.equilibriumArray.push({
-                        paramValue: ind,
-                        eqPoint: [...el],
-                        jacobianMatrix: [...q],
-                        stability: this.model.jacobianAnalysis(q)
-                    })
-                }
+                    name: "X to S - " + ind,
+                    data: [...dataXToS]
+                })
             },
             saveExperiment() {
-                saveExperimentPdf(this.model, "experiment-series", "experiment-behave", "experiment-table");
+                saveExperimentPdf(
+                    this.model,
+                    "experiment-series-jm",
+                    "experiment-behave-jm",
+                    "experiment-param-jm"
+                );
             },
             saveExperimentXlsx() {
                 let wb = createWorkbook();
                 // add data prey
-                let data = [];
-                this.equilibriumArray.forEach(function (el) {
-                    data.push([
-                        el.paramValue,
-                        el.eqPoint,
-                        [el.jacobianMatrix],
-                        el.stability
-                    ]);
-                });
-                data.splice(0, 0, ["Parameter", "Equilibrium point", "Jacobian Matrix", "Stability"]);
-                wb = createWorkSheet(wb, data, "stability");
+                for (let i = 0; i < this.series.length; i++) {
+                    let data = [["Time", "Biomass"], this.series[i].data];
+                    wb = createWorkSheet(wb, data, this.series[i].name);
+                }
                 // save
-                saveWorkbook("test", wb);
+                saveWorkbook("chemostat", wb);
             }
         }
     }

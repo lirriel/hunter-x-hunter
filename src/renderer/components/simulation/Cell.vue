@@ -26,19 +26,6 @@
                 },
                 type: Object,
             },
-            // xPos: {
-            //     default: -1,
-            //     type: Number,
-            // },
-            // yPos: {
-            //     default: -1,
-            //     type: Number,
-            // },
-            // isPredator: {
-            //     default: false,
-            //     type: Boolean,
-            //     required: false
-            // },
             isMouseDown: {
                 default: false,
                 type: Boolean,
@@ -67,13 +54,6 @@
                 } else if (this.organism instanceof Person) {
                     return 'human';
                 }
-                // if (this.status.isAlive && this.status.isPredator) {
-                //     return 'predator'
-                // } else if (this.status.isAlive && !this.status.isPredator) {
-                //     return 'prey'
-                // } else {
-                //     return 'dead'
-                // }
             }
         },
     };

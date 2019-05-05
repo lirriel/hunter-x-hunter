@@ -19,9 +19,9 @@
                         v-if="gridListOrg.length > 0">
                     <app-cell
                             :is-mouse-down="isMouseDown"
+                            :key="indexY"
                             :organism="o"
                             @wasUpdated="updateCellCount"
-                            :key="indexY"
                             v-for="(o, indexY) in col"
                     />
                 </div>
@@ -36,6 +36,7 @@
     import {Predator} from "../../assets/simulation/Predator";
     import {Prey} from "../../assets/simulation/Prey";
     import {Person} from "../../assets/simulation/Person";
+    import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
 
     export default {
         components: {
@@ -75,6 +76,14 @@
 
                     isAliveProbability: 0.4,
                     isPredatorProbability: 0.2,
+                    isHumanProbability: 0.01,
+                    isHumanRequired: false,
+                    killPredatorPriority: 0.2,
+                    killPreyPriority: 0.1,
+                    killRange: 12,
+                    noticeOrganismRange: 20,
+                    preyNeedLimit: 10,
+                    preyNeedStepsLimit: 12,
 
                     width: 40,
                     height: 20,
@@ -109,7 +118,6 @@
                     this.saveData();
                     return;
                 }
-
                 if (val === 'nextStep') {
                     this.update();
                     this.currentTick++;
@@ -215,37 +223,41 @@
             },
             randomSeed: function () {
                 this.organisms = [];
+                Person.setPreyNeedLimit(this.simulationParams.preyNeedLimit);
+                Person.setPreyNeedStepsLimit(this.simulationParams.preyNeedStepsLimit);
+
                 this.reset();
                 for (let i = 0; i < this.simulationParams.width; i++) {
                     for (let j = 0; j < this.simulationParams.height; j++) {
                         let rnd = Math.random();
                         let isAlive = rnd < this.simulationParams.isAliveProbability;
                         let isPredator = rnd < this.simulationParams.isPredatorProbability;
-                        let isHuman = rnd < 0.02;
+                        let isHuman = rnd < this.simulationParams.isHumanProbability;
 
                         let organism = null;
                         if (isAlive === true) {
-                            if (isHuman === true && this.isHumanRequired) {
+                            if (isHuman === true && this.simulationParams.isHumanRequired) {
                                 organism = new Person(
                                     this.simulationParams.predatorLifespan,
                                     i, j,
-                                    0.1,
-                                    0.3,
-                                    1,
-                                    5);
+                                    this.simulationParams.killPredatorPriority,
+                                    this.simulationParams.killPreyPriority,
+                                    this.simulationParams.killRange,
+                                    this.simulationParams.noticeOrganismRange
+                                );
                             } else if (isPredator === true) {
                                 organism = new Predator(
                                     this.simulationParams.predatorLifespan,
                                     this.simulationParams.predatorAdulthoodAge,
                                     this.simulationParams.predatorBirthPeriod,
                                     this.simulationParams.predatorFeedPreyCount,
-                                    i, j)
+                                    i, j);
                             } else {
                                 organism = new Prey(
                                     this.simulationParams.preyLifespan,
                                     this.simulationParams.preyAdulthoodAge,
                                     this.simulationParams.preyBirthPeriod,
-                                    i, j)
+                                    i, j);
                             }
                             this.organisms.push(organism)
                         }

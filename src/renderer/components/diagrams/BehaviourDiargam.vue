@@ -1,5 +1,5 @@
 <template>
-    <basic-chart-box :series="series" :chart-options="chartOptions"/>
+    <basic-chart-box :chart-options="chartOptions" :series="series"/>
 </template>
 
 <script>
@@ -10,6 +10,12 @@
         name: "BehaviourDiargam",
         props: {
             series: Array,
+            x: {
+                default: "Prey"
+            },
+            y: {
+                default: "Predator"
+            }
         },
         components: {
             apexchart: VueApexCharts,
@@ -25,7 +31,7 @@
                     },
                     xaxis: {
                         title: {
-                            text: "Prey",
+                            text: this.x,
                             style: {
                                 color: "#883157",
                                 fontSize: "14px"
@@ -34,7 +40,7 @@
                     },
                     yaxis: {
                         title: {
-                            text: "Predator",
+                            text: this.y,
                             style: {
                                 color: "#883157",
                                 fontSize: "14px"

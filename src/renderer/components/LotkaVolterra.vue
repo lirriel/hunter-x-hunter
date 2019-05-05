@@ -6,23 +6,23 @@
                 <lotka-volterra-control-panel @behaviour="onBehaviour"
                                               @bifurcation="onBifurcation"
                                               @compare="onCompare"
-                                              @series="onSeries"
                                               @savePdf="onSavePdf"
+                                              @series="onSeries"
                 />
             </b-col>
-            <b-col sm="9" id="seriesCharts">
+            <b-col id="seriesCharts" sm="9">
                 <div>
                     <b-row>
                         <b-col>
-                            <basic-chart-box style="width: 1000px" id="currentChart"
-                                             :chart-options="chartOptions"
-                                             :series="series"/>
+                            <basic-chart-box :chart-options="chartOptions" :series="series"
+                                             id="currentChart"
+                                             style="width: 1000px"/>
 
                         </b-col>
                     </b-row>
                     <b-row>
-                        <div v-for="s in seriesCompare"
-                             v-if="compareFlag" id="seriesCompare">
+                        <div id="seriesCompare"
+                             v-for="s in seriesCompare" v-if="compareFlag">
                             <b-col>
                                 <label style="font-color: gray">{{s.params}}</label>
                                 <basic-chart-box :chart-options="chartOptions"
@@ -35,9 +35,9 @@
         </b-row>
         <b-row>
             <b-tabs>
-                <b-tab title="Behaviour" active>
-                    <behaviour-diargam :series="seriesBehave" style="width: 800px"
-                                       id="lvBehave"></behaviour-diargam>
+                <b-tab active title="Behaviour">
+                    <behaviour-diargam :series="seriesBehave" id="lvBehave"
+                                       style="width: 800px"></behaviour-diargam>
                 </b-tab>
                 <b-tab title="Bifurcation">
                     <b-row>
@@ -45,9 +45,9 @@
                             <b-form-select :options="selectParameter" v-model="bifurcationParam"/>
 
                         </b-col>
-                        <b-col sm="9" id="lvBifuraction">
-                            <basic-chart-box id="bfId" :chart-options="bifurcationChartOptions"
-                                             :series="seriesBifurcation" style="width: 800px"/>
+                        <b-col id="lvBifuraction" sm="9">
+                            <basic-chart-box :chart-options="bifurcationChartOptions" :series="seriesBifurcation"
+                                             id="bfId" style="width: 800px"/>
                         </b-col>
                     </b-row>
                 </b-tab>
@@ -214,7 +214,7 @@
                 this.seriesBehave = data
             },
             onBifurcation(data) {
-                console.log(data)
+                console.log(data);
                 this.seriesBifurcation = data
             },
             onCompare(data) {

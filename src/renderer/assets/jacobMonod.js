@@ -19,12 +19,15 @@ export class JacobMonod extends Model {
     }
 
     calculateModel(x, s) {
-        let f = this.mMax * s / (this.K + s);
+        let f = this.getMonodCurve(s);
         return {
-            dx: f* x - this.dr * x,
+            dx: f * x - this.dr * x,
             ds: -this.alpha * f * x - this.dr * s + this.dr * this.sIn
         }
     }
 
+    getMonodCurve(s) {
+        return this.mMax * s / (this.K + s)
+    }
 
 }

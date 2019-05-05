@@ -102,7 +102,7 @@ function saveBifurcationDiargamm(pdf, filename, diagramId) {
     })
 }
 
-export function saveExperimentPdf(currentParams) {
+export function saveExperimentPdf(currentParams, idSeries, idBehave, idTable) {
     let filename = "experiment";
     let pdf = new jsPDF.jsPDF('portrait', 'mm', 'a4');
     pdfW = pdf.internal.pageSize.width;
@@ -115,7 +115,7 @@ export function saveExperimentPdf(currentParams) {
     pdf.text(10, y, pdf.splitTextToSize(getParamsText("", currentParams), MAX_WIDTH));
     y += 5;
 
-    html2canvas(document.querySelector('#experiment-series'), {
+    html2canvas(document.querySelector('#' + idSeries), {
         imageTimeout: 5000,
         useCORS: true
     }).then(canvas => {
@@ -128,7 +128,7 @@ export function saveExperimentPdf(currentParams) {
         pdf.addImage(img, 'JPEG', 25, y, xScale * canvas.clientWidth, xScale * canvas.clientHeight);
         y += img.clientHeight + 20;
     }).then(() => {
-        html2canvas(document.querySelector('#experiment-behave'), {
+        html2canvas(document.querySelector('#' + idBehave), {
             imageTimeout: 5000,
             useCORS: true
         }).then(canvas => {
@@ -144,7 +144,7 @@ export function saveExperimentPdf(currentParams) {
             pdf.text(10, y, 'Phase plane diagram.');
             pdf.addImage(img, 'JPEG', 25, y, xScale * canvas.clientWidth, xScale * canvas.clientHeight);
         }).then(() => {
-            html2canvas(document.querySelector('#experiment-table'), {
+            html2canvas(document.querySelector('#' + idTable), {
                 imageTimeout: 5000,
                 useCORS: true
             }).then(canvas => {
@@ -155,9 +155,15 @@ export function saveExperimentPdf(currentParams) {
                 document.getElementById('pdf').appendChild(canvas);
 
                 let img = canvas.toDataURL('image/png');
-                let yScale = (pdfH - 50) / canvas.clientHeight;
+                let scale = 1;
+                if (canvas.clientHeight > canvas.clientWidth) {
+                    scale = (pdfH - 50) / canvas.clientHeight;
+                } else {
+                    scale = (pdfW - 50) / canvas.clientWidth;
+                }
 
-                pdf.addImage(img, 'JPEG', 25, y, yScale * canvas.clientWidth, yScale * canvas.clientHeight);
+                pdf.addImage(img, 'JPEG', 25, y,
+                    scale * canvas.clientWidth, scale * canvas.clientHeight);
             }).then(() => {
                 pdf.save(filename + '.pdf');
                 document.getElementById('pdf').innerHTML = '';
@@ -172,4 +178,13 @@ export function getParamsText(modelType, currentParams) {
         params += key + ' = ' + currentParams[key] + ", ";
     }
     return "Considering a model of type \"" + modelType + "\" with parameters " + params + "."
+}
+
+
+export function roundArray(sampleArray) {
+    if (sampleArray) {
+        return sampleArray.map(function (each_element) {
+            return Number(each_element.toFixed(2));
+        });
+    } else return []
 }

@@ -1,4 +1,3 @@
-
 class Organism {
     constructor(r, g, b) {
         this.r = r;
@@ -6,6 +5,7 @@ class Organism {
         this.b = b;
         this.mutationSize = 20; //Must be greater than 2
     }
+
     reproduce() {
         // Prevents negative numbers from appearing
         let newR = Math.max(this.r + this.mutateTrait(), 0);
@@ -16,7 +16,7 @@ class Organism {
 
     mutateTrait() {
         let multiplier = Math.random() - 0.5;
-        if(multiplier < 0) {
+        if (multiplier < 0) {
             return randomValue(this.mutationSize) * -1;
         } else {
             return randomValue(this.mutationSize);
@@ -54,7 +54,7 @@ export class Environment {
 
     // Adds a list of organisms with random fitnesses
     addOrganisms(num) {
-        while(num > 0) {
+        while (num > 0) {
             let newOrganism = new Organism(randomValue(256), randomValue(256), randomValue(256));
             this.organisms.push(newOrganism);
             this.weaknesses.push(this.calculateWeakness(newOrganism));
@@ -70,7 +70,7 @@ export class Environment {
         let e = this;
 
         // 1) Select a Random organism to reproduce
-        let randomIndex = randomValue(this.organisms.length)
+        let randomIndex = randomValue(this.organisms.length);
         let parentOrganism = this.organisms[randomIndex];
         let newOrganism = parentOrganism.reproduce();
 
@@ -82,7 +82,7 @@ export class Environment {
 
         // 3) Remove a random individual, weighted by weakness
         intervals.forEach((interval, index) => {
-            if(isWithinInterval(interval, randomOrganismToReplace)) {
+            if (isWithinInterval(interval, randomOrganismToReplace)) {
                 e.organisms[index] = newOrganism;
                 e.weaknesses[index] = e.calculateWeakness(newOrganism);
             }
@@ -91,7 +91,7 @@ export class Environment {
 
     // Compute the average weakness of the population
     computeAverageWeakness() {
-        return this.weaknesses.reduce((sum, current) => sum + current)/ (this.weaknesses.length);
+        return this.weaknesses.reduce((sum, current) => sum + current) / (this.weaknesses.length);
     }
 }
 
@@ -103,7 +103,7 @@ function createIntervals(arr) {
     let runningTotal = 0;
     let result = arr.map(int => {
         let newTotal = runningTotal + int;
-        let result = [runningTotal, newTotal]
+        let result = [runningTotal, newTotal];
         runningTotal = newTotal;
         return result;
     });

@@ -26,7 +26,7 @@ export class Model {
             } else {
                 if (tr > 0) {
                     return "unstable focus"
-                } else if (tr < 0){
+                } else if (tr < 0) {
                     return "stable focus"
                 } else {
                     return "non-hyperbolic equilibria"

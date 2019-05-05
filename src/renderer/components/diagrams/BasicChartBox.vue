@@ -8,13 +8,14 @@
 
 <script>
     import VueApexCharts from 'vue-apexcharts'
+
     export default {
         name: "BasicChartBox",
         props: {
             chartOptions: Object,
             series: Array,
             type: String
-        }                                     ,
+        },
         components: {
             apexchart: VueApexCharts
         },

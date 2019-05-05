@@ -3,8 +3,8 @@
         <b-row>
             <b-col sm="3">
                 <b-row style="margin-left: 10px; margin-top: 5px;">
-                    <b-form-select :options="params" v-model="currentParam"
-                                   style="margin-bottom: 20px"/>
+                    <b-form-select :options="params" style="margin-bottom: 20px"
+                                   v-model="currentParam"/>
                     <b-row>
                         <b-col sm="4">
                             <label>Min</label>
@@ -51,19 +51,32 @@
             </b-col>
             <b-col>
                 <b-row>
-                    <basic-chart-box style="margin: 10px; width: 800px"
-                                     :chart-options="chartOptions"
+                    <basic-chart-box :chart-options="chartOptions"
                                      :series="series"
-                                     id="experiment-series-kmk"/>
+                                     id="experiment-series-kmk"
+                                     style="margin: 10px; width: 800px"/>
                 </b-row>
                 <b-row>
-                    <behaviour-diargam id="experiment-behave-kmk" style="margin: 10px; width: 800px"
-                                       :series="seriesBehave"/>
+                    <basic-chart-box :chart-options="chartOptionsSI"
+                                     :series="phaseTrajSeries"
+                                     id="experiment-behave-kmk-s-i"
+                                     style="margin: 10px; width: 800px"/>
+                </b-row>
+                <b-row>
+                    <basic-chart-box :chart-options="chartOptionsSR"
+                                     :series="seriesStoR"
+                                     id="experiment-behave-kmk-s-r"
+                                     style="margin: 10px; width: 800px"/>
+                </b-row>
+                <b-row>
+                    <basic-chart-box :chart-options="chartOptionsRI"
+                                     :series="seriesItoR"
+                                     id="experiment-behave-kmk-i-r"
+                                     style="margin: 10px; width: 800px"/>
                 </b-row>
             </b-col>
-
         </b-row>
-        <!--<b-row style="margin-left: 5px" id="experiment-table">
+        <b-row id="experiment-table" style="margin-left: 5px">
             <b-row>
                 <h3>Changing parameter {{currentParam}}</h3>
             </b-row>
@@ -71,32 +84,23 @@
             <b-row style="margin-top: 10px">
                 <table>
                     <thead>
-                    <th>Parameter value</th>
-                    <th>Equilibrium point</th>
-                    <th>Jacobian matrix</th>
-                    <th>Stability</th>
+                    <th>Susceptible</th>
+                    <th>Infected</th>
+                    <th>Recovered</th>
+                    <th>Chance to be infected</th>
+                    <th>Chance to be recovered</th>
+                    <th>return to infected</th>
+                    <th>basicReproductionNumber</th>
+                    <th>Message</th>
                     </thead>
                     <tbody>
-                    <tr v-for="e in equilibriumArray">
-                        <td>{{e.paramValue}}</td>
-                        <td>{{e.eqPoint}}</td>
-                        <td>
-                            <table>
-                                <tbody>
-                                <tr v-for="entry in e.jacobianMatrix">
-                                    <td v-for="key in entry">
-                                        {{key}}
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                        <td>{{e.stability}}</td>
+                    <tr v-for="e in info">
+                        <td v-for="el in e">{{el}}</td>
                     </tr>
                     </tbody>
                 </table>
             </b-row>
-        </b-row>-->
+        </b-row>
     </div>
 </template>
 
@@ -105,6 +109,7 @@
     import BehaviourDiargam from '../diagrams/BehaviourDiargam'
     import {saveExperimentPdf} from "../../assets/pdfUtils";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
+    import {KermackMakKendrickSIS} from "../../assets/kermackMakKendrick";
 
     export default {
         name: "KmKComparisonTestModal",
@@ -157,19 +162,11 @@
                     jac: [],
                     descr: []
                 },
-
+                info: [],
                 chartOptions: {
                     chart: {
                         zoom: {
                             enabled: true
-                        },
-                    },
-                    legend: {
-                        position: 'top',
-                        horizontalAlign: "left",
-                        offsetX: 10,
-                        onItemClick: {
-                            toggleDataSeries: true
                         },
                     },
                     grid: {
@@ -188,29 +185,71 @@
                     },
                 },
 
+                chartOptionsSR: null,
+                chartOptionsSI: null,
+                chartOptionsRI: null,
+
                 dataS: [],
                 dataI: [],
                 dataR: [],
 
-                series: []
+                series: [],
+                seriesStoR: [],
+                seriesItoR: [],
+                phaseTrajSeries: []
             }
         },
-        watch: {
-            params: function (data) {
-                // console.log("params")
-                // console.log(this.paramsArray)
-                // this.paramsArray = Object.keys(data)
-            },
-        },
         methods: {
+            load() {
+                this.chartOptionsRI = copyObject(this.chartOptions);
+                this.chartOptionsSI = copyObject(this.chartOptions);
+                this.chartOptionsSR = copyObject(this.chartOptions);
+
+                this.chartOptionsRI.xaxis = this.getAxis("Recovered");
+                this.chartOptionsRI.yaxis = this.getAxis("Infected");
+
+                this.chartOptionsSI.xaxis = this.getAxis("Susceptible");
+                this.chartOptionsSI.yaxis = this.getAxis("Infected");
+
+                this.chartOptionsSR.xaxis = this.getAxis("Susceptible");
+                this.chartOptionsSR.yaxis = this.getAxis("Recovered");
+
+                this.chartOptions.yaxis = this.getAxis("Time");
+                this.chartOptions.xaxis = this.getAxis("Group size");
+            },
             calculate() {
+                this.load();
                 this.currentSeries = [];
                 this.seriesBehave = [];
+                this.seriesStoR = [];
+                this.seriesItoR = [];
                 this.ev = [];
+                this.info = [];
                 this.equilibriumArray = [];
+                this.phaseTrajSeries = [];
+                console.log(this.model);
 
                 for (let i = this.min; i < this.max; i += this.step) {
                     this.model[this.currentParam] = i;
+                    if (this.currentParam === "S") {
+                        this.s = i;
+                    }
+                    if (this.currentParam === "I") {
+                        this.i = i;
+                    }
+                    if (this.currentParam === "R") {
+                        this.r = i;
+                    }
+                    this.info.push([
+                        this.s,
+                        this.i,
+                        this.r,
+                        this.model.b,
+                        this.model.q,
+                        this.model.m,
+                        this.model.getBasicReproductionNumber(this.s),
+                        this.getMessage()
+                    ]);
                     this.calculateForTime(i);
                 }
                 this.series = this.currentSeries;
@@ -221,6 +260,7 @@
                 this.dataR = [];
 
                 let dataSToI = [];
+                let is = [];
                 let dataSToR = [];
                 let dataIToR = [];
 
@@ -228,9 +268,16 @@
                 let i = this.i;
                 let r = this.r;
 
+                is.push([0, s + i + r]);
+                is.push([s + i + r, 0]);
+
                 this.dataS.push([0, s]);
                 this.dataI.push([0, i]);
                 this.dataR.push([0, r]);
+
+                dataSToI.push([s, i]);
+                dataSToR.push([s, r]);
+                dataIToR.push([r, i]);
 
                 for (let j = 0; j < this.time; j += this.timeStep) {
                     let res = this.model.calculateModel(s, i, r);
@@ -243,9 +290,13 @@
                     this.dataI.push([j, i]);
                     this.dataR.push([j, r]);
 
-                    dataSToI.push([i, s]);
-                    dataSToR.push([r, s]);
+                    dataSToI.push([s, i]);
+                    dataSToR.push([s, r]);
                     dataIToR.push([r, i]);
+
+                    if (i === 0) {
+                        break;
+                    }
                 }
 
                 this.currentSeries.push({
@@ -260,45 +311,91 @@
                     name: "R - " + ind,
                     data: [...this.dataR]
                 });
-                this.seriesBehave.push({
-                    name: "Behave - " + ind,
+
+                this.phaseTrajSeries.push({
+                    name: "Behave - I to S -" + ind,
                     data: [...dataSToI]
                 });
-                let eq = this.model.getEquilibrium();
+                this.phaseTrajSeries.push({
+                    name: "MAX - " + ind,
+                    data: [...is]
+                });
 
-                // for (let i = 0; i < eq.length; i++) {
-                //     let el = eq[i];
-                //     let q = this.model.jacobian(el[0], el[1]);
-                //     this.equilibriumArray.push({
-                //         paramValue: ind,
-                //         eqPoint: [...el],
-                //         jacobianMatrix: [...q],
-                //         stability: this.model.jacobianAnalysis(q)
-                //     })
-                // }
+                this.seriesStoR.push({
+                    name: "Behave - R to S - " + ind,
+                    data: [...dataSToR]
+                });
+                this.seriesStoR.push({
+                    name: "MAX - " + ind,
+                    data: [...is]
+                });
+
+                this.seriesItoR.push({
+                    name: "Behave - I to R -" + ind,
+                    data: [...dataIToR]
+                });
+                this.seriesItoR.push({
+                    name: "MAX - " + ind,
+                    data: [...is]
+                });
+
+                this.drawPhaseTrajectories(ind);
             },
             saveExperiment() {
-                saveExperimentPdf(this.model);
+                saveExperimentPdf(this.model, "experiment-series-kmk",
+                    "experiment-behave-kmk", "experiment-table-kmk");
             },
             saveExperimentXlsx() {
                 let wb = createWorkbook();
-                // add data prey
-                let data = [];
-                this.equilibriumArray.forEach(function (el) {
-                    data.push([
-                        el.paramValue,
-                        el.eqPoint,
-                        [el.jacobianMatrix],
-                        el.stability
-                    ]);
-                });
-                console.log(data);
-                data.splice(0, 0, ["Parameter", "Equilibrium point", "Jacobian Matrix", "Stability"]);
-                wb = createWorkSheet(wb, data, "stability");
-                // save
-                saveWorkbook("test", wb);
-            }
+                // data.splice(0, 0, ["Parameter", "Equilibrium point", "Jacobian Matrix", "Stability"]);
+                wb = createWorkSheet(wb, this.info, "epidemic");
+                saveWorkbook("epidemic model", wb);
+            },
+            drawPhaseTrajectories(ind) {
+                let arr = [];
+                /*  if (this.model instanceof BasicSIR) {
+                      for (let i = 0; i < this.dataSToI.length; i++) {
+                          arr.push([
+                              this.dataSToI[0],
+                              this.model.getPhaseTrajectories(
+                                  this.dataSToI[0], this.dataSToI[1]
+                              )
+                          ]);
+                      }
+                  }
+                  this.phaseTrajSeries.push({
+                      data: arr,
+                      name: "phase trajectories - " + ind
+                  });*/
+
+            },
+            getAxis(txt) {
+                let o = {
+                    title: {
+                        text: txt,
+                        style: {
+                            color: "#883157",
+                            fontSize: "14px"
+                        }
+                    }
+                };
+                return copyObject(o);
+            },
+            getMessage() {
+                let msg = this.model.getAnalysis(this.s, this.i, 0.05);
+                msg += ". Epidemological Threshold Analysis: "
+                    + this.model.getEpidemicThresholdAnalysis(this.s);
+                if (this.model instanceof KermackMakKendrickSIS) {
+                    msg += ". Spread analysis of SIS: "
+                        + this.model.spreadAnalysis(this.s);
+                }
+                return msg;
+            },
         }
+    }
+
+    function copyObject(o) {
+        return JSON.parse(JSON.stringify(o));
     }
 </script>
 

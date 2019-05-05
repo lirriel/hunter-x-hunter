@@ -3,18 +3,25 @@
         <h2>J.Monod Chemostat model</h2>
         <b-row>
             <b-col sm="3">
-                <jacob-monod-controller @series="onSeries" @seriesBehave="onSeriesBehave"/>
+                <jacob-monod-controller @curve="onMonodCurve" @series="onSeries"
+                                        @seriesBehave="onSeriesBehave"/>
             </b-col>
             <b-col sm="9">
                 <div>
-                    <basic-chart-box :chart-options="chartOptions" :series="series.series" id="jmSeries"/>
+                    <basic-chart-box :chart-options="chartOptions" :series="series.series"
+                                     id="jmSeries"/>
                 </div>
             </b-col>
         </b-row>
         <b-row>
             <b-tabs style="width: 700px">
-                <b-tab title="Behaviour" active>
-                    <behaviour-diargam :series="seriesBehave.series" id="jmBehave"/>
+                <b-tab active title="Behaviour">
+                    <behaviour-diargam :series="seriesBehave.series" :x="'Nutrient'" :y="'Bacteria'"
+                                       id="jmBehave"/>
+                </b-tab>
+                <b-tab active title="Monod curve">
+                    <behaviour-diargam :series="seriesCurve" :x="'Nutrient'" :y="'Monod function'"
+                                       id="jmCurve"/>
                 </b-tab>
             </b-tabs>
         </b-row>
@@ -126,7 +133,8 @@
                 },
 
                 series: [],
-                seriesBehave: []
+                seriesBehave: [],
+                seriesCurve: []
             }
         },
         methods: {
@@ -135,6 +143,9 @@
             },
             onSeriesBehave(data) {
                 this.seriesBehave = data;
+            },
+            onMonodCurve(data) {
+                this.seriesCurve = data;
             }
         }
     }

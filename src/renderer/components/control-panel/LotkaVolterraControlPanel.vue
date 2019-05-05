@@ -1,6 +1,6 @@
 <template>
     <div class="shadow p-3 mb-5 bg-white rounded">
-        <b-form-select :options="lvModelTypes" v-model="currentType" style="margin-bottom: 20px"/>
+        <b-form-select :options="lvModelTypes" style="margin-bottom: 20px" v-model="currentType"/>
 
         <div v-if="isLotkaVolterra || isLotkaVolterraQuadratic">
             <b-row>
@@ -470,11 +470,11 @@
         <div style="margin-top: 20px">
             <b-button v-b-modal.modal-test-compare variant="outline-primary">Hold test</b-button>
         </div>
-        <b-modal size="xl" id="modal-test-compare" title="parameter run test">
-            <comparison-test-modal :params="currentExperimentParams"
-                                   :model="currentModel"
-                                   :prey="prey"
+        <b-modal id="modal-test-compare" size="xl" title="parameter run test">
+            <comparison-test-modal :model="currentModel"
+                                   :params="currentExperimentParams"
                                    :predator="predator"
+                                   :prey="prey"
                                    :time="time"
                                    :time-step="timeStep"
             />

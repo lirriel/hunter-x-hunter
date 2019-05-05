@@ -32,16 +32,16 @@ export class Person extends Organism {
     }
 
     calculateInstinct(organisms, huntedPrey, maxX, maxY) {
-        var surrounding = this.checkCoordinates(organisms, maxX, maxY);
-        var huntedDistance = Array(8).fill(Number.MAX_SAFE_INTEGER);
+        let surrounding = this.checkCoordinates(organisms, maxX, maxY);
+        let huntedDistance = Array(8).fill(Number.MAX_SAFE_INTEGER);
         for (let i = 0; i < 8; i++) {
             if (surrounding[i] === true) {
                 var huntTurnStep = turnStep(i, this.x, this.y);
                 huntedDistance[i] = huntedPrey.calculateDistance(huntTurnStep.x, huntTurnStep.y);
             }
         }
-        var minDist = maxX * maxY;
-        var moveNumber = -1;
+        let minDist = maxX * maxY;
+        let moveNumber = -1;
         for (let it = 0; it < 8; it++) {
             if ((surrounding[it] === true) && (huntedDistance[it] < minDist)) {
                 minDist = huntedDistance[it];
@@ -90,10 +90,10 @@ export class Person extends Organism {
 
     hunt(organisms, o, dist, x, y) {
         if (dist <= this.killRange) {
-            console.log(Person.preyNeedLimit)
+            console.log(Person.preyNeedLimit);
             if (o instanceof Prey) {
-                if (Person.preyNeedCounter == Person.preyNeedLimit) {
-                    if (Person.preyNeedStepsLimit == Person.preyNeedStepsCounter) {
+                if (Person.preyNeedCounter === Person.preyNeedLimit) {
+                    if (Person.preyNeedStepsLimit === Person.preyNeedStepsCounter) {
                         Person.preyNeedCounter = 0;
                         Person.preyNeedStepsLimit = 0;
                         organisms = removeOrganism(organisms, o)
@@ -101,7 +101,7 @@ export class Person extends Organism {
                         Person.preyNeedStepsLimit++;
                     }
                 } else {
-                    organisms = removeOrganism(organisms, o)
+                    organisms = removeOrganism(organisms, o);
                     Person.preyNeedCounter++;
                 }
             } else {

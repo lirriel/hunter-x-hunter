@@ -4,8 +4,8 @@
             <b-col sm="4">
                 <app-controller
                         :is-running="isRunning"
-                        @send="delegate($event)"
                         @params="onParams"
+                        @send="delegate($event)"
                         @type="onModelType"
                         style="height: 500px; margin-left: 40px"
                 ></app-controller>
@@ -13,19 +13,21 @@
             <b-col sm="8">
                 <transition mode="out-in" name="fade">
                     <app-grid
-                            style="margin-right: 40px"
                             :current-speed="speed"
                             :import-token="importToken"
                             :message="message"
                             :params="params"
-                            @series="onSeries"/>
+                            @series="onSeries"
+                            style="margin-right: 40px"/>
                 </transition>
                 <b-tabs style="width: 700px">
-                    <b-tab title="Size change" active>
-                        <basic-chart-box :chart-options="chartOptions" :series="series" id="simulationSeries"/>
+                    <b-tab active title="Size change">
+                        <basic-chart-box :chart-options="chartOptions" :series="series"
+                                         id="simulationSeries"/>
                     </b-tab>
                     <b-tab title="Behaviour">
-                        <behaviour-diargam :series="seriesBehave" id="simulationBehave"></behaviour-diargam>
+                        <behaviour-diargam :series="seriesBehave"
+                                           id="simulationBehave"></behaviour-diargam>
                     </b-tab>
                 </b-tabs>
             </b-col>
