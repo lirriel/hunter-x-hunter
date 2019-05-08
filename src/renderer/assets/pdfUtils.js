@@ -8,8 +8,7 @@ export function saveIdAsPdf(id, filename, modelType, currentParams, compareId, b
     let pdf = new jsPDF.jsPDF('portrait', 'mm', 'a4');
     pdfW = pdf.internal.pageSize.width;
     pdf.setFontSize(20);
-    let pdfH = pdf.internal.pageSize.height;
-    var y = 25;
+    let y = 25;
     pdf.text(35, y, 'Predator-prey model results');
     y += 10;
     pdf.setFontSize(12);
@@ -172,6 +171,31 @@ export function saveExperimentPdf(currentParams, idSeries, idBehave, idTable) {
     });
 }
 
+export function saveSimulationExperimentPdf(filename, id, parameters, parameter) {
+    let pdf = new jsPDF.jsPDF('portrait', 'mm', 'a4');
+    pdfW = pdf.internal.pageSize.width;
+    pdf.setFontSize(20);
+    let y = 25;
+    pdf.text(35, y, 'Predator-prey model simulation');
+    y += 10;
+    pdf.setFontSize(10);
+    pdf.text(10, y, pdf.splitTextToSize(getParamsText("Simulation", parameters)
+         + " Changing parameter " + parameter + ".", MAX_WIDTH));
+    y += у0;
+
+    html2canvas(document.querySelector("#"+id), {
+        imageTimeout: 10000,
+        useCORS: true
+    }).then(canvas => {
+        document.getElementById('pdf').appendChild(canvas);
+        let img = canvas.toDataURL('image/png');
+        let scale = getScale(canvas, pdfW, pdf.internal.pageSize.height);
+        pdf.addImage(img, 'JPEG', 25, y, scale * canvas.clientWidth, scale * canvas.clientHeight);
+        pdf.save(filename + '.pdf');
+        document.getElementById('pdf').innerHTML = '';
+    })
+}
+
 export function getParamsText(modelType, currentParams) {
     let params = "";
     for (let key in currentParams) {
@@ -187,4 +211,14 @@ export function roundArray(sampleArray) {
             return Number(each_element.toFixed(2));
         });
     } else return []
+}
+
+function getScale(canvas, w, h) {
+    let scale = 1;
+    if (canvas.clientHeight > canvas.clientWidth) {
+        scale = (h - 50) / canvas.clientHeight;
+    } else {
+        scale = (w - 50) / canvas.clientWidth;
+    }
+    return scale
 }

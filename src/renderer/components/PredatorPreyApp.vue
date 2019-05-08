@@ -14,7 +14,6 @@
                 <transition mode="out-in" name="fade">
                     <app-grid
                             :current-speed="speed"
-                            :import-token="importToken"
                             :message="message"
                             :params="params"
                             @series="onSeries"
@@ -32,6 +31,7 @@
                 </b-tabs>
             </b-col>
         </b-row>
+        <simulation-experiment :simulation-params="params"/>
     </div>
 </template>
 
@@ -42,6 +42,7 @@
     import {clearInterval, setInterval} from 'timers';
     import BasicChartBox from "./diagrams/BasicChartBox"
     import BehaviourDiargam from './diagrams/BehaviourDiargam'
+    import SimulationExperiment from './simulation/SimulationExperiment'
 
     export default {
         name: 'PredatorPreyApp',
@@ -49,7 +50,8 @@
             'app-grid': Grid,
             'app-controller': Controller,
             BasicChartBox,
-            BehaviourDiargam
+            BehaviourDiargam,
+            SimulationExperiment
         },
         data() {
             return {
@@ -57,7 +59,34 @@
                 modelType: '',
                 importToken: '',
                 exportToken: '',
-                params: null,
+                params: {
+                    preyLifespan: 60,
+                    preyAdulthoodAge: 3,
+                    preyBirthPeriod: 2,
+
+                    predatorLifespan: 100,
+                    predatorAdulthoodAge: 5,
+                    predatorBirthPeriod: 1,
+                    predatorFeedPreyCount: 2,
+
+                    hungerSteps: 8,
+                    ///////////////////////////////////////////////////////////////////////////
+                    isAliveProbability: 0.4,
+                    isPredatorProbability: 0.2,
+                    isHumanProbability: 0.02,
+                    isHumanRequired: false,
+
+                    killPredatorPriority: 0.2,
+                    killPreyPriority: 0.1,
+                    killRange: 12,
+                    noticeOrganismRange: 20,
+                    preyNeedLimit: 10,
+                    preyNeedStepsLimit: 12,
+
+                    ////////////////////////////////////////////////////////////////////////////
+                    width: 40,
+                    height: 20,
+                },
 
                 isRunning: false,
                 isNavbar: false,

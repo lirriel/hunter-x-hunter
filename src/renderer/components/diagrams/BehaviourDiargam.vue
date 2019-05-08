@@ -29,6 +29,9 @@
                             enabled: true
                         },
                     },
+                    dataLabels: {
+                        enabled: false
+                    },
                     xaxis: {
                         title: {
                             text: this.x,
@@ -47,9 +50,6 @@
                             }
                         }
                     },
-                    dataLabels: {
-                        enabled: false
-                    },
                     fill: {
                         type: 'gradient',
                         gradient: {
@@ -61,8 +61,8 @@
                         },
                     },
                     tooltip: {
-                        shared: false,
-                        intersect: true,
+                        x: {},
+                        y: {}
                     },
                     legend: {
                         position: 'top',

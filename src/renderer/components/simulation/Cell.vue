@@ -27,7 +27,7 @@
                 type: Object,
             },
             isMouseDown: {
-                default: false,
+                default: true,
                 type: Boolean,
             },
         },

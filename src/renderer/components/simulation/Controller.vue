@@ -320,11 +320,19 @@
                 }
             };
         },
+        watch: {
+            simulationParams: function (data) {
+                this.updateParams();
+            }
+        },
         methods: {
             send: function (event) {
                 this.$emit('send', event);
-                this.$emit('params', this.simulationParams);
+                this.updateParams();
             },
+            updateParams() {
+                this.$emit('params', this.simulationParams);
+            }
         },
     };
 </script>

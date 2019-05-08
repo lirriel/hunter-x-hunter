@@ -1,17 +1,13 @@
 <template>
     <div>
-        <b-col>
+        <b-col v-if="showGreed">
             <app-stats
                     :cell-count="cellCount"
                     :cells-alive="cellsAlive"
                     :cells-created="cellsCreated"
                     :current-speed="currentSpeed"
                     :current-tick="currentTick"/>
-            <div
-                    @mousedown="isMouseDown = true"
-                    @mouseleave="isMouseDown = false"
-                    @mouseup="isMouseDown = false"
-                    class="grid columns">
+            <div class="grid columns">
                 <div
                         :key="indexX"
                         class="column"
@@ -51,14 +47,14 @@
             params: {
                 type: Object
             },
-            importToken: {
-                default: '',
-                type: String,
-            },
             currentSpeed: {
                 default: 0,
                 type: Number,
             },
+            showGreed: {
+                type: Boolean,
+                default: true
+            }
         },
         data() {
             return {
@@ -99,7 +95,7 @@
                 cellsCreated: 0,
 
                 // A prop that gets used by the app-cell component (drag)
-                isMouseDown: false,
+                isMouseDown: true,
 
                 isHumanRequired: false,
 
@@ -137,7 +133,11 @@
         },
         methods: {
             startGrid: function () {
+                this.dataPredator = [];
+                this.dataPrey = [];
+                this.dataBehave = [];
                 this.gridListOrg = [];
+
                 for (let i = 0; i < this.simulationParams.width; i++) {
                     this.gridListOrg[i] = [];
                     for (let j = 0; j < this.simulationParams.height; j++) {
@@ -217,9 +217,11 @@
                 this.seriesBehave = [];
                 this.dataPrey = [];
                 this.dataPredator = [];
-                this.dataHuman = [];
                 this.dataBehave = [];
-                this.$emit('series', {series: this.series, seriesBehave: this.seriesBehave});
+                this.getGrid();
+                if (this.showGreed) {
+                    this.$emit('series', {series: this.series, seriesBehave: this.seriesBehave});
+                }
             },
             randomSeed: function () {
                 this.organisms = [];
