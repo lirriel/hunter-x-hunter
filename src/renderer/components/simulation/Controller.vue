@@ -43,7 +43,7 @@
 
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-human-check">Add human</label>
+                            <label for="input-human-check">Add human role</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-checkbox id="input-human-check"
@@ -64,7 +64,7 @@
 
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-preyLifespan">prey Lifespan</label>
+                            <label for="input-preyLifespan">Prey Lifespan</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-preyLifespan" max="1000.00" min="0.00"
@@ -74,7 +74,7 @@
                     </b-row>
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-preyAdulthoodAge">prey Adulthood Age</label>
+                            <label for="input-preyAdulthoodAge">Prey Adulthood Age</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-preyAdulthoodAge" max="1000.00" min="0.00"
@@ -84,7 +84,7 @@
                     </b-row>
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-preyBirthPeriod">prey Birth Period</label>
+                            <label for="input-preyBirthPeriod">Prey Birth Period</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-preyBirthPeriod" max="1000.00" min="0.00"
@@ -94,7 +94,7 @@
                     </b-row>
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-predatorLifespan">predator Lifespan</label>
+                            <label for="input-predatorLifespan">Predator Lifespan</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-predatorLifespan" max="1000.00" min="0.00"
@@ -104,7 +104,7 @@
                     </b-row>
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-predatorAdulthoodAge">predator Adulthood Age</label>
+                            <label for="input-predatorAdulthoodAge">Predator Adulthood Age</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-predatorAdulthoodAge" max="1000.00" min="0.00"
@@ -114,7 +114,7 @@
                     </b-row>
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-predatorBirthPeriod">predator Birth Period</label>
+                            <label for="input-predatorBirthPeriod">Predator Birth Period</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-predatorBirthPeriod" max="1000.00" min="0.00"
@@ -124,7 +124,7 @@
                     </b-row>
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-predatorFeedPreyCount">predator Feed Prey
+                            <label for="input-predatorFeedPreyCount">Predator Feed Prey
                                 Count</label>
                         </b-col>
                         <b-col sm="6">
@@ -135,7 +135,7 @@
                     </b-row>
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-hungerSteps">hunger Steps</label>
+                            <label for="input-hungerSteps">Predator Hunger Steps</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-hungerSteps" max="1000.00" min="0.00"
@@ -147,7 +147,7 @@
                 <b-tab title="Human parameters">
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-killPredatorPriority">kill predator priority</label>
+                            <label for="input-killPredatorPriority">Kill Predator Priority</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-killPredatorPriority" max="1000.00" min="0.00"
@@ -159,7 +159,7 @@
 
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-killPreyPriority">kill Prey Priority</label>
+                            <label for="input-killPreyPriority">Kill Prey Priority</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-killPreyPriority" max="1000.00" min="0.00"
@@ -170,7 +170,7 @@
 
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-killRange">kill range</label>
+                            <label for="input-killRange">Kill Range</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-killRange" max="1000.00" min="0.00"
@@ -181,7 +181,7 @@
 
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-noticeOrganismRange">notice organism range</label>
+                            <label for="input-noticeOrganismRange">Notice Animal Range</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-noticeOrganismRange" max="1000.00" min="0.00"
@@ -192,7 +192,7 @@
 
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-preyNeedLimit">prey need limit</label>
+                            <label for="input-preyNeedLimit">Prey Need Limit</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-preyNeedLimit" max="1000.00" min="0.00"
@@ -202,7 +202,7 @@
                     </b-row>
                     <b-row class="my-1">
                         <b-col sm="6">
-                            <label for="input-preyNeedStepsLimit">prey need steps limit</label>
+                            <label for="input-preyNeedStepsLimit">Prey Need Steps Limit</label>
                         </b-col>
                         <b-col sm="6">
                             <b-form-input id="input-preyNeedStepsLimit" max="1000.00" min="0.00"
@@ -213,70 +213,69 @@
                 </b-tab>
             </b-tabs>
         </b-row>
+        <vs-divider/>
         <b-row>
-            <b-col>
-                <div>
-                    <b-row style="margin-top: 10px;">
-                        <b-button
-                                class="button"
-                                v-on:click="send('slowDown')"
-                                variant="outline-primary"
-                        >
-                            Slow down
-                        </b-button>
-                        <br>
-                        <b-button
-                                class="button"
-                                v-on:click="send('play')"
-                                variant="outline-primary"
-                        >
-                            <div v-if="isRunning">Stop</div>
-                            <div v-if="!isRunning">Play</div>
-                        </b-button>
-                        <br>
-                        <b-button
-                                class="button"
-                                v-on:click="send('redoSession')"
-                                variant="outline-primary"
-                        >
-                            Clear grid
-                        </b-button>
-                        <br>
-                        <b-button
-                                class="button"
-                                v-on:click="send('nextStep')"
-                                variant="outline-primary"
-                        >
-                            Next step
-                        </b-button>
-                        <br>
-                        <b-button
-                                class="button"
-                                v-on:click="send('speedUp')"
-                                variant="outline-primary"
-                        >
-                            Speed up
-                        </b-button>
-                        <br>
-                        <b-button
-                                class="button"
-                                v-on:click="send('randomSeed')"
-                                variant="outline-primary"
-                        >
-                            Random seed
-                        </b-button>
-                        <br>
-                        <b-button
-                                class="button"
-                                v-on:click="send('saveData')"
-                                variant="outline-warning"
-                        >
-                            Save xlsx
-                        </b-button>
-                    </b-row>
-                </div>
-            </b-col>
+            <b-row>
+                <b-button
+                        class="button"
+                        v-on:click="send('randomSeed')"
+                        variant="outline-primary"
+                        style="color:#883157;"
+                >
+                    Random seed
+                </b-button>
+                <b-button
+                        class="button"
+                        v-on:click="send('play')"
+                        variant="outline-primary"
+                >
+                    <div v-if="isRunning">Stop</div>
+                    <div v-if="!isRunning">Play</div>
+                </b-button>
+                <b-button
+                        class="button"
+                        v-on:click="send('nextStep')"
+                        variant="outline-primary"
+                        style="color:#47886f;"
+                >
+                    Next step
+                </b-button>
+            </b-row>
+            <vs-divider/>
+            <b-row>
+                <b-button
+                        class="button"
+                        v-on:click="send('slowDown')"
+                        variant="outline-primary"
+                >
+                    Slow down
+                </b-button>
+                <b-button
+                        class="button"
+                        v-on:click="send('speedUp')"
+                        variant="outline-primary"
+                >
+                    Speed up
+                </b-button>
+                <b-button
+                        class="button"
+                        v-on:click="send('redoSession')"
+                        variant="outline-primary"
+                >
+                    Clear grid
+                </b-button>
+            </b-row>
         </b-row>
+        <vs-divider/>
+        <b-col>
+            <b-button
+                    class="button"
+                    v-on:click="send('saveData')"
+                    variant="outline-warning"
+            >
+                Save xlsx
+            </b-button>
+        </b-col>
     </div>
 </template>
 
@@ -340,12 +339,11 @@
 <style scoped>
     .button {
         margin-right: 10px;
-        margin-bottom: 5px;
     }
 
     label {
         font-size: smaller;
-        font-family: "Bookman Old Style";
+        font-family: "Bookman Old Style",serif;
         margin-bottom: 0;
     }
 

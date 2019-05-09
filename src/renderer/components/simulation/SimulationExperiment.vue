@@ -1,70 +1,59 @@
 <template>
     <div style="margin-bottom: 100px">
-        <b-button style="width: 100%" v-b-toggle.collapse variant="danger">Comparison experiment
+        <b-button style="width: 100%" v-b-toggle.collapse variant="outline-danger">
+            Comparison experiment
         </b-button>
         <b-collapse id="collapse" invisible>
             <b-card>
+                <b-row style="margin-left: 10px">
+                    <vs-select label="Model property"
+                               v-model="currentParam"
+                    >
+                        <vs-select-item :key="i" :text="item" :value="item"
+                                        v-for="(item, i) in Object.keys(simulationParams)"/>
+                    </vs-select>
+                </b-row>
+                <vs-divider/>
                 <b-row style="margin-top: 20px;">
-                    <b-form-select :options="Object.keys(simulationParams)"
-                                   style="margin-bottom: 20px"
-                                   v-model="currentParam"/>
                     <b-col>
-                        <label>Start value</label>
-                        <b-form-input max="1000.00" min="0.00" placeholder="Start value"
-                                      step="0.0001"
-                                      type="number"
-                                      v-model.number="min"/>
+                        <vs-input label="Start value" placeholder="0" type="number" v-model="min"/>
                     </b-col>
                     <b-col>
-                        <label>Max value</label>
-                        <b-form-input max="1000.00" min="0.00" placeholder="Max value"
-                                      step="0.0001"
-                                      type="number"
-                                      v-model.number="max"/>
+                        <vs-input label="Max value" placeholder="1" type="number" v-model="max"/>
                     </b-col>
                     <b-col>
-                        <label>Step</label>
-                        <b-form-input max="1000.00" min="0.0000" placeholder="step"
-                                      step="0.000001"
-                                      type="number"
-                                      v-model.number="step"/>
-                    </b-col>
-
-                    <b-col>
-                        <label>Prey min count</label>
-                        <b-form-input max="1000.00" min="0.0000" placeholder="step"
-                                      step="0.000001"
-                                      type="number"
-                                      v-model.number="preyMinCount"/>
-                    </b-col>
-
-                    <b-col>
-                        <label>Prey max count</label>
-                        <b-form-input max="1000.00" min="0.0000" placeholder="step"
-                                      step="0.000001"
-                                      type="number"
-                                      v-model.number="preyMaxCount"/>
-                    </b-col>
-
-                    <b-col>
-                        <label>Timer</label>
-                        <b-form-input max="1000.00" min="0.0000" placeholder="15 ticks"
-                                      step="0.000001"
-                                      type="number"
-                                      v-model.number="maxTick"/>
+                        <vs-input label="Step" placeholder="1" type="number" v-model="step"/>
                     </b-col>
                     <b-col>
+                        <vs-input label="Prey min count" placeholder="1" type="number"
+                                  v-model="preyMinCount"/>
+                    </b-col>
+                    <b-col>
+                        <vs-input label="Prey max count" placeholder="1" type="number"
+                                  v-model="preyMaxCount"/>
+                    </b-col>
+                    <b-col>
+                        <vs-input label="Number of ticks" placeholder="1" type="number"
+                                  v-model="maxTick"/>
+                    </b-col>
+                </b-row>
+                <vs-divider/>
+                <b-row style="padding-top: 10px">
+                    <b-col sm="4">
                         <b-button v-on:click="start" variant="outline-primary">Start</b-button>
                         <b-button v-on:click="savePdf" variant="outline-primary">Save pdf</b-button>
-                        <b-button v-on:click="saveXlsx" variant="outline-primary">Save data
+                        <b-button v-on:click="saveXlsx" variant="outline-primary">
+                            Save data
                         </b-button>
                     </b-col>
                 </b-row>
-                <b-row v-if="showSpinner">
-                    <b-spinner label="Spinning" type="grow"></b-spinner>
+                <vs-divider/>
+                <b-row style="margin: 5px;" v-if="showSpinner">
+                    <b-spinner label="Spinning" type="grow"/>
                 </b-row>
+                <vs-divider v-if="showSpinner"/>
                 <b-row id="gameHumanExp" v-if="!showSpinner">
-                    <b-col v-for="(value, ind) in valueArray">
+                    <b-col :key="ind" v-for="(value, ind) in valueArray">
                         <label>{{currentParam}} = {{value}}</label>
                         <label>Longest period = {{maxTimeBetweenValues[ind][0]}}</label>
                         <br>
@@ -73,56 +62,69 @@
                                          style="width: 700px"/>
                     </b-col>
                 </b-row>
+                <vs-divider/>
                 <b-col>
                     <b-row>
-                        <b-button v-on:click="getHumanInteractionEvaluation">Start exp</b-button>
+                        <vs-input label="Minimum time threshold" placeholder="0"
+                                  type="number" v-model="maxTimeThreshold"/>
                     </b-row>
-                    <b-row>
-                        <label>Is finished: {{isExperimentFinished}}</label>
-                    </b-row>
-                    <b-progress :max="experimentMaxCount" height="20px" width="500px">
-                        <b-progress-bar :value="experimentCount">
-                            Progress: <strong>{{ experimentCount.toFixed(2) }} / {{
-                            experimentMaxCount}}</strong>
+                    <vs-divider/>
+                    <b-progress :max="experimentMaxCount" height="30px" width="500px">
+                        <b-progress-bar :max="experimentMaxCount" :value="experimentCount">
+                            Progress: <strong>{{ experimentCount}} / {{experimentMaxCount}}</strong>
                         </b-progress-bar>
                     </b-progress>
+                    <vs-divider/>
                     <b-row>
-                        <b-col v-for="p in params">
-                            <label>{{p.name}} min</label>
-                            <b-form-input max="1000.00" min="0.0000" placeholder="step"
-                                          step="0.000001"
-                                          type="number"
-                                          v-model.number="p.min"/>
-                            <label>{{p.name}} max</label>
-                            <b-form-input max="1000.00" min="0.0000" placeholder="step"
-                                          step="0.000001"
-                                          type="number"
-                                          v-model.number="p.max"/>
-                            <label>{{p.name}} step</label>
-                            <b-form-input max="1000.00" min="0.0000" placeholder="step"
-                                          step="0.000001"
-                                          type="number"
-                                          v-model.number="p.step"/>
+                        <b-button v-on:click="getHumanInteractionEvaluation"
+                                  variant="outline-warning">
+                            Start experiment
+                        </b-button>
+                        <b-button style="margin-left: 20px" v-on:click="stopExperiment"
+                                  variant="outline-danger">
+                            Stop running
+                        </b-button>
+                        <b-button style="margin-left: 20px" v-on:click="saveTableData"
+                                  variant="outline-danger">
+                            Save results table
+                        </b-button>
+                    </b-row>
+                    <vs-divider/>
+                    <b-row>
+                        <b-col :key="i" v-for="(p, i) in params">
+                            <b-form-checkbox v-model="p.active">
+                                {{p.name}}
+                            </b-form-checkbox>
+                            <div v-if="p.active">
+                                <vs-input label="Min" placeholder="0" type="number"
+                                          v-model="p.min"/>
+                                <vs-input label="Max" placeholder="0" type="number"
+                                          v-model="p.max"/>
+                                <vs-input label="Step" placeholder="0" type="number"
+                                          v-model="p.step"/>
+                            </div>
                         </b-col>
-
                     </b-row>
                 </b-col>
-                <b-col>
-                    <label>Minimum threshold</label>
-                    <b-form-input max="1000.00" min="0.0000" placeholder="step"
-                                  step="0.000001"
-                                  type="number"
-                                  v-model.number="maxTimeThreshold"/>
-                </b-col>
-                <div style="color:#000;">
+                <vs-divider/>
+                <b-row style="color:#000;">
                     <b-table :fields="fields" :items="items" hover/>
-                </div>
-                <div>
-                    <b-form-input type="number" v-model.number="getChartInd"/>
-                    <!--<b-button v-on:click="getSeriesHuman(getChartInd)">Get chart</b-button>-->
-                    <!--<basic-chart-box :series="getSeriesHuman(getChartInd)"-->
-                    <!--:chart-options="chartOptions"/>-->
-                </div>
+                </b-row>
+                <b-row v-if="isExperimentFinished">
+                    <vs-input label="Chart id" placeholder="0" type="number"
+                              v-model="getChartInd"/>
+                </b-row>
+                <b-row v-if="isExperimentFinished">
+                    <b-button style="width: 40px" v-on:click="getSeriesHuman(getChartInd)">Get
+                        chart
+                    </b-button>
+                    <b-button style="width: 40px" v-on:click="saveChartData(getChartInd)">Save
+                        chart
+                        data
+                    </b-button>
+                    <basic-chart-box :chart-options="chartOptions" :series="experimentSeries"
+                                     id="experimentHumanChart"/>
+                </b-row>
                 <div id="pdf"></div>
             </b-card>
         </b-collapse>
@@ -152,7 +154,8 @@
         },
         watch: {
             simulationParams: function (data) {
-                this.showSpinner = true;
+                // todo: workaround
+                this.showSpinner = false;
             }
         },
         data() {
@@ -294,32 +297,35 @@
                     },
                 },
                 params: [
-                    {name: "killPredatorPriority", min: 0.1, max: 1, step: 0.1},
-                    {name: "killPreyPriority", min: 0.1, max: 1, step: 0.1},
+                    {name: "killPredatorPriority", min: 0.1, max: 1, step: 0.1, active: false},
+                    {name: "killPreyPriority", min: 0.1, max: 1, step: 0.1, active: false},
                     {
                         name: "killRange",
                         min: 1,
                         max: 7,
                         // max: Math.max(this.simulationParams.width, this.simulationParams.height),
-                        step: 1
+                        step: 1,
                         // step: Math.max(this.simulationParams.width, this.simulationParams.height) / 10
-
+                        active: false
                     },
                     {
                         name: "noticeOrganismRange",
                         min: 5,
                         max: 6,
                         // max: Math.max(this.simulationParams.width, this.simulationParams.height),
-                        step: 1
+                        step: 1,
                         // step: Math.max(this.simulationParams.width, this.simulationParams.height) / 10
+                        active: false
                     },
-                    {name: "preyNeedLimit", min: 4, max: 5, step: 1},
-                    {name: "preyNeedStepsLimit", min: 4, max: 5, step: 1}
+                    {name: "preyNeedLimit", min: 4, max: 5, step: 1, active: false},
+                    {name: "preyNeedStepsLimit", min: 4, max: 5, step: 1, active: false}
                 ],
                 maxTimeBetweenValues: [],
                 experimentHuman: [],
                 experimentMaxCount: 0,
+                experimentSeries: [],
                 experimentCount: 0,
+                experimentRun: false,
                 getChartInd: 0,
                 isExperimentFinished: false,
                 maxTimeOverall: [],
@@ -367,6 +373,33 @@
             }
         },
         methods: {
+            saveTableData() {
+                var wb = createWorkbook();
+                var data = [Object.keys(this.fields)];
+                for (let i = 0; i < this.items.length; i++) {
+                    data.push(Object.values(this.items[i]));
+                }
+                wb = createWorkSheet(wb, data, "human-interaction-threshold" + this.maxTimeThreshold);
+                data = [Object.keys(this.simulationParams), Object.values(this.simulationParams)];
+                wb = createWorkSheet(wb, data, "original-params");
+                saveWorkbook("humanInteractionExperiment", wb);
+            },
+            saveChartData(ind) {
+                var wb = createWorkbook();
+                for (let j = 0; j < this.seriesArray[ind].length; j++) {
+                    var series = this.seriesArray[ind][j];
+                    var data = Array.from(series.data);
+                    data.splice(0, 0, [series.name, "time"]);
+                    wb = createWorkSheet(wb, data, series.name + "_" + i + "");
+                }
+                saveWorkbook("predatorPreySimulationExperiment", wb);
+            },
+            stopExperiment() {
+                this.experimentRun = false;
+                this.experimentSeries = this.experimentHuman = [];
+                this.experimentMaxCount = this.experimentCount = 0;
+                this.isExperimentFinished = true;
+            },
             start() {
                 this.showSpinner = true;
                 this.valueArray = [];
@@ -411,7 +444,7 @@
                 return maxT;
             },
             getSeriesHuman(ind) {
-                return this.experimentHuman[ind];
+                this.experimentSeries = this.experimentHuman[ind];
             },
             getOverallTimeBetween(arr, min, max) {
                 return arr.filter(function (el) {
@@ -444,90 +477,51 @@
                 })
             },
             getHumanInteractionEvaluation() {
+                this.experimentRun = true;
                 this.isExperimentFinished = false;
                 this.maxTimeOverall = [];
                 this.items = [];
-                let parameters = this.simulationParams;
                 this.experimentCount = 0;
                 this.experimentMaxCount = 1;
                 for (let q = 0; q < this.params.length; q++) {
-                    this.experimentMaxCount *= ((this.params[q].max - this.params[q].min) / this.params[q].step + 1)
-
+                    if (this.params[q].active === true) {
+                        this.experimentMaxCount *= (this.params[q].max - this.params[q].min + this.params[q].step) / this.params[q].step
+                    }
                 }
-                console.log(this.experimentMaxCount);
-                for (let j = this.params[0].min; j < this.params[0].max; j += this.params[0].step) {
-                    for (let j1 = this.params[1].min; j1 < this.params[1].max; j1 += this.params[1].step) {
-                        for (let j2 = this.params[2].min; j2 < this.params[2].max; j2 += this.params[2].step) {
-                            for (let j3 = this.params[3].min; j3 < this.params[3].max; j3 += this.params[3].step) {
-                                for (let j4 = this.params[4].min; j4 < this.params[4].max; j4 += this.params[4].step) {
-                                    for (let j5 = this.params[5].min; j5 < this.params[5].max; j5 += this.params[5].step) {
-                                        parameters[this.params[0].name] = j;
-                                        parameters[this.params[1].name] = j1;
-                                        parameters[this.params[2].name] = j2;
-                                        parameters[this.params[3].name] = j3;
-                                        parameters[this.params[4].name] = j4;
-                                        parameters[this.params[5].name] = j5;
-                                        let rndSeed = this.randomSeed;
-                                        let upd = this.update;
-                                        let tick = this.maxTick;
-                                        new Promise(function (resolve, reject) {
-                                            setTimeout(() => {
-                                                let p = parameters;
-                                                let dataPrey = [];
-                                                let dataPredator = [];
-                                                let organisms = [];
-                                                organisms = rndSeed(p, organisms);
-                                                for (let j = 0; j < tick; j++) {
-                                                    let update = upd(organisms, p);
-                                                    dataPrey.push([j, update[0]]);
-                                                    dataPredator.push([j, update[1]]);
-                                                }
-                                                let series = [
-                                                    {name: "Prey population", data: dataPrey},
-                                                    {
-                                                        name: "Predator population",
-                                                        data: dataPredator
-                                                    }
-                                                ];
-                                                resolve(series);
-                                            }, 500);
-                                        }).then((series) => {
-                                            this.experimentHuman.push(series);
-                                            let t = this.getOverallTimeBetween(
-                                                series[0].data,
-                                                this.preyMinCount,
-                                                this.preyMaxCount
-                                            );
-                                            let t1 = this.getMaxTimeBetween(
-                                                series[0].data,
-                                                this.preyMinCount,
-                                                this.preyMaxCount
-                                            );
-                                            if (t >= this.maxTimeThreshold
-                                                && t1 >= this.maxTimeThreshold) {
-                                                this.maxTimeOverall.push(t);
-                                                this.items.push({
-                                                    index: this.experimentCount,
-                                                    killPredatorPriority: j,
-                                                    killPreyPriority: j1,
-                                                    killRange: j2,
-                                                    noticeOrganismRange: j3,
-                                                    preyNeedLimit: j4,
-                                                    preyNeedStepsLimit: j5,
-                                                    maxOverallTime: t,
-                                                    longestMax: t1
-                                                })
-                                            }
-                                            console.log(this.experimentCount);
-                                            this.experimentCount++;
-                                            if (this.experimentCount >= this.experimentMaxCount) {
-                                                this.isExperimentFinished = true;
-                                            }
-                                        })
+                this.getRecParams(0, []);
+                /*for (let j = this.params[0].min; j <= this.params[0].max; j += this.params[0].step) {
+                    for (let j1 = this.params[1].min; j1 <= this.params[1].max; j1 += this.params[1].step) {
+                        for (let j2 = this.params[2].min; j2 <= this.params[2].max; j2 += this.params[2].step) {
+                            for (let j3 = this.params[3].min; j3 <= this.params[3].max; j3 += this.params[3].step) {
+                                for (let j4 = this.params[4].min; j4 <= this.params[4].max; j4 += this.params[4].step) {
+                                    for (let j5 = this.params[5].min; j5 <= this.params[5].max; j5 += this.params[5].step) {
+                                        if (this.experimentRun === false) {
+                                            return;
+                                        }
+                                        runSimulationExperiment.call(this, parameters, j, j1, j2, j3, j4, j5);
                                     }
                                 }
                             }
                         }
+                    }
+                }*/
+            },
+            getRecParams(i, paramsArr) {
+                if (i === this.params.length - 1) {
+                    runSimulationExperiment.call(this, this.simulationParams, [...paramsArr]);
+                    return;
+                }
+                if (i < this.params.length - 1) {
+                    if (this.params[i].active === true) {
+                        for (let j = this.params[i].min; j <= this.params[i].max; j += this.params[i].step) {
+                            let arr = [...paramsArr];
+                            arr.push(j);
+                            this.getRecParams(i + 1, arr);
+                        }
+                    } else {
+                        let arr = [...paramsArr];
+                        arr.push(null);
+                        this.getRecParams(i + 1, arr);
                     }
                 }
             },
@@ -551,7 +545,8 @@
                     }
                 }
                 return this.getGrid(organisms);
-            },
+            }
+            ,
             getGrid: function (organisms) {
                 let countPrey = 0;
                 let countPredator = 0;
@@ -569,7 +564,8 @@
                 }
 
                 return [countPrey, countPredator, countHuman]
-            },
+            }
+            ,
             randomSeed: function (params, organisms) {
                 organisms = [];
                 Person.setPreyNeedLimit(params.preyNeedLimit);
@@ -631,6 +627,74 @@
             }
         }
     }
+
+    function runSimulationExperiment(parameters, arr) {
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i]) {
+                parameters[this.params[i].name] = arr[i];
+            }
+        }
+        let rndSeed = this.randomSeed;
+        let upd = this.update;
+        let tick = this.maxTick;
+        let isAlive = this.experimentRun;
+        let p = new Promise(function (resolve, reject) {
+            setTimeout(() => {
+                let p = parameters;
+                let dataPrey = [];
+                let dataPredator = [];
+                let organisms = [];
+                organisms = rndSeed(p, organisms);
+                for (let j = 0; j < tick && isAlive; j++) {
+                    let update = upd(organisms, p);
+                    dataPrey.push([j, update[0]]);
+                    dataPredator.push([j, update[1]]);
+                }
+                let series = [
+                    {name: "Prey population", data: dataPrey},
+                    {
+                        name: "Predator population",
+                        data: dataPredator
+                    }
+                ];
+                resolve(series);
+            }, 500);
+        });
+        p.then((series) => {
+            if (this.experimentRun === true) {
+                this.experimentHuman.push([...series]);
+                let t = this.getOverallTimeBetween(
+                    series[0].data,
+                    this.preyMinCount,
+                    this.preyMaxCount
+                );
+                let t1 = this.getMaxTimeBetween(
+                    series[0].data,
+                    this.preyMinCount,
+                    this.preyMaxCount
+                );
+                if (t >= this.maxTimeThreshold
+                    && t1 >= this.maxTimeThreshold) {
+                    this.maxTimeOverall.push(t);
+                    this.items.push({
+                        index: this.experimentCount.toFixed(2),
+                        killPredatorPriority: parameters[this.params[0].name].toFixed(2),
+                        killPreyPriority: parameters[this.params[1].name].toFixed(2),
+                        killRange: parameters[this.params[2].name].toFixed(2),
+                        noticeOrganismRange: parameters[this.params[3].name].toFixed(2),
+                        preyNeedLimit: parameters[this.params[4].name].toFixed(2),
+                        preyNeedStepsLimit: parameters[this.params[5].name].toFixed(2),
+                        maxOverallTime: t,
+                        longestMax: t1
+                    })
+                }
+                this.experimentCount++;
+                if (this.experimentCount >= this.experimentMaxCount) {
+                    this.isExperimentFinished = true;
+                }
+            }
+        })
+    }
 </script>
 
 <style scoped>
@@ -639,5 +703,9 @@
         width: 60px;
         height: 60px;
         margin: 20px auto;
+    }
+
+    .vs-input, .vs-select {
+        color: black;
     }
 </style>

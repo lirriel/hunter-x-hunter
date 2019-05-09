@@ -17,9 +17,14 @@ import VueP5 from 'vue-p5';
 import jsPDF from 'jspdf';
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
+import '@mdi/font/css/materialdesignicons.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import VueDragResize from 'vue-drag-resize'
 import VModal from 'vue-js-modal'
+import Vuesax from 'vuesax'
+import 'vuesax/dist/vuesax.css' //Vuesax styles
 
+Vue.use(Vuesax);
 Vue.use(VModal);
 Vue.component('vue-drag-resize', VueDragResize);
 Vue.use(PerfectScrollbar);

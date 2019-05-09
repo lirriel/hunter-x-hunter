@@ -19,7 +19,7 @@
                             @series="onSeries"
                             style="margin-right: 40px"/>
                 </transition>
-                <b-tabs style="width: 700px">
+                <b-tabs style="width: 900px; margin-top: 20px">
                     <b-tab active title="Size change">
                         <basic-chart-box :chart-options="chartOptions" :series="series"
                                          id="simulationSeries"/>
@@ -74,7 +74,7 @@
                     isAliveProbability: 0.4,
                     isPredatorProbability: 0.2,
                     isHumanProbability: 0.02,
-                    isHumanRequired: false,
+                    isHumanRequired: true,
 
                     killPredatorPriority: 0.2,
                     killPreyPriority: 0.1,
@@ -233,7 +233,7 @@
                 this.speed += speed;
                 if (this.speed < 20) {
                     this.speed = 20;
-                } else if (this.speed > 500) {
+                } else if (this.speed > 800) {
                     this.speed = 500;
                 }
             },
