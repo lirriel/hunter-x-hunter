@@ -75,7 +75,7 @@
                     isAliveProbability: 0.4,
                     isPredatorProbability: 0.2,
                     isHumanProbability: 0.01,
-                    isHumanRequired: false,
+                    isHumanRequired: true,
                     killPredatorPriority: 0.2,
                     killPreyPriority: 0.1,
                     killRange: 12,
@@ -90,18 +90,13 @@
                 organisms: [],
                 gridListOrg: [],
 
-                // Stats that get passed down to the app-stats component
                 currentTick: 0,
                 cellCount: 0,
                 cellsAlive: 0,
                 cellsCreated: 0,
 
-                // A prop that gets used by the app-cell component (drag)
                 isMouseDown: true,
 
-                isHumanRequired: false,
-
-                ////////////////////////////////////////////
                 series: [],
                 seriesBehave: [],
                 dataBehave: [],
@@ -191,6 +186,9 @@
                     }
                 }
 
+                if (this.currentTick === 0 && countPrey == 0 && countPredator === 0) {
+                    return;
+                }
                 this.dataPrey.push([this.currentTick, countPrey]);
                 this.dataPredator.push([this.currentTick, countPredator]);
                 this.dataBehave.push([countPrey, countPredator]);
@@ -222,6 +220,7 @@
                 this.dataPrey = [];
                 this.dataPredator = [];
                 this.dataBehave = [];
+                this.organisms = [];
                 this.getGrid();
                 if (this.showGreed) {
                     this.$emit('series', {series: this.series, seriesBehave: this.seriesBehave});

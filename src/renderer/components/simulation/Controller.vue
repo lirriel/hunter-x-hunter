@@ -214,18 +214,19 @@
             </b-tabs>
         </b-row>
         <vs-divider/>
-        <b-row>
+        <b-col>
             <b-row>
                 <b-button
                         class="button"
+                        style="color:#883157;"
                         v-on:click="send('randomSeed')"
                         variant="outline-primary"
-                        style="color:#883157;"
                 >
                     Random seed
                 </b-button>
                 <b-button
                         class="button"
+                        style="color: #ff3044"
                         v-on:click="send('play')"
                         variant="outline-primary"
                 >
@@ -234,14 +235,13 @@
                 </b-button>
                 <b-button
                         class="button"
+                        style="color:#16624e;"
                         v-on:click="send('nextStep')"
                         variant="outline-primary"
-                        style="color:#47886f;"
                 >
                     Next step
                 </b-button>
             </b-row>
-            <vs-divider/>
             <b-row>
                 <b-button
                         class="button"
@@ -265,16 +265,16 @@
                     Clear grid
                 </b-button>
             </b-row>
-        </b-row>
-        <vs-divider/>
-        <b-col>
-            <b-button
-                    class="button"
-                    v-on:click="send('saveData')"
-                    variant="outline-warning"
-            >
-                Save xlsx
-            </b-button>
+            <b-row>
+                <b-button
+                        class="button"
+                        style="color: darkolivegreen;"
+                        v-on:click="send('saveData')"
+                        variant="outline-primary"
+                >
+                    Save xlsx file
+                </b-button>
+            </b-row>
         </b-col>
     </div>
 </template>
@@ -339,11 +339,12 @@
 <style scoped>
     .button {
         margin-right: 10px;
+        margin-top: 5px;
     }
 
     label {
         font-size: smaller;
-        font-family: "Bookman Old Style",serif;
+        font-family: "Bookman Old Style", serif;
         margin-bottom: 0;
     }
 

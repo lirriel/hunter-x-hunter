@@ -63,31 +63,12 @@
                     </b-col>
                 </b-row>
                 <vs-divider/>
+                <label style="margin: 0 auto">Calculate for min-max evaluation</label>
+                <vs-divider/>
                 <b-col>
                     <b-row>
                         <vs-input label="Minimum time threshold" placeholder="0"
                                   type="number" v-model="maxTimeThreshold"/>
-                    </b-row>
-                    <vs-divider/>
-                    <b-progress :max="experimentMaxCount" height="30px" width="500px">
-                        <b-progress-bar :max="experimentMaxCount" :value="experimentCount">
-                            Progress: <strong>{{ experimentCount}} / {{experimentMaxCount}}</strong>
-                        </b-progress-bar>
-                    </b-progress>
-                    <vs-divider/>
-                    <b-row>
-                        <b-button v-on:click="getHumanInteractionEvaluation"
-                                  variant="outline-warning">
-                            Start experiment
-                        </b-button>
-                        <b-button style="margin-left: 20px" v-on:click="stopExperiment"
-                                  variant="outline-danger">
-                            Stop running
-                        </b-button>
-                        <b-button style="margin-left: 20px" v-on:click="saveTableData"
-                                  variant="outline-danger">
-                            Save results table
-                        </b-button>
                     </b-row>
                     <vs-divider/>
                     <b-row>
@@ -105,6 +86,30 @@
                             </div>
                         </b-col>
                     </b-row>
+                    <vs-divider/>
+                    <b-row>
+                        <b-button v-on:click="getHumanInteractionEvaluation"
+                                  variant="outline-warning">
+                            Start experiment
+                        </b-button>
+                        <b-button style="margin-left: 20px" v-on:click="stopExperiment"
+                                  variant="outline-danger">
+                            Stop running
+                        </b-button>
+                        <b-button style="margin-left: 20px" v-on:click="saveTableData"
+                                  variant="outline-danger">
+                            Save results table
+                        </b-button>
+                    </b-row>
+                    <vs-divider/>
+                    <b-row>
+                        <b-progress :max="experimentMaxCount" height="40px" style="width: 100%">
+                            <b-progress-bar :max="experimentMaxCount" :value="experimentCount">
+                                Progress: <strong>{{ experimentCount}} /
+                                {{experimentMaxCount}}</strong>
+                            </b-progress-bar>
+                        </b-progress>
+                    </b-row>
                 </b-col>
                 <vs-divider/>
                 <b-row style="color:#000;">
@@ -114,17 +119,23 @@
                     <vs-input label="Chart id" placeholder="0" type="number"
                               v-model="getChartInd"/>
                 </b-row>
-                <b-row v-if="isExperimentFinished">
-                    <b-button style="width: 40px" v-on:click="getSeriesHuman(getChartInd)">Get
-                        chart
-                    </b-button>
-                    <b-button style="width: 40px" v-on:click="saveChartData(getChartInd)">Save
-                        chart
-                        data
-                    </b-button>
-                    <basic-chart-box :chart-options="chartOptions" :series="experimentSeries"
-                                     id="experimentHumanChart"/>
-                </b-row>
+                <b-сol v-if="isExperimentFinished">
+                    <b-row style="margin-top: 10px">
+                        <b-button v-on:click="getSeriesHuman(getChartInd)"
+                                  variant="outline-primary">
+                            Get chart
+                        </b-button>
+                        <b-button style="margin-left: 10px;" v-on:click="saveChartData(getChartInd)"
+                                  variant="outline-primary">
+                            Save chart data
+                        </b-button>
+                    </b-row>
+                    <b-row style="margin-top: 10px">
+                        <basic-chart-box :chart-options="chartOptions" :series="experimentSeries"
+                                         id="experimentHumanChart"
+                                         style="width: 80%"/>
+                    </b-row>
+                </b-сol>
                 <div id="pdf"></div>
             </b-card>
         </b-collapse>
@@ -705,7 +716,16 @@
         margin: 20px auto;
     }
 
-    .vs-input, .vs-select {
+    .vs-select-item {
         color: black;
     }
+
+    .vs-select {
+        color: black;
+    }
+
+    .vs-input {
+        color: black;
+    }
+
 </style>

@@ -36,6 +36,11 @@
                 status: this.statusObj,
             };
         },
+        watch: {
+          statusObj: function (data) {
+              this.$emit('wasUpdated', this.status.isAlive);
+          }
+        },
         methods: {
             reborn: function (bool) {
                 if (bool) {
