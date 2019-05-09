@@ -2,7 +2,11 @@ import {Organism, removeOrganism, turnStep} from "./Organism";
 import {Predator} from "./Predator";
 import {Prey} from "./Prey";
 
+var killRangeOrganisms = [];
+var huntRangeOrganisms = [];
+
 export class Person extends Organism {
+
     constructor(lifespan,
                 x, y,
                 killPredatorPriority,
@@ -63,11 +67,19 @@ export class Person extends Organism {
 
         let minPreyDist = Number.MAX_SAFE_INTEGER;
         let closestPrey = null;
-
+        killRangeOrganisms = [];
+        huntRangeOrganisms = [];
         for (let i = 0; i < organisms.length; i++) {
             let currentOrganism = organisms[i];
             if (currentOrganism instanceof Prey || currentOrganism instanceof Predator) {
                 let dist = currentOrganism.calculateDistanceWith(this);
+
+                if (dist <= this.killRange) {
+                    killRangeOrganisms.push(currentOrganism)
+                } else if (dist <= this.noticeOrganismRange) {
+                    huntRangeOrganisms.push(currentOrganism)
+                }
+
                 if (currentOrganism instanceof Prey) {
                     if (dist < minPreyDist) {
                         closestPrey = currentOrganism;
@@ -90,22 +102,21 @@ export class Person extends Organism {
 
     hunt(organisms, o, dist, x, y) {
         if (dist <= this.killRange) {
-            console.log(Person.preyNeedLimit);
             if (o instanceof Prey) {
                 if (Person.preyNeedCounter === Person.preyNeedLimit) {
                     if (Person.preyNeedStepsLimit === Person.preyNeedStepsCounter) {
                         Person.preyNeedCounter = 0;
                         Person.preyNeedStepsLimit = 0;
-                        organisms = removeOrganism(organisms, o)
+                        removeOrganism(organisms, o)
                     } else {
                         Person.preyNeedStepsLimit++;
                     }
                 } else {
-                    organisms = removeOrganism(organisms, o);
+                    removeOrganism(organisms, o);
                     Person.preyNeedCounter++;
                 }
             } else {
-                organisms = removeOrganism(organisms, o)
+                removeOrganism(organisms, o)
             }
         } else if (dist <= this.noticeOrganismRange) {
             this.calculateInstinct(organisms, o, x, y)

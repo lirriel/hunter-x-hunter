@@ -470,7 +470,7 @@
         <div style="margin-top: 20px">
             <b-button v-b-modal.modal-test-compare variant="outline-primary">Hold test</b-button>
         </div>
-        <b-modal id="modal-test-compare" size="xl" title="parameter run test">
+        <b-modal id="modal-test-compare" scrollable size="xl" title="parameter run test">
             <comparison-test-modal :model="currentModel"
                                    :params="currentExperimentParams"
                                    :predator="predator"
@@ -666,7 +666,6 @@
                     // vArray.push([this.dataBehave[i][1], this.dataBehave[i][0], v]);
                 }
                 let eq = this.currentModel.getEquilibrium();
-                console.log(eq);
                 this.seriesBehave = [
                     {
                         name: "Behaviour",

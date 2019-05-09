@@ -46,7 +46,8 @@
 
                         </b-col>
                         <b-col id="lvBifuraction" sm="9">
-                            <basic-chart-box :chart-options="bifurcationChartOptions" :series="seriesBifurcation"
+                            <basic-chart-box :chart-options="bifurcationChartOptions"
+                                             :series="seriesBifurcation"
                                              id="bfId" style="width: 800px"/>
                         </b-col>
                     </b-row>
@@ -214,13 +215,11 @@
                 this.seriesBehave = data
             },
             onBifurcation(data) {
-                console.log(data);
                 this.seriesBifurcation = data
             },
             onCompare(data) {
                 this.compareFlag = true;
                 this.seriesCompare.push(data);
-                console.log(this.seriesCompare);
             },
             onSavePdf() {
                 if (this.compareFlag) {

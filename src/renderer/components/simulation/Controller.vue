@@ -47,8 +47,8 @@
                         </b-col>
                         <b-col sm="6">
                             <b-form-checkbox id="input-human-check"
-                                             v-model="simulationParams.isHumanRequired"
-                                             name="check-button" switch/>
+                                             name="check-button"
+                                             switch v-model="simulationParams.isHumanRequired"/>
                         </b-col>
                     </b-row>
 
@@ -305,7 +305,7 @@
                     isAliveProbability: 0.4,
                     isPredatorProbability: 0.2,
                     isHumanProbability: 0.02,
-                    isHumanRequired: false,
+                    isHumanRequired: true,
 
                     killPredatorPriority: 0.2,
                     killPreyPriority: 0.1,

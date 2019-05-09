@@ -8,7 +8,7 @@ export class Prey extends Organism {
     movePrey(organisms, maxX, maxY) {
         this.tickAge();
         if (this.age > this.lifespan) {
-            organisms = removeOrganism(organisms, this);
+            removeOrganism(organisms, this);
             // organisms = organisms.splice(organisms.indexOf(this), 1);
             return;
         }

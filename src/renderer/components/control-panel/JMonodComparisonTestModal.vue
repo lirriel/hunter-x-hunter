@@ -75,7 +75,8 @@
                                      style="margin: 10px; width: 800px"/>
                 </b-row>
                 <b-row>
-                    <basic-chart-box :chart-options="chartOptionsBehave" :series="seriesParameterToX"
+                    <basic-chart-box :chart-options="chartOptionsBehave"
+                                     :series="seriesParameterToX"
                                      id="experiment-param-jm"
                                      style="margin: 10px; width: 800px"/>
                 </b-row>

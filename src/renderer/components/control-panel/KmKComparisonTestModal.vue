@@ -227,7 +227,6 @@
                 this.info = [];
                 this.equilibriumArray = [];
                 this.phaseTrajSeries = [];
-                console.log(this.model);
 
                 for (let i = this.min; i < this.max; i += this.step) {
                     this.model[this.currentParam] = i;

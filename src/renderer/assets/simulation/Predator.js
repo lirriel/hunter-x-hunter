@@ -37,7 +37,7 @@ export class Predator extends Organism {
     movePredator(organisms, maxX, maxY) {
         this.tickAge();
         if (this.age > this.lifespan || this.hunger <= 0) {
-            organisms = removeOrganism(organisms, this);
+            removeOrganism(organisms, this);
             return;
         }
         var currentPredator = this;
@@ -50,7 +50,7 @@ export class Predator extends Organism {
                 preyFlag = true;
                 var distance = organism.calculateDistanceWith(currentPredator);
                 if (distance <= Math.sqrt(2)) {
-                    organisms = removeOrganism(organisms, organism);
+                    removeOrganism(organisms, organism);
                     // organisms = organisms.splice(organisms.indexOf(organism), 1);
                     currentPredator.hunger = Predator.hungerSteps;
                     currentPredator.feedPreyTimer++;

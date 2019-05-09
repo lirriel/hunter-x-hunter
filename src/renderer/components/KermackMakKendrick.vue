@@ -143,12 +143,9 @@
                 this.series = data;
             },
             onSeriesBehave(data) {
-                console.log(data);
                 this.seriesBehave = data;
             },
             onBehaveCurve(data) {
-                console.log("behave curve");
-                console.log(data);
                 this.behaveCurveFlag = data.flag;
                 this.seriesBehaveCurve = data.series;
             },

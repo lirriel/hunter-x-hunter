@@ -7,21 +7,23 @@
                     :cells-created="cellsCreated"
                     :current-speed="currentSpeed"
                     :current-tick="currentTick"/>
-            <div class="grid columns">
-                <div
-                        :key="indexX"
-                        class="column"
-                        v-for="(col, indexX) in gridListOrg"
-                        v-if="gridListOrg.length > 0">
-                    <app-cell
-                            :is-mouse-down="isMouseDown"
-                            :key="indexY"
-                            :organism="o"
-                            @wasUpdated="updateCellCount"
-                            v-for="(o, indexY) in col"
-                    />
+            <transition mode="out-in">
+                <div class="grid columns">
+                    <div
+                            :key="indexX"
+                            class="column"
+                            v-for="(col, indexX) in gridListOrg"
+                            v-if="gridListOrg.length > 0">
+                        <app-cell
+                                :is-mouse-down="isMouseDown"
+                                :key="indexY"
+                                :organism="o"
+                                @wasUpdated="updateCellCount"
+                                v-for="(o, indexY) in col"
+                        />
+                    </div>
                 </div>
-            </div>
+            </transition>
         </b-col>
     </div>
 </template>
@@ -175,15 +177,17 @@
 
                 for (let i = 0; i < this.organisms.length; i++) {
                     let o = this.organisms[i];
-                    if (o instanceof Predator) {
-                        countPredator++;
-                    } else if (o instanceof Prey) {
-                        countPrey++;
-                    } else if (o instanceof Person) {
-                        countHuman++;
-                    }
                     if (o.x >= 0 && o.y >= 0) {
+                        if (o instanceof Predator) {
+                            countPredator++;
+                        } else if (o instanceof Prey) {
+                            countPrey++;
+                        } else if (o instanceof Person) {
+                            countHuman++;
+                        }
                         this.gridListOrg[o.x][o.y] = o;
+                    } else {
+                        console.log("OUT")
                     }
                 }
 

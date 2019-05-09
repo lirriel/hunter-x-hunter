@@ -4,7 +4,7 @@
                       :menu="menu"
                       :show-one-child="true"
         ></sidebar-menu>
-        <div style="margin-left: 100px; margin-top: 20px">
+        <div style="margin-left: 80px; margin-top: 20px">
             <router-view></router-view>
         </div>
     </div>

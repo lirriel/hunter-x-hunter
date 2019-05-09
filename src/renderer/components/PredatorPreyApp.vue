@@ -280,8 +280,6 @@
         bottom: 0;
     }
 
-    // The transitions used to switch out my page components as well as
-    // the import/export modal
     .fade-enter-active,
     .fade-leave-active {
         transition: opacity 0.35s linear;

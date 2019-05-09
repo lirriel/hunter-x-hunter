@@ -180,10 +180,10 @@ export function saveSimulationExperimentPdf(filename, id, parameters, parameter)
     y += 10;
     pdf.setFontSize(10);
     pdf.text(10, y, pdf.splitTextToSize(getParamsText("Simulation", parameters)
-         + " Changing parameter " + parameter + ".", MAX_WIDTH));
-    y += у0;
+        + " Changing parameter " + parameter + ".", MAX_WIDTH));
+    y += 20;
 
-    html2canvas(document.querySelector("#"+id), {
+    html2canvas(document.querySelector("#" + id), {
         imageTimeout: 10000,
         useCORS: true
     }).then(canvas => {

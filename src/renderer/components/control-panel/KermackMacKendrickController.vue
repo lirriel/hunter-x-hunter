@@ -103,7 +103,7 @@
                     Hold test
                 </b-button>
             </div>
-            <b-modal id="modal-test-compare-kmk" size="xl" title="parameter run test">
+            <b-modal id="modal-test-compare-kmk" scrollable size="xl" title="parameter run test">
                 <km-k-comparison-test-modal :i="I"
                                             :model="currentModel"
                                             :params="Object.keys(expKermackMcKendrick)"

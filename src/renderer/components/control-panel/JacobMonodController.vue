@@ -107,7 +107,7 @@
                 <b-button v-b-modal.modal-test-compare-jm variant="outline-primary">Hold test
                 </b-button>
             </div>
-            <b-modal id="modal-test-compare-jm" size="xl" title="parameter run test">
+            <b-modal id="modal-test-compare-jm" scrollable size="xl" title="parameter run test">
                 <j-monod-comparison-test-modal :model="model"
                                                :params="Object.keys(expJMonod)"
                                                :s="expJMonod.s"

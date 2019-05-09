@@ -139,5 +139,5 @@ export function turnStep(caseNumber, x, y) {
 }
 
 export function removeOrganism(organisms, organism) {
-    return organisms.splice(organisms.indexOf(organism), 1);
+    organisms.splice(organisms.indexOf(organism), 1);
 }
