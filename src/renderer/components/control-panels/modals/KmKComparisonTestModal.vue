@@ -38,15 +38,26 @@
                                           v-model.number="step"/>
                         </b-col>
                     </b-row>
-                    <b-button v-on:click="calculate" variant="outline-primary">
-                        Calculate
-                    </b-button>
-                    <b-button v-on:click="saveExperiment" variant="outline-primary">
-                        Save pdf
-                    </b-button>
-                    <b-button v-on:click="saveExperimentXlsx" variant="outline-primary">
-                        Save table
-                    </b-button>
+                    <b-col>
+                        <b-row>
+                            <b-button v-on:click="calculate" variant="outline-primary">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </b-button>
+                        </b-row>
+                        <b-row>
+                            <b-button v-on:click="saveExperiment" variant="outline-danger">
+                                <i class="far fa-file-pdf"/>
+                                Save Pdf
+                            </b-button>
+                        </b-row>
+                        <b-row>
+                            <b-button v-on:click="saveExperimentXlsx" variant="outline-success">
+                                <i class="fas fa-file-excel"></i>
+                                Save Data
+                            </b-button>
+                        </b-row>
+                    </b-col>
                 </b-row>
             </b-col>
             <b-col>
@@ -105,11 +116,11 @@
 </template>
 
 <script>
-    import BasicChartBox from '../diagrams/BasicChartBox'
-    import BehaviourDiargam from '../diagrams/BehaviourDiargam'
-    import {saveExperimentPdf} from "../../assets/pdfUtils";
-    import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
-    import {KermackMakKendrickSIS} from "../../assets/kermackMakKendrick";
+    import BasicChartBox from '../../diagrams/BasicChartBox'
+    import BehaviourDiargam from '../../diagrams/BehaviourDiargam'
+    import {saveExperimentPdf} from "../../../assets/pdfUtils";
+    import {createWorkbook, createWorkSheet, saveWorkbook} from "../../../assets/xlsx_utils";
+    import {KermackMakKendrickSIS} from "../../../assets/kermackMakKendrick";
 
     export default {
         name: "KmKComparisonTestModal",
@@ -400,13 +411,13 @@
 
 <style scoped>
     table {
-        border: 1px solid #42b983;
-        border-radius: 3px;
+        border: 1px dashed #b9b9b7;
+        border-radius: 2px;
         background-color: #fff;
         color: black;
     }
 
-    .b-button {
+    b-button {
         margin: 10px;
     }
 
@@ -425,8 +436,15 @@
     }
 
     th, td {
-        min-width: 120px;
-        padding: 10px 20px;
+        min-width: 100%;
+        padding: 10px 10px;
+        margin-left: 10px;
     }
 
+    .col {
+        margin-top: 5px;
+    }
+    .row {
+        margin-top: 5px;
+    }
 </style>

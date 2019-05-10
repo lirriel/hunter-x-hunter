@@ -98,13 +98,16 @@
         </b-row>
         <div style="margin-top: 10px">
             <b-button v-on:click="calculateJMonod" variant="outline-primary">
+                <i class="fas fa-calculator"></i>
                 Calculate
             </b-button>
             <b-button v-on:click="saveData" variant="outline-primary">
-                Save
+                <i class="fas fa-file-excel"></i>
+                Save Data
             </b-button>
             <div style="margin-top: 20px">
-                <b-button v-b-modal.modal-test-compare-jm variant="outline-primary">Hold test
+                <b-button v-b-modal.modal-test-compare-jm variant="outline-primary">
+                    <i class="fas fa-rocket"></i>Start tests
                 </b-button>
             </div>
             <b-modal id="modal-test-compare-jm" scrollable size="xl" title="parameter run test">
@@ -123,7 +126,7 @@
 <script>
     import {JacobMonod} from "../../assets/jacobMonod";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
-    import JMonodComparisonTestModal from './JMonodComparisonTestModal'
+    import JMonodComparisonTestModal from './modals/JMonodComparisonTestModal'
 
     export default {
         name: "JacobMonodController",
@@ -151,7 +154,6 @@
                 timeStep: 0.2,
 
                 model: null,
-                ///////////////////////////////////
                 isJMonod: true
             }
         },
@@ -243,6 +245,7 @@
 
 <style scoped>
     label {
+        font-family: 'Karla', sans-serif;
         font-size: smaller;
     }
 

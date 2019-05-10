@@ -13,13 +13,13 @@
             <b-col sm="8">
                 <transition mode="out-in" name="fade">
                     <app-grid
-                            :current-speed="speed"
+                            :currentspeed="speed"
                             :message="message"
-                            :params="params"
                             @series="onSeries"
                             style="margin-right: 40px"/>
                 </transition>
-                <b-tabs style="width: 900px; margin-top: 20px">
+                <vs-divider/>
+                <b-tabs style="margin-top: 20px; width: 1000px;">
                     <b-tab active title="Size change">
                         <basic-chart-box :chart-options="chartOptions" :series="series"
                                          id="simulationSeries"/>
@@ -31,18 +31,20 @@
                 </b-tabs>
             </b-col>
         </b-row>
+        <vs-divider/>
         <simulation-experiment :simulation-params="params"/>
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
-    import Controller from './simulation/Controller.vue';
-    import Grid from './simulation/Grid.vue';
+    import Controller from '../simulation/Controller.vue';
+    import Grid from '../simulation/Grid.vue';
     import {clearInterval, setInterval} from 'timers';
-    import BasicChartBox from "./diagrams/BasicChartBox"
-    import BehaviourDiargam from './diagrams/BehaviourDiargam'
-    import SimulationExperiment from './simulation/SimulationExperiment'
+    import BasicChartBox from "../diagrams/BasicChartBox"
+    import BehaviourDiargam from '../diagrams/BehaviourDiargam'
+    import SimulationExperiment from '../simulation/SimulationExperiment'
+    import {simulationParams as params} from "../../assets/simulation/simulationParams";
 
     export default {
         name: 'PredatorPreyApp',
@@ -59,34 +61,7 @@
                 modelType: '',
                 importToken: '',
                 exportToken: '',
-                params: {
-                    preyLifespan: 60,
-                    preyAdulthoodAge: 3,
-                    preyBirthPeriod: 2,
-
-                    predatorLifespan: 100,
-                    predatorAdulthoodAge: 5,
-                    predatorBirthPeriod: 1,
-                    predatorFeedPreyCount: 2,
-
-                    hungerSteps: 8,
-                    ///////////////////////////////////////////////////////////////////////////
-                    isAliveProbability: 0.4,
-                    isPredatorProbability: 0.2,
-                    isHumanProbability: 0.02,
-                    isHumanRequired: true,
-
-                    killPredatorPriority: 0.2,
-                    killPreyPriority: 0.1,
-                    killRange: 12,
-                    noticeOrganismRange: 20,
-                    preyNeedLimit: 10,
-                    preyNeedStepsLimit: 12,
-
-                    ////////////////////////////////////////////////////////////////////////////
-                    width: 40,
-                    height: 20,
-                },
+                params: params,
 
                 isRunning: false,
                 isNavbar: false,
@@ -245,17 +220,16 @@
     html,
     body {
         color: #000;
-        font-family: "Dosis", Helvetica, sans-serif;
+        font-family: 'Karla', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         margin: 0px;
     }
 
     #app {
-        font-family: "Avenir", Helvetica, Arial, sans-serif;
+        font-family: 'Karla', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        /*color: #fff;*/
     }
 
     .hero-body {

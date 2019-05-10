@@ -7,28 +7,27 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'home',
-            component: require('@/components/LandingPage').default
+            redirect: '/game'
         },
         {
             path: '/kermack-makkendrick',
             name: 'kermackMakKendrick',
-            component: require('@/components/KermackMakKendrick').default
+            component: require('@/components/main-frames/KermackMakKendrick').default
         },
         {
             path: '/lotka-volterra',
             name: 'LotkaVolterra',
-            component: require('@/components/LotkaVolterra').default
+            component: require('@/components/main-frames/LotkaVolterra').default
         },
         {
             path: '/jacob-monod',
             name: 'JacobMonod',
-            component: require('@/components/JacobMonod').default
+            component: require('@/components/main-frames/JacobMonod').default
         },
         {
             path: '/game',
             name: 'Game',
-            component: require('@/components/PredatorPreyApp').default
+            component: require('@/components/main-frames/PredatorPreyApp').default
         },
         {
             path: '*',

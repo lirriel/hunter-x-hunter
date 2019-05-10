@@ -6,10 +6,10 @@
                     <b-form-select :options="paramsArray" style="margin-bottom: 20px"
                                    v-model="currentParam"/>
                     <b-row>
-                        <b-col sm="4">
+                        <b-col sm="5">
                             <label>Min</label>
                         </b-col>
-                        <b-col sm="8">
+                        <b-col sm="7">
                             <b-form-input max="1000.00" min="0.00" placeholder="Start value"
                                           step="0.0001"
                                           type="number"
@@ -17,10 +17,10 @@
                         </b-col>
                     </b-row>
                     <b-row>
-                        <b-col sm="4">
+                        <b-col sm="5">
                             <label>Max</label>
                         </b-col>
-                        <b-col sm="8">
+                        <b-col sm="7">
                             <b-form-input max="1000.00" min="0.00" placeholder="Max value"
                                           step="0.0001"
                                           type="number"
@@ -28,25 +28,36 @@
                         </b-col>
                     </b-row>
                     <b-row>
-                        <b-col sm="4">
+                        <b-col sm="5">
                             <label>Step</label>
                         </b-col>
-                        <b-col sm="8">
+                        <b-col sm="7">
                             <b-form-input max="1000.00" min="0.0000" placeholder="step"
                                           step="0.000001"
                                           type="number"
                                           v-model.number="step"/>
                         </b-col>
                     </b-row>
-                    <b-button v-on:click="calculate" variant="outline-primary">
-                        Calculate
-                    </b-button>
-                    <b-button v-on:click="saveExperiment" variant="outline-primary">
-                        Save pdf
-                    </b-button>
-                    <b-button v-on:click="saveExperimentXlsx" variant="outline-primary">
-                        Save table
-                    </b-button>
+                    <b-col>
+                        <b-row>
+                            <b-button v-on:click="calculate" variant="outline-primary">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </b-button>
+                        </b-row>
+                        <b-row>
+                            <b-button v-on:click="saveExperiment" variant="outline-danger">
+                                <i class="far fa-file-pdf"/>
+                                Save Pdf
+                            </b-button>
+                        </b-row>
+                        <b-row>
+                            <b-button v-on:click="saveExperimentXlsx" variant="outline-success">
+                                <i class="fas fa-file-excel"></i>
+                                Save Data
+                            </b-button>
+                        </b-row>
+                    </b-col>
                 </b-row>
             </b-col>
             <b-col>
@@ -65,11 +76,12 @@
         </b-row>
         <b-row id="experiment-table" style="margin-left: 5px">
             <b-row>
-                <h3>Changing parameter {{currentParam}}</h3>
+                <h2>Changing parameter {{currentParam}}</h2>
             </b-row>
-            <br>
-            <b-row style="margin-top: 10px">
-                <table>
+            <br><br>
+            <br><br>
+            <b-row style="margin-top: 40px; margin-left: 10px">
+                <table width="800px">
                     <thead>
                     <th>Parameter value</th>
                     <th>Equilibrium point</th>
@@ -78,14 +90,14 @@
                     </thead>
                     <tbody>
                     <tr v-for="e in equilibriumArray">
-                        <td>{{e.paramValue}}</td>
-                        <td>{{e.eqPoint}}</td>
+                        <td>{{e.paramValue.toFixed(2)}}</td>
+                        <td>{{round(e.eqPoint)}}</td>
                         <td>
-                            <table>
+                            <table style="margin-left: 8px">
                                 <tbody>
                                 <tr v-for="entry in e.jacobianMatrix">
-                                    <td v-for="key in entry">
-                                        {{key}}
+                                    <td v-for="key in entry" v-if="key">
+                                        {{key.toFixed(2)}}
                                     </td>
                                 </tr>
                                 </tbody>
@@ -101,10 +113,11 @@
 </template>
 
 <script>
-    import BasicChartBox from '../diagrams/BasicChartBox'
-    import BehaviourDiargam from '../diagrams/BehaviourDiargam'
-    import {saveExperimentPdf} from "../../assets/pdfUtils";
-    import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
+    import BasicChartBox from '../../diagrams/BasicChartBox'
+    import BehaviourDiargam from '../../diagrams/BehaviourDiargam'
+    import {saveExperimentPdf} from "../../../assets/pdfUtils";
+    import {createWorkbook, createWorkSheet, saveWorkbook, checkNan} from "../../../assets/xlsx_utils";
+    import {roundArray} from "../../../assets/pdfUtils";
 
     export default {
         name: "ComparisonTestModal",
@@ -154,7 +167,6 @@
                     jac: [],
                     descr: []
                 },
-
                 chartOptions: {
                     chart: {
                         zoom: {
@@ -179,16 +191,13 @@
                         x: {},
                         y: {}
                     },
-
                     stroke: {
                         curve: "straight",
                         width: 1
                     },
                 },
-
                 dataPrey: [],
                 dataPredator: [],
-
                 series: []
             }
         },
@@ -198,6 +207,9 @@
             },
         },
         methods: {
+            round(ar) {
+                return roundArray(ar)
+            },
             calculate() {
                 this.currentSeries = [];
                 this.seriesBehave = [];
@@ -227,9 +239,9 @@
                     x += this.timeStep * res.prey;
                     y += this.timeStep * res.predator;
 
-                    this.dataPrey.push([i, x]);
-                    this.dataPredator.push([i, y]);
-                    dataBehave.push([x, y])
+                    this.dataPrey.push([i, checkNan(x)]);
+                    this.dataPredator.push([i, checkNan(y)]);
+                    dataBehave.push([checkNan(x), checkNan(y)])
                 }
                 this.currentSeries.push({
                     name: "Prey population - " + ind,
@@ -281,13 +293,13 @@
 
 <style scoped>
     table {
-        border: 1px solid #42b983;
-        border-radius: 3px;
+        border: 1px dashed #b9b9b7;
+        border-radius: 2px;
         background-color: #fff;
         color: black;
     }
 
-    .b-button {
+    b-button {
         margin: 10px;
     }
 
@@ -306,8 +318,16 @@
     }
 
     th, td {
-        min-width: 120px;
-        padding: 10px 20px;
+        min-width: 100%;
+        padding: 10px 10px;
+        margin-left: 10px;
+    }
+
+    .col {
+        margin-top: 5px;
+    }
+    .row {
+        margin-top: 5px;
     }
 
 </style>

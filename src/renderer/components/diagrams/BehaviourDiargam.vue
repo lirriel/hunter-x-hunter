@@ -72,7 +72,7 @@
                     },
                     stroke: {
                         curve: "straight",
-                        width: [2, 0.5]
+                        width: 1.5
                     }
                 },
             }

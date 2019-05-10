@@ -1,26 +1,23 @@
 <template>
     <div>
-        <b-col v-if="showGreed">
-            <app-stats
-                    :cell-count="cellCount"
-                    :cells-alive="cellsAlive"
-                    :cells-created="cellsCreated"
-                    :current-speed="currentSpeed"
-                    :current-tick="currentTick"/>
+        <b-col>
+            <app-stats :cells="simulationParams.width * simulationParams.height"
+                       :predator="dataPredator[currentTick][1]"
+                       :prey="dataPrey[currentTick][1]"
+                       :speed="currentSpeed"
+                       :tick="currentTick"
+                       v-if="dataPrey.length > 0"/>
             <transition mode="out-in">
                 <div class="grid columns">
-                    <div
-                            :key="indexX"
-                            class="column"
-                            v-for="(col, indexX) in gridListOrg"
-                            v-if="gridListOrg.length > 0">
-                        <app-cell
-                                :is-mouse-down="isMouseDown"
-                                :key="indexY"
-                                :organism="o"
-                                @wasUpdated="updateCellCount"
-                                v-for="(o, indexY) in col"
-                        />
+                    <div :key="indexX"
+                         class="column"
+                         v-for="(col, indexX) in organismsGrid"
+                         v-if="organismsGrid.length > 0">
+                        <app-cell :is-mouse-down="isMouseDown"
+                                  :key="indexY"
+                                  :organism="o"
+                                  @wasUpdated="updateCellCount"
+                                  v-for="(o, indexY) in col"/>
                     </div>
                 </div>
             </transition>
@@ -35,6 +32,7 @@
     import {Prey} from "../../assets/simulation/Prey";
     import {Person} from "../../assets/simulation/Person";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
+    import {simulationParams} from '../../assets/simulation/simulationParams'
 
     export default {
         components: {
@@ -53,48 +51,14 @@
                 default: 0,
                 type: Number,
             },
-            showGreed: {
-                type: Boolean,
-                default: true
-            }
         },
         data() {
             return {
-                simulationParams: {
-                    preyLifespan: 60,
-                    preyAdulthoodAge: 2,
-                    preyBirthPeriod: 2,
-
-                    predatorLifespan: 100,
-                    predatorAdulthoodAge: 5,
-                    predatorBirthPeriod: 1,
-                    predatorFeedPreyCount: 2,
-
-                    hungerSteps: 8,
-
-                    isAliveProbability: 0.4,
-                    isPredatorProbability: 0.2,
-                    isHumanProbability: 0.01,
-                    isHumanRequired: true,
-                    killPredatorPriority: 0.2,
-                    killPreyPriority: 0.1,
-                    killRange: 12,
-                    noticeOrganismRange: 20,
-                    preyNeedLimit: 10,
-                    preyNeedStepsLimit: 12,
-
-                    width: 40,
-                    height: 20,
-                },
-                gridList: [],
+                simulationParams: simulationParams,
                 organisms: [],
-                gridListOrg: [],
+                organismsGrid: [],
 
                 currentTick: 0,
-                cellCount: 0,
-                cellsAlive: 0,
-                cellsCreated: 0,
-
                 isMouseDown: true,
 
                 series: [],
@@ -104,7 +68,6 @@
                 dataPredator: [],
             };
         },
-        computed: {},
         watch: {
             message: function (val) {
                 if (val === 'saveData') {
@@ -133,43 +96,36 @@
                 this.dataPredator = [];
                 this.dataPrey = [];
                 this.dataBehave = [];
-                this.gridListOrg = [];
-
-                for (let i = 0; i < this.simulationParams.width; i++) {
-                    this.gridListOrg[i] = [];
-                    for (let j = 0; j < this.simulationParams.height; j++) {
-                        this.gridListOrg[i][j] = null;
-                    }
-                }
-                this.cellCount = this.simulationParams.width * this.simulationParams.height;
+                this.organismsGrid = [];
+                this.resetGrid();
             },
             update: function () {
-                var x = this.simulationParams.width;
-                var y = this.simulationParams.height;
-
+                let maxWidth = this.simulationParams.width - 1;
+                let maxHeight = this.simulationParams.height - 1;
                 for (let i = 0; i < this.organisms.length; i++) {
-                    var organism = this.organisms[i];
+                    let organism = this.organisms[i];
                     if (organism instanceof Predator) {
-                        organism.movePredator(this.organisms, x - 1, y - 1)
+                        organism.movePredator(this.organisms, maxWidth, maxHeight)
                     } else if (organism instanceof Prey) {
-                        organism.movePrey(this.organisms, x - 1, y - 1)
+                        organism.movePrey(this.organisms, maxWidth, maxHeight)
                     } else if (organism instanceof Person) {
-                        organism.moveHunter(this.organisms, x - 1, y - 1)
+                        organism.moveHunter(this.organisms, maxWidth, maxHeight)
+                    }
+                }
+            },
+            resetGrid() {
+                for (let i = 0; i < this.simulationParams.width; i++) {
+                    this.organismsGrid[i] = [];
+                    for (let j = 0; j < this.simulationParams.height; j++) {
+                        this.organismsGrid[i][j] = null;
                     }
                 }
             },
             getGrid: function () {
-                for (let i = 0; i < this.simulationParams.width; i++) {
-                    this.gridListOrg[i] = [];
-                    for (let j = 0; j < this.simulationParams.height; j++) {
-                        this.gridListOrg[i][j] = null;
-                    }
-                }
-
+                this.resetGrid();
                 let countPrey = 0;
                 let countPredator = 0;
                 let countHuman = 0;
-
                 for (let i = 0; i < this.organisms.length; i++) {
                     let o = this.organisms[i];
                     if (o.x >= 0 && o.y >= 0) {
@@ -180,15 +136,14 @@
                         } else if (o instanceof Person) {
                             countHuman++;
                         }
-                        this.gridListOrg[o.x][o.y] = o;
-                    } else {
-                        console.log("OUT")
+                        this.organismsGrid[o.x][o.y] = o;
                     }
                 }
 
-                if (this.currentTick === 0 && countPrey == 0 && countPredator === 0) {
+                if (this.currentTick === 0 && countPrey === 0 && countPredator === 0) {
                     return;
                 }
+
                 this.dataPrey.push([this.currentTick, countPrey]);
                 this.dataPredator.push([this.currentTick, countPredator]);
                 this.dataBehave.push([countPrey, countPredator]);
@@ -222,16 +177,15 @@
                 this.dataBehave = [];
                 this.organisms = [];
                 this.getGrid();
-                if (this.showGreed) {
-                    this.$emit('series', {series: this.series, seriesBehave: this.seriesBehave});
-                }
+                this.$emit('series', {series: this.series, seriesBehave: this.seriesBehave});
             },
             randomSeed: function () {
-                this.organisms = [];
+                this.reset();
+
                 Person.setPreyNeedLimit(this.simulationParams.preyNeedLimit);
                 Person.setPreyNeedStepsLimit(this.simulationParams.preyNeedStepsLimit);
+                Predator.hungerSteps = this.simulationParams.hungerSteps;
 
-                this.reset();
                 for (let i = 0; i < this.simulationParams.width; i++) {
                     for (let j = 0; j < this.simulationParams.height; j++) {
                         let rnd = Math.random();
@@ -266,19 +220,11 @@
                             }
                             this.organisms.push(organism)
                         }
-                        this.gridListOrg[i][j] = organism;
+                        this.organismsGrid[i][j] = organism;
                     }
                 }
-                Predator.hungerSteps = this.simulationParams.hungerSteps;
             },
-            updateCellCount: function (bool) {
-                if (bool) {
-                    this.cellsAlive++;
-                    this.cellsCreated++;
-                } else {
-                    this.cellsAlive--;
-                }
-            },
+            updateCellCount: function (bool) {},
             saveData() {
                 var wb = createWorkbook();
                 // add data prey

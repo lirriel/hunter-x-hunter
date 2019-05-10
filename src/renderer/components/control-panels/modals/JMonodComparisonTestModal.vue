@@ -52,13 +52,16 @@
                     </b-row>
 
                     <b-button v-on:click="calculate" variant="outline-primary">
+                        <i class="fas fa-calculator"></i>
                         Calculate
                     </b-button>
                     <b-button v-on:click="saveExperiment" variant="outline-primary">
+                        <i class="far fa-file-pdf"/>
                         Save pdf
                     </b-button>
                     <b-button v-on:click="saveExperimentXlsx" variant="outline-primary">
-                        Save xlsx
+                        <i class="fas fa-file-excel"></i>
+                        Save Data
                     </b-button>
                 </b-row>
             </b-col>
@@ -88,10 +91,10 @@
 </template>
 
 <script>
-    import BasicChartBox from '../diagrams/BasicChartBox'
-    import BehaviourDiargam from '../diagrams/BehaviourDiargam'
-    import {saveExperimentPdf} from "../../assets/pdfUtils";
-    import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
+    import BasicChartBox from '../../diagrams/BasicChartBox'
+    import BehaviourDiargam from '../../diagrams/BehaviourDiargam'
+    import {saveExperimentPdf} from "../../../assets/pdfUtils";
+    import {createWorkbook, createWorkSheet, saveWorkbook} from "../../../assets/xlsx_utils";
 
     export default {
         name: "JMonodComparisonTestModal",

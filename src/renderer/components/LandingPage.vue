@@ -5,17 +5,15 @@
 </template>
 
 <script>
-    import SystemInformation from './LandingPage/SystemInformation'
-    import LotkaVolterra from './LotkaVolterra'
-    import KermackMakKendrick from './KermackMakKendrick'
-    import PredatorPreyApp from './PredatorPreyApp'
-    import JacobMonod from './JacobMonod'
+    import LotkaVolterra from './main-frames/LotkaVolterra'
+    import KermackMakKendrick from './main-frames/KermackMakKendrick'
+    import PredatorPreyApp from './main-frames/PredatorPreyApp'
+    import JacobMonod from './main-frames/JacobMonod'
     import VueP5 from 'vue-p5';
 
     export default {
         name: 'landing-page',
         components: {
-            SystemInformation,
             LotkaVolterra,
             KermackMakKendrick,
             JacobMonod,
@@ -26,20 +24,6 @@
             open(link) {
                 this.$electron.shell.openExternal(link)
             },
-            writeFile() {
-                // let environment = new Environment(200, 14, 39, 50);
-                // environment.run()
-
-                // var workbook = readXlsxWorkbook();
-                // console.log(workbook);
-                // saveWorkbook(workbook);
-            },
-            start() {
-                STATE['numPredators'] = prompt("Enter initial number of panthers:");
-                STATE['numPrey'] = prompt("Enter initial number of bunnies:");
-                initializeBoard();
-                predatorSetup();
-            }
         }
     }
 </script>

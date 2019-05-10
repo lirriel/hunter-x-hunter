@@ -34,6 +34,8 @@
                                      :series="seriesBehaveCurve"
                                      id="kmkBehaveCurve"/>
                 </b-tab>
+                <b-tab title="Bifurcation">
+                </b-tab>
                 <b-tab title="Epidemic points info">
                     <div class="shadow p-3 mb-5 bg-white rounded">
                         <label v-if="info.peak !== [-1,-1]">Infection peak:
@@ -53,10 +55,10 @@
 
 <script>
     import VueApexCharts from 'vue-apexcharts'
-    import BehaviourDiargam from './diagrams/BehaviourDiargam'
-    import KermackMacKendrickController from './control-panel/KermackMacKendrickController'
-    import BasicChartBox from './diagrams/BasicChartBox'
-    import {roundArray} from "../assets/pdfUtils";
+    import BehaviourDiargam from '../diagrams/BehaviourDiargam'
+    import KermackMacKendrickController from '../control-panels/KermackMacKendrickController'
+    import BasicChartBox from '../diagrams/BasicChartBox'
+    import {roundArray} from "../../assets/pdfUtils";
 
     export default {
         name: "KermackMakKendrick",
@@ -160,7 +162,7 @@
             },
             round(ar) {
                 return roundArray(ar);
-            }
+            },
         }
     }
 </script>

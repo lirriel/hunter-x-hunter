@@ -1,20 +1,20 @@
 <template>
     <div>
         <b-row>
-            <b-col sm="2">
-                <label>TICK: {{currentTick}}</label>
+            <b-col>
+                <label>TICK: {{tick}}</label>
             </b-col>
-            <b-col sm="2">
-                <label>CELL COUNT: {{cellCount}}</label>
+            <b-col>
+                <label>PREY COUNT: {{prey}}</label>
             </b-col>
-            <b-col sm="2">
-                <label>CELLS ALIVE: {{cellsAlive}}</label>
+            <b-col>
+                <label>PREDATOR COUNT: {{predator}}</label>
             </b-col>
-            <b-col sm="2">
-                <label>CELLS CREATED: {{cellsCreated}}</label>
+            <b-col>
+                <label>CELLS: {{cells}}</label>
             </b-col>
-            <b-col sm="2">
-                <label>SPEED: {{currentSpeed}}</label>
+            <b-col>
+                <label>SPEED: {{speed}}</label>
             </b-col>
         </b-row>
     </div>
@@ -23,23 +23,23 @@
 <script>
     export default {
         props: {
-            currentTick: {
+            tick: {
                 default: 0,
                 type: Number,
             },
-            cellCount: {
+            prey: {
                 default: 0,
                 type: Number,
             },
-            cellsAlive: {
+            predator: {
                 default: 0,
                 type: Number,
             },
-            cellsCreated: {
+            cells: {
                 default: 0,
                 type: Number,
             },
-            currentSpeed: {
+            speed: {
                 default: 0,
                 type: Number,
             },
@@ -47,7 +47,6 @@
         data() {
             return {};
         },
-        methods: {},
     };
 </script>
 

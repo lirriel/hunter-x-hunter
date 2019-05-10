@@ -1,6 +1,6 @@
 <template>
     <div style="margin-bottom: 100px">
-        <b-button style="width: 100%" v-b-toggle.collapse variant="outline-danger">
+        <b-button style="width: 100%" v-b-toggle.collapse variant="outline-info">
             Comparison experiment
         </b-button>
         <b-collapse id="collapse" invisible>
@@ -40,9 +40,18 @@
                 <vs-divider/>
                 <b-row style="padding-top: 10px">
                     <b-col sm="4">
-                        <b-button v-on:click="start" variant="outline-primary">Start</b-button>
-                        <b-button v-on:click="savePdf" variant="outline-primary">Save pdf</b-button>
-                        <b-button v-on:click="saveXlsx" variant="outline-primary">
+                        <b-button v-on:click="start" variant="outline-primary">
+                            <i class="fas fa-play"/>
+                            Start
+                        </b-button>
+                        <b-button style="margin-left: 10px" v-on:click="savePdf"
+                                  variant="outline-primary">
+                            <i class="far fa-file-pdf"/>
+                            Save pdf
+                        </b-button>
+                        <b-button style="margin-left: 10px" v-on:click="saveXlsx"
+                                  variant="outline-primary">
+                            <i class="fas fa-file-excel"/>
                             Save data
                         </b-button>
                     </b-col>
@@ -63,11 +72,13 @@
                     </b-col>
                 </b-row>
                 <vs-divider/>
-                <label style="margin: 0 auto">Calculate for min-max evaluation</label>
+                <b-row>
+                    <label style="margin: 0 auto"><-- Calculate for min-max evaluation --></label>
+                </b-row>
                 <vs-divider/>
                 <b-col>
                     <b-row>
-                        <vs-input label="Minimum time threshold" placeholder="0"
+                        <vs-input label="Minimum time threshold" placeholder="0" size="small"
                                   type="number" v-model="maxTimeThreshold"/>
                     </b-row>
                     <vs-divider/>
@@ -89,22 +100,23 @@
                     <vs-divider/>
                     <b-row>
                         <b-button v-on:click="getHumanInteractionEvaluation"
-                                  variant="outline-warning">
+                                  variant="outline-warning"><i class="fas fa-play"></i>
                             Start experiment
                         </b-button>
                         <b-button style="margin-left: 20px" v-on:click="stopExperiment"
-                                  variant="outline-danger">
+                                  variant="outline-danger"><i class="fas fa-random"></i>
                             Stop running
                         </b-button>
                         <b-button style="margin-left: 20px" v-on:click="saveTableData"
-                                  variant="outline-danger">
+                                  variant="outline-success"><i class="fas fa-file-excel"></i>
                             Save results table
                         </b-button>
                     </b-row>
                     <vs-divider/>
                     <b-row>
                         <b-progress :max="experimentMaxCount" height="40px" style="width: 100%">
-                            <b-progress-bar :max="experimentMaxCount" :value="experimentCount">
+                            <b-progress-bar :max="experimentMaxCount" :value="experimentCount"
+                                            variant="info">
                                 Progress: <strong>{{ experimentCount}} /
                                 {{experimentMaxCount}}</strong>
                             </b-progress-bar>
@@ -118,24 +130,26 @@
                 <b-row v-if="isExperimentFinished">
                     <vs-input label="Chart id" placeholder="0" type="number"
                               v-model="getChartInd"/>
-                </b-row>
-                <b-сol v-if="isExperimentFinished">
                     <b-row style="margin-top: 10px">
                         <b-button v-on:click="getSeriesHuman(getChartInd)"
                                   variant="outline-primary">
+                            <i class="far fa-chart-bar"></i>
                             Get chart
                         </b-button>
                         <b-button style="margin-left: 10px;" v-on:click="saveChartData(getChartInd)"
-                                  variant="outline-primary">
+                                  variant="outline-success"><i class="fas fa-file-excel"></i>
                             Save chart data
                         </b-button>
                     </b-row>
+
+                </b-row>
+                <b-row v-if="isExperimentFinished">
                     <b-row style="margin-top: 10px">
                         <basic-chart-box :chart-options="chartOptions" :series="experimentSeries"
                                          id="experimentHumanChart"
-                                         style="width: 80%"/>
+                                         style="width: 1000px"/>
                     </b-row>
-                </b-сol>
+                </b-row>
                 <div id="pdf"></div>
             </b-card>
         </b-collapse>
@@ -150,6 +164,8 @@
     import {Prey} from "../../assets/simulation/Prey";
     import {saveSimulationExperimentPdf} from "../../assets/pdfUtils";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
+    import {simulationParams} from "../../assets/simulation/simulationParams";
+    import {predatorPreyChartOptions} from "../../assets/simulation/predatorPreyChartOptions";
 
     export default {
         name: "SimulationExperiment",
@@ -160,7 +176,7 @@
         props: {
             simulationParams: {
                 type: Object,
-                default: {key: 'key'}
+                default: simulationParams
             }
         },
         watch: {
@@ -192,9 +208,8 @@
                 ///////////////////////////
 
                 //////////////////////////////////////////////////////////////////////
-                gridList: [],
                 organisms: [],
-                gridListOrg: [],
+                organismsGrid: [],
 
                 // Stats that get passed down to the app-stats component
                 currentTick: 0,
@@ -215,98 +230,7 @@
                 dataPredator: [],
 
                 /////////////////////////////////
-                chartOptions: {
-                    title: {
-                        text: 'Predator-prey population size'
-                    },
-                    colors: ['#6aff6b', '#10e3dd', '#fff6f0', '#f91b26'],
-                    chart: {
-                        zoom: {
-                            enabled: true
-                        },
-                    },
-                    grid: {
-                        clipMarkers: false
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    tooltip: {
-                        x: {},
-                        y: {}
-                    },
-                    yaxis: [
-                        {
-                            axisTicks: {
-                                show: true
-                            },
-                            axisBorder: {
-                                show: true,
-                                color: "#FF1654"
-                            },
-                            labels: {
-                                style: {
-                                    color: "#FF1654"
-                                },
-                                show: true,
-                                rotate: -45,
-                                rotateAlways: false,
-                                hideOverlappingLabels: true,
-                                showDuplicates: false,
-                                trim: true,
-                                formatter: function (value) {
-                                    return value.toFixed(2)
-                                }
-                            },
-                            title: {
-                                text: "Prey population"
-                            }
-                        },
-                        {
-                            opposite: true,
-                            axisTicks: {
-                                show: true
-                            },
-                            axisBorder: {
-                                show: true,
-                                color: "#247BA0"
-                            },
-                            labels: {
-                                style: {
-                                    color: "#247BA0"
-                                },
-                                show: true,
-                                rotate: -45,
-                                rotateAlways: false,
-                                hideOverlappingLabels: true,
-                                showDuplicates: false,
-                                trim: true,
-                                formatter: function (value) {
-                                    return value.toFixed(2);
-                                }
-                            },
-                            title: {
-                                text: "Predator population"
-                            }
-                        },
-                        {
-                            show: false,
-                            seriesName: "Prey population"
-                        },
-                        {
-                            show: false,
-                            seriesName: "Prey population"
-                        }
-                    ],
-                    legend: {
-                        horizontalAlign: "left",
-                        offsetX: 10
-                    },
-                    stroke: {
-                        curve: "smooth",
-                        width: 3
-                    },
-                },
+                chartOptions: predatorPreyChartOptions,
                 params: [
                     {name: "killPredatorPriority", min: 0.1, max: 1, step: 0.1, active: false},
                     {name: "killPreyPriority", min: 0.1, max: 1, step: 0.1, active: false},
@@ -430,10 +354,10 @@
                             type: "area",
                             data: [[0, this.preyMaxCount], [this.maxTick, this.preyMaxCount]]
                         });
-                        let t =
-                            this.getMaxTimeBetween(result[0].data, this.preyMinCount, this.preyMaxCount);
-                        let t1 = this.getOverallTimeBetween(result[0].data, this.preyMinCount, this.preyMaxCount);
-                        this.maxTimeBetweenValues.push([t, t1]);
+                        this.maxTimeBetweenValues.push([
+                            this.getMaxTimeBetween(result[0].data, this.preyMinCount, this.preyMaxCount),
+                            this.getOverallTimeBetween(result[0].data, this.preyMinCount, this.preyMaxCount)
+                        ]);
                         this.seriesArray.push([...result])
                     })
                 }
@@ -500,22 +424,6 @@
                     }
                 }
                 this.getRecParams(0, []);
-                /*for (let j = this.params[0].min; j <= this.params[0].max; j += this.params[0].step) {
-                    for (let j1 = this.params[1].min; j1 <= this.params[1].max; j1 += this.params[1].step) {
-                        for (let j2 = this.params[2].min; j2 <= this.params[2].max; j2 += this.params[2].step) {
-                            for (let j3 = this.params[3].min; j3 <= this.params[3].max; j3 += this.params[3].step) {
-                                for (let j4 = this.params[4].min; j4 <= this.params[4].max; j4 += this.params[4].step) {
-                                    for (let j5 = this.params[5].min; j5 <= this.params[5].max; j5 += this.params[5].step) {
-                                        if (this.experimentRun === false) {
-                                            return;
-                                        }
-                                        runSimulationExperiment.call(this, parameters, j, j1, j2, j3, j4, j5);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }*/
             },
             getRecParams(i, paramsArr) {
                 if (i === this.params.length - 1) {
@@ -726,6 +634,10 @@
 
     .vs-input {
         color: black;
+    }
+
+    .button {
+        margin-right: 10px;
     }
 
 </style>

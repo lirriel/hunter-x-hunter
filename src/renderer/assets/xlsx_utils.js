@@ -8,6 +8,13 @@ export function readXlsxWorkbook() {
     return XLSX.readFile(o[0]);
 }
 
+export function checkNan(val) {
+    if (isNaN(val)) {
+        return 0;
+    }
+    return val;
+}
+
 export function saveWorkbook(name, workbook) {
     /* show a file-save dialog and write the workbook */
     var o = dialog.showSaveDialog({

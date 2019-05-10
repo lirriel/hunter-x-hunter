@@ -428,9 +428,7 @@
                                   type="number"
                                   v-model.number="experimentLotkaVolterraContiniousTimeAlleeEffect.b"/>
                 </b-col>
-
             </b-row>
-
             <b-row>
                 <b-col sm="4">
                     <label>Time</label>
@@ -441,7 +439,6 @@
                                   v-model.number="time"></b-form-input>
                 </b-col>
             </b-row>
-
             <b-row>
                 <b-col sm="4">
                     <label>Time step</label>
@@ -456,22 +453,31 @@
         </div>
         <div style="margin-top: 10px">
             <b-button v-on:click="calculateLotkaVolterra" variant="outline-primary">
+                <i class="fas fa-calculator"></i>
                 Calculate
             </b-button>
-            <b-button v-on:click="saveData" variant="outline-primary">
-                Save
-            </b-button>
-            <b-button v-on:click="savePdf" variant="outline-primary">Save Pdf</b-button>
-            <b-button v-on:click="compare" variant="outline-warning">
+            <b-button v-on:click="compare" variant="outline-info">
+                <i class="fas fa-greater-than-equal"></i>
                 Compare
             </b-button>
-            <b-button v-on:click="getBifurcationD" variant="outline-warning">generate</b-button>
+            <br>
+            <b-button v-on:click="saveData" variant="outline-success">
+                <i class="fas fa-file-excel"></i>
+                Save Data
+            </b-button>
+            <b-button v-on:click="savePdf" variant="outline-danger">
+                <i class="far fa-file-pdf"/>
+                Save Pdf
+            </b-button>
         </div>
+        <vs-divider/>
         <div style="margin-top: 20px">
-            <b-button v-b-modal.modal-test-compare variant="outline-primary">Hold test</b-button>
+            <b-button v-b-modal.modal-test-compare variant="outline-primary">
+                <i class="fas fa-rocket"></i>Start tests
+            </b-button>
         </div>
         <b-modal id="modal-test-compare" scrollable size="xl" title="parameter run test">
-            <comparison-test-modal :model="currentModel"
+            <l-v-comparison-test-modal :model="currentModel"
                                    :params="currentExperimentParams"
                                    :predator="predator"
                                    :prey="prey"
@@ -491,12 +497,12 @@
         RosenzweigMacArthur,
     } from "../../assets/lotkaVolterra";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
-    import ComparisonTestModal from './ComparisonTestModal'
+    import LVComparisonTestModal from './modals/LVComparisonTestModal'
 
     export default {
         name: "LotkaVolterraControlPanel",
         components: {
-            ComparisonTestModal
+            LVComparisonTestModal
         },
         data() {
             return {
@@ -575,7 +581,9 @@
                 isLotkaVolterraFiniteCapacity: false,
                 isLotkaVolterraQuadratic: false,
                 isLotkaVolterraContiniousTimeAlleeEffect: false,
-                ////////////////////////////////
+
+                isPreyBifurcation: true,
+
                 currentModel: null,
                 currentExperimentParams: null,
             }
@@ -641,6 +649,7 @@
                         this.experimentLotkaVolterraContiniousTimeAlleeEffect.b);
                     this.currentExperimentParams = this.experimentLotkaVolterraContiniousTimeAlleeEffect;
                 }
+                this.$emit('model', {model: this.currentModel, predator: this.predator, prey: this.prey})
             },
             calculateLotkaVolterra() {
                 this.assignParams(this.currentType);
@@ -702,36 +711,6 @@
                     this.dataBehave.push([x, y])
                 }
             },
-            getBifurcationD() {
-                this.dataBifurcation = [];
-                var x = this.prey;
-                var y = this.predator;
-                for (var i = this.bifurcationStartValue; i <= this.bifurcationMaxValue; i += this.bifurcationStep) {
-                    var res = {prey: 0, predator: 0};
-                    if (this.bifurcationParam === 'alpha') {
-                        res = this.currentModel.calculateModel(x, y);
-                    } else if (this.bifurcationParam === 'beta') {
-                        res = this.currentModel.calculateModel(x, y);
-                        // res = BasicLotkaVolterra.calculateModel(x, 0, this.alpha, this.gamma1, i, this.gamma2);
-                        // res = lotkaVolterraContiniousTime(x, y, 1.6, 125, 3.2, i, 0.6, 0.56);
-                    } else if (this.bifurcationParam === 'gamma1') {
-                        res = this.currentModel.calculateModel(x, y);
-                        // res = BasicLotkaVolterra.calculateModel(x, 0, this.alpha, i, this.beta, this.gamma2);
-                        // res = lotkaVolterraContiniousTime(x, y, 1.6, 125, 3.2, 50, i, 0.56);
-                    } else if (this.bifurcationParam === 'gamma2') {
-                        res = this.currentModel.calculateModel(x, y);
-                        // res = BasicLotkaVolterra.calculateModel(x, 0, this.alpha, this.gamma1, this.beta, i);
-                        // res = lotkaVolterraContiniousTime(x, y, 1.6, 125, 3.2, 50, 0.6, i);
-                    }
-                    x = x + res.prey;
-                    this.dataBifurcation.push([i, x])
-                }
-                this.seriesBifurcation = [{
-                    name: "Bifrucation " + this.bifurcationParam,
-                    data: this.dataBifurcation
-                }];
-                this.$emit('bifurcation', this.seriesBifurcation)
-            },
             saveData() {
                 var wb = createWorkbook();
                 // add data prey
@@ -768,7 +747,7 @@
                 } else if (this.isRosenzweigMacArthur === true) {
                     curParams = this.experimentRosenzweigMacArthur;
                 }
-                this.$emit('compare', {series: this.seriesCompare, params: curParams});
+                this.$emit('compare', {series: this.seriesCompare, params: Object.assign({}, curParams)});
             },
             savePdf() {
                 this.$emit('savePdf', true)
@@ -779,11 +758,16 @@
 
 <style scoped>
     label {
-        font-size: smaller;
+        font-family: 'Karla', sans-serif;
+        font-size: medium;
     }
 
-    .b-row {
+    b-row {
         margin-bottom: 10px;
+    }
+
+    button {
+        margin: 5px;
     }
 
 </style>

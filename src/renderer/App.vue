@@ -82,23 +82,28 @@
 
 <style lang="scss">
     @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600');
+    @import url('https://fonts.googleapis.com/css?family=Karla');
 
     body,
     html {
         margin: 0;
+        font-family: 'Karla', sans-serif;
         padding: 0;
     }
 
     body {
-        font-family: 'Source Sans Pro', sans-serif;
+        font-family: 'Karla', sans-serif;
+        /*font-family: 'Source Sans Pro', sans-serif;*/
         background-color: #f77070;
     }
 
     label {
+        font-family: 'Karla', sans-serif;
         color: black;
     }
 
     h1, h2, h3, h4, h5 {
+        font-family: 'Karla', sans-serif;
         color: black;
     }
 

@@ -30,9 +30,9 @@
 
 <script>
     import VueApexCharts from 'vue-apexcharts'
-    import BehaviourDiargam from './diagrams/BehaviourDiargam'
-    import JacobMonodController from "./control-panel/JacobMonodController"
-    import BasicChartBox from './diagrams/BasicChartBox'
+    import BehaviourDiargam from '../diagrams/BehaviourDiargam'
+    import JacobMonodController from "../control-panels/JacobMonodController"
+    import BasicChartBox from '../diagrams/BasicChartBox'
 
     export default {
         name: "JacobMonod",

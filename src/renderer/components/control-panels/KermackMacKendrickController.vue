@@ -91,16 +91,19 @@
         </div>
         <div style="margin-top: 10px">
             <b-button v-on:click="calculateKermackMakKendrick" variant="outline-primary">
+                <i class="fas fa-calculator"></i>
                 Calculate
             </b-button>
-            <b-button v-on:click="saveData" variant="outline-primary">
-                Save
+            <b-button v-on:click="saveData" variant="outline-success" style="margin-left: 10px">
+                <i class="fas fa-file-excel"></i>
+                Save Data
             </b-button>
         </div>
+        <vs-divider/>
         <div style="margin-top: 10px">
             <div style="margin-top: 20px">
                 <b-button v-b-modal.modal-test-compare-kmk variant="outline-primary">
-                    Hold test
+                    <i class="fas fa-rocket"></i>Start tests
                 </b-button>
             </div>
             <b-modal id="modal-test-compare-kmk" scrollable size="xl" title="parameter run test">
@@ -110,8 +113,7 @@
                                             :r="R"
                                             :s="S"
                                             :time="time"
-                                            :time-step="timeStep"
-                />
+                                            :time-step="timeStep"/>
             </b-modal>
         </div>
     </div>
@@ -119,7 +121,7 @@
 
 <script>
     import {BasicSIR, KermackMakKendrickSIS, SIRS} from "../../assets/kermackMakKendrick";
-    import KmKComparisonTestModal from './KmKComparisonTestModal'
+    import KmKComparisonTestModal from './modals/KmKComparisonTestModal'
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
 
     export default {
@@ -380,6 +382,7 @@
 
 <style scoped>
     label {
+        font-family: 'Karla', sans-serif;
         font-size: smaller;
     }
 
