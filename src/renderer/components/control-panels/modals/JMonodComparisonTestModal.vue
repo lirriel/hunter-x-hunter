@@ -6,63 +6,66 @@
                     <b-form-select :options="params" style="margin-bottom: 20px"
                                    v-model="currentParam"/>
                     <b-row>
-                        <b-col sm="4">
+                        <b-col sm="6">
                             <label>Min</label>
                         </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Start value"
-                                          step="0.0001"
+                        <b-col sm="6">
+                            <b-form-input placeholder="Start value"
                                           type="number"
                                           v-model.number="min"/>
                         </b-col>
                     </b-row>
                     <b-row>
-                        <b-col sm="4">
+                        <b-col sm="6">
                             <label>Max</label>
                         </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Max value"
-                                          step="0.0001"
+                        <b-col sm="6">
+                            <b-form-input placeholder="Max value"
                                           type="number"
                                           v-model.number="max"/>
                         </b-col>
                     </b-row>
                     <b-row>
-                        <b-col sm="4">
+                        <b-col sm="6">
                             <label>Step</label>
                         </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.0000" placeholder="step"
-                                          step="0.000001"
+                        <b-col sm="6">
+                            <b-form-input placeholder="step"
                                           type="number"
                                           v-model.number="step"/>
                         </b-col>
                     </b-row>
 
                     <b-row>
-                        <b-col sm="4">
+                        <b-col sm="6">
                             <label>Time index</label>
                         </b-col>
-                        <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Time index"
-                                          step="0.0001"
+                        <b-col sm="6">
+                            <b-form-input placeholder="Time index"
                                           type="number"
                                           v-model.number="timeIndex"/>
                         </b-col>
                     </b-row>
-
-                    <b-button v-on:click="calculate" variant="outline-primary">
-                        <i class="fas fa-calculator"></i>
-                        Calculate
-                    </b-button>
-                    <b-button v-on:click="saveExperiment" variant="outline-primary">
-                        <i class="far fa-file-pdf"/>
-                        Save pdf
-                    </b-button>
-                    <b-button v-on:click="saveExperimentXlsx" variant="outline-primary">
-                        <i class="fas fa-file-excel"></i>
-                        Save Data
-                    </b-button>
+                    <b-col>
+                        <b-row>
+                            <b-button v-on:click="calculate" variant="outline-primary">
+                                <i class="fas fa-calculator"></i>
+                                Calculate
+                            </b-button>
+                        </b-row>
+                        <b-row>
+                            <b-button v-on:click="saveExperiment" variant="outline-danger">
+                                <i class="far fa-file-pdf"/>
+                                Save pdf
+                            </b-button>
+                        </b-row>
+                        <b-row>
+                            <b-button v-on:click="saveExperimentXlsx" variant="outline-success">
+                                <i class="fas fa-file-excel"></i>
+                                Save Data
+                            </b-button>
+                        </b-row>
+                    </b-col>
                 </b-row>
             </b-col>
             <b-col>
@@ -318,6 +321,10 @@
 
     .b-button {
         margin: 10px;
+    }
+
+    .row {
+        margin-top: 10px;
     }
 
     th {

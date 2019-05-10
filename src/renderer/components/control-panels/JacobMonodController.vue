@@ -101,10 +101,12 @@
                 <i class="fas fa-calculator"></i>
                 Calculate
             </b-button>
-            <b-button v-on:click="saveData" variant="outline-primary">
+            <br>
+            <b-button style="margin-top: 10px" v-on:click="saveData" variant="outline-success">
                 <i class="fas fa-file-excel"></i>
                 Save Data
             </b-button>
+            <vs-divider/>
             <div style="margin-top: 20px">
                 <b-button v-b-modal.modal-test-compare-jm variant="outline-primary">
                     <i class="fas fa-rocket"></i>Start tests
@@ -249,7 +251,7 @@
         font-size: smaller;
     }
 
-    .b-row {
+    .row {
         margin-bottom: 10px;
     }
 </style>

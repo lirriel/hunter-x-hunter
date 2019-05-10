@@ -10,11 +10,11 @@
                         @r0="onR"
                         @series="onSeries"
                         @seriesBehave="onSeriesBehave"/>
-                <div class="shadow p-3 mb-5 bg-white rounded">
-                    <h5>initial value analysis: <br> {{msg}}</h5>
+                <div class="shadow p-3 mb-5 bg-white rounded" v-if="msg.length > 0">
+                    <h6>Initial value analysis: {{msg}}</h6>
                 </div>
-                <div class="shadow p-3 mb-5 bg-white rounded">
-                    <h5>Basic reproduction number : <br> {{r0}}</h5>
+                <div class="shadow p-3 mb-5 bg-white rounded" v-if="r0 != 0">
+                    <h6>Basic reproduction number : {{r0}}</h6>
                 </div>
             </b-col>
             <b-col sm="9">
@@ -25,17 +25,17 @@
             </b-col>
         </b-row>
         <b-row>
-            <b-tabs style="width: 700px">
+            <b-tabs style="width: 900px">
                 <b-tab active title="Behaviour">
-                    <behaviour-diargam :series="seriesBehave.series" id="kmkBehave"/>
+                    <behaviour-diargam :series="seriesBehave.series" id="kmkBehave" style="margin-left: 30px; margin-top: 20px"/>
                 </b-tab>
                 <b-tab title="Behave curve" v-if="behaveCurveFlag">
                     <basic-chart-box :chart-options="chartOptions"
                                      :series="seriesBehaveCurve"
                                      id="kmkBehaveCurve"/>
                 </b-tab>
-                <b-tab title="Bifurcation">
-                </b-tab>
+                <!--<b-tab title="Bifurcation">-->
+                <!--</b-tab>-->
                 <b-tab title="Epidemic points info">
                     <div class="shadow p-3 mb-5 bg-white rounded">
                         <label v-if="info.peak !== [-1,-1]">Infection peak:
