@@ -7,6 +7,7 @@
                         @behaveCurve="onBehaveCurve"
                         @epidemicInfo="onEpidemicInfo"
                         @message="onmessage"
+                        @model="onModelChanged"
                         @r0="onR"
                         @series="onSeries"
                         @seriesBehave="onSeriesBehave"/>
@@ -25,27 +26,39 @@
             </b-col>
         </b-row>
         <b-row>
-            <b-tabs style="width: 900px">
+            <b-tabs style="width: 100%">
                 <b-tab active title="Behaviour">
-                    <behaviour-diargam :series="seriesBehave.series" id="kmkBehave" style="margin-left: 30px; margin-top: 20px"/>
+                    <div class="inside-tab">
+                        <behaviour-diargam :series="seriesBehave.series" id="kmkBehave"
+                                           style="width: 900px; margin-left: 30px; margin-top: 20px"/>
+                    </div>
                 </b-tab>
                 <b-tab title="Behave curve" v-if="behaveCurveFlag">
-                    <basic-chart-box :chart-options="chartOptions"
-                                     :series="seriesBehaveCurve"
-                                     id="kmkBehaveCurve"/>
+                    <div class="inside-tab">
+                        <basic-chart-box :chart-options="chartOptions"
+                                         :series="seriesBehaveCurve"
+                                         id="kmkBehaveCurve"
+                                         style="width: 900px"/>
+                    </div>
                 </b-tab>
-                <!--<b-tab title="Bifurcation">-->
-                <!--</b-tab>-->
                 <b-tab title="Epidemic points info">
-                    <div class="shadow p-3 mb-5 bg-white rounded">
-                        <label v-if="info.peak !== [-1,-1]">Infection peak:
-                            {{round(info.peak)}}</label>
-                        <br>
-                        <br>
-                        <label>Recovery Threshold: {{round(info.recoverThreshold)}}</label>
-                        <br>
-                        <br>
-                        <label>Outbreak Threshold: {{round(info.outbreakThreshold)}}</label>
+                    <div class="inside-tab">
+                        <div class="shadow p-3 mb-5 bg-white rounded">
+                            <label v-if="info.peak !== [-1,-1]">Infection peak:
+                                {{round(info.peak)}}</label>
+                            <br>
+                            <br>
+                            <label>Recovery Threshold: {{round(info.recoverThreshold)}}</label>
+                            <br>
+                            <br>
+                            <label>Outbreak Threshold: {{round(info.outbreakThreshold)}}</label>
+                        </div>
+                    </div>
+                </b-tab>
+                <b-tab title="Customize">
+                    <div class="inside-tab">
+                        <calculate-custom-parameters
+                                :input-model="currentModel"/>
                     </div>
                 </b-tab>
             </b-tabs>
@@ -59,6 +72,8 @@
     import KermackMacKendrickController from '../control-panels/KermackMacKendrickController'
     import BasicChartBox from '../diagrams/BasicChartBox'
     import {roundArray} from "../../assets/pdfUtils";
+    import CalculateCustomParameters from '../CalculateCustomParameters'
+    import {BasicSIR} from "../../assets/kermackMakKendrick";
 
     export default {
         name: "KermackMakKendrick",
@@ -66,7 +81,8 @@
             apexchart: VueApexCharts,
             BehaviourDiargam,
             KermackMacKendrickController,
-            BasicChartBox
+            BasicChartBox,
+            CalculateCustomParameters
         },
         data() {
             return {
@@ -136,6 +152,7 @@
                 seriesBehave: [],
                 seriesBehaveCurve: [],
                 behaveCurveFlag: false,
+                currentModel: new BasicSIR(0, 0),
                 msg: '',
                 info: {}
             }
@@ -154,6 +171,9 @@
             onmessage(data) {
                 this.msg = data;
             },
+            onModelChanged(data) {
+                this.currentModel = data.model;
+            },
             onR(data) {
                 this.r0 = data;
             },
@@ -168,5 +188,8 @@
 </script>
 
 <style scoped>
-
+    .inside-tab {
+        margin-top: 20px;
+        margin-left: 30px;
+    }
 </style>

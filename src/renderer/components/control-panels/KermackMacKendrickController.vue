@@ -115,7 +115,7 @@
                 <i class="fas fa-calculator"></i>
                 Calculate
             </b-button>
-            <b-button v-on:click="saveData" variant="outline-success" style="margin-left: 10px">
+            <b-button style="margin-left: 10px" v-on:click="saveData" variant="outline-success">
                 <i class="fas fa-file-excel"></i>
                 Save Data
             </b-button>
@@ -240,6 +240,7 @@
                         this.expKermackMcKendrick.mor,
                     )
                 }
+                this.$emit('model', {model: this.currentModel})
             },
             calculateKermackMakKendrick() {
                 this.update(this.currentType);
@@ -311,7 +312,7 @@
 
                 for (let j = 0; j < t; j += this.timeStep) {
                     let res = this.currentModel.calculateModel(s, i, r);
-                    console.log(res)
+                    console.log(res);
                     s += this.timeStep * res.ds;
                     let di = this.timeStep * res.di;
                     i += di;

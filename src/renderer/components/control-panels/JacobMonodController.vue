@@ -168,6 +168,7 @@
                     this.expJMonod.mMax,
                     this.expJMonod.K
                 );
+                this.$emit('model', {model: this.currentModel});
                 this.calculateForTime(this.time);
                 this.series = [
                     {

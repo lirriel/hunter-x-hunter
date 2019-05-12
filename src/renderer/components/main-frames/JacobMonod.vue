@@ -4,6 +4,7 @@
         <b-row>
             <b-col sm="3">
                 <jacob-monod-controller @curve="onMonodCurve" @series="onSeries"
+                                        @model="onModelChanged"
                                         @seriesBehave="onSeriesBehave"/>
             </b-col>
             <b-col sm="9">
@@ -14,14 +15,28 @@
             </b-col>
         </b-row>
         <b-row>
-            <b-tabs style="width: 700px">
+            <b-tabs style="width: 100%">
                 <b-tab active title="Behaviour">
-                    <behaviour-diargam :series="seriesBehave.series" :x="'Nutrient'" :y="'Bacteria'"
-                                       id="jmBehave"/>
+                    <div class="inside-tab">
+                        <behaviour-diargam :series="seriesBehave.series" :x="'Nutrient'"
+                                           :y="'Bacteria'"
+                                           style="width: 900px"
+                                           id="jmBehave"/>
+                    </div>
                 </b-tab>
                 <b-tab active title="Monod curve">
-                    <behaviour-diargam :series="seriesCurve" :x="'Nutrient'" :y="'Monod function'"
-                                       id="jmCurve"/>
+                    <div class="inside-tab">
+                        <behaviour-diargam :series="seriesCurve" :x="'Nutrient'"
+                                           :y="'Monod function'"
+                                           style="width: 900px"
+                                           id="jmCurve"/>
+                    </div>
+                </b-tab>
+                <b-tab title="Customize">
+                    <div class="inside-tab">
+                        <calculate-custom-parameters
+                                :input-model="currentModel"></calculate-custom-parameters>
+                    </div>
                 </b-tab>
             </b-tabs>
         </b-row>
@@ -33,6 +48,7 @@
     import BehaviourDiargam from '../diagrams/BehaviourDiargam'
     import JacobMonodController from "../control-panels/JacobMonodController"
     import BasicChartBox from '../diagrams/BasicChartBox'
+    import CalculateCustomParameters from '../CalculateCustomParameters'
 
     export default {
         name: "JacobMonod",
@@ -40,10 +56,12 @@
             apexchart: VueApexCharts,
             BehaviourDiargam,
             JacobMonodController,
-            BasicChartBox
+            BasicChartBox,
+            CalculateCustomParameters
         },
         data() {
             return {
+                currentModel: new JacobMonod(0, 0, 0, 0, 0),
                 chartOptions: {
                     title: {
                         text: 'Chemostat biomass and bacteria size'
@@ -146,11 +164,17 @@
             },
             onMonodCurve(data) {
                 this.seriesCurve = data;
-            }
+            },
+            onModelChanged(data) {
+                this.currentModel = data.model;
+            },
         }
     }
 </script>
 
 <style scoped>
-
+    .inside-tab {
+        margin-top: 20px;
+        margin-left: 30px;
+    }
 </style>

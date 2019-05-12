@@ -23,6 +23,7 @@ import VueDragResize from 'vue-drag-resize'
 import VModal from 'vue-js-modal'
 import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css' //Vuesax styles
+import * as math from 'mathjs'
 
 Vue.use(Vuesax);
 Vue.use(VModal);

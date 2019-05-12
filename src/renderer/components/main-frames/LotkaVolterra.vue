@@ -35,7 +35,7 @@
             </b-col>
         </b-row>
         <b-row>
-            <b-tabs>
+            <b-tabs style="width: 100%;">
                 <b-tab active title="Behaviour">
                     <div class="inside-tab">
                         <behaviour-diargam :series="seriesBehave" id="lvBehave"
@@ -72,6 +72,11 @@
                         </b-row>
                     </div>
                 </b-tab>
+                <b-tab title="Customize">
+                    <div class="inside-tab">
+                        <calculate-custom-parameters :input-model="currentModel"></calculate-custom-parameters>
+                    </div>
+                </b-tab>
             </b-tabs>
         </b-row>
         <div id="pdf"></div>
@@ -85,6 +90,8 @@
     import BasicChartBox from '../diagrams/BasicChartBox'
     import {saveIdAsPdf} from "../../assets/pdfUtils";
     import {predatorPreyChartOptions} from "../../assets/simulation/predatorPreyChartOptions";
+    import CalculateCustomParameters from '../CalculateCustomParameters'
+    import {BasicLotkaVolterra} from "../../assets/lotkaVolterra";
 
     export default {
         name: "LotkaVolterra",
@@ -92,7 +99,8 @@
             apexchart: VueApexCharts,
             BehaviourDiargam,
             BasicChartBox,
-            LotkaVolterraControlPanel
+            LotkaVolterraControlPanel,
+            CalculateCustomParameters
         },
         data() {
             return {
@@ -138,7 +146,7 @@
                 bifurcationStartValue: 0,
                 bifurcationMaxValue: 10,
                 bifurcationStep: 1,
-                currentModel: null,
+                currentModel: new BasicLotkaVolterra(0, 0, 0, 0),
                 predator: 0,
                 prey: 0
             }
@@ -156,6 +164,7 @@
                 this.seriesCompare.push(data);
             },
             onModelChanged(data) {
+                console.log("Model changed");
                 this.currentModel = data.model;
                 this.predator = data.predator;
                 this.prey = data.prey;
