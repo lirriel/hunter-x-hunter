@@ -513,7 +513,7 @@
                     'Lotka-Volterra finite capacity',
                     'Lotka-Volterra Continious Time with Allee Effect'
                 ],
-                currentType: '',
+                currentType: 'Lotka-Volterra',
                 experimentLotkaVolterra: {
                     prey: 20,
                     predator: 3,
@@ -600,8 +600,23 @@
                 this.assignParams(data);
             }
         },
+        mounted() {
+            this.isLotkaVolterra = true;
+            this.currentModel = new BasicLotkaVolterra(
+                this.experimentLotkaVolterra.a,
+                this.experimentLotkaVolterra.g1,
+                this.experimentLotkaVolterra.b,
+                this.experimentLotkaVolterra.g2
+            );
+            this.currentExperimentParams = this.experimentLotkaVolterra;
+        },
         methods: {
             assignParams(data) {
+                this.isLotkaVolterra =
+                    this.isLotkaVolterraContTime =
+                        this.isRosenzweigMacArthur =
+                            this.isLotkaVolterraFiniteCapacity =
+                                this.isLotkaVolterraContiniousTimeAlleeEffect = false;
                 if (data === this.lvModelTypes[0]) {
                     this.isLotkaVolterra = true;
                     this.currentModel = new BasicLotkaVolterra(
@@ -668,11 +683,11 @@
                 this.$emit('modelType', this.currentType);
                 let vArray = [];
                 for (let i = 0; i < this.dataBehave.length; i++) {
-                    // let v = this.currentModel.phaseSpacePlot(
-                    //     this.dataBehave[i][0],
-                    //     this.dataBehave[i][1]
-                    // );
-                    // vArray.push([this.dataBehave[i][1], this.dataBehave[i][0], v]);
+                    let v = this.currentModel.phaseSpacePlot(
+                        this.dataBehave[i][0],
+                        this.dataBehave[i][1]
+                    );
+                    vArray.push([this.dataBehave[i][1], this.dataBehave[i][0], v]);
                 }
                 let eq = this.currentModel.getEquilibrium();
                 this.seriesBehave = [

@@ -57,11 +57,32 @@
 
             <b-row v-if="!isBasicSIR">
                 <b-col sm="4">
-                    <label>Birth rate</label>
+                    <label>Immunity loss rate</label>
                 </b-col>
                 <b-col sm="8">
                     <b-form-input max="1000.00" min="0.00" placeholder="m" step="0.01" type="number"
                                   v-model.number="expKermackMcKendrick.m"/>
+                </b-col>
+
+            </b-row>
+
+            <b-row v-if="currentType === 'SIRS with vital dynamics'">
+                <b-col sm="4">
+                    <label>Birth rate</label>
+                </b-col>
+                <b-col sm="8">
+                    <b-form-input max="1000.00" min="0.00" placeholder="m" step="0.01" type="number"
+                                  v-model.number="expKermackMcKendrick.v"/>
+                </b-col>
+
+            </b-row>
+            <b-row v-if="currentType === 'SIRS with vital dynamics'">
+                <b-col sm="4">
+                    <label>Morality rate</label>
+                </b-col>
+                <b-col sm="8">
+                    <b-form-input max="1000.00" min="0.00" placeholder="m" step="0.01" type="number"
+                                  v-model.number="expKermackMcKendrick.mor"/>
                 </b-col>
 
             </b-row>
@@ -120,7 +141,12 @@
 </template>
 
 <script>
-    import {BasicSIR, KermackMakKendrickSIS, SIRS} from "../../assets/kermackMakKendrick";
+    import {
+        BasicSIR,
+        KermackMakKendrickSIS,
+        SIRS,
+        SIRSwithVital
+    } from "../../assets/kermackMakKendrick";
     import KmKComparisonTestModal from './modals/KmKComparisonTestModal'
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
 
@@ -138,9 +164,11 @@
                     R: 10,
                     b: 0.01,
                     q: 0.8,
-                    m: 1
+                    m: 1,
+                    v: 0,
+                    mor: 0
                 },
-                modelTypes: ["Basic SIR", "SIR with repeat infection", "SIS"],
+                modelTypes: ["Basic SIR", "SIR with repeat infection", "SIS", "SIRS with vital dynamics"],
                 currentType: "Basic SIR",
                 currentModel: null,
 
@@ -202,6 +230,15 @@
                         this.expKermackMcKendrick.q
                     );
                     this.R = 0;
+                }
+                if (data === this.modelTypes[3]) {
+                    this.currentModel = new SIRSwithVital(
+                        this.expKermackMcKendrick.b,
+                        this.expKermackMcKendrick.m,
+                        this.expKermackMcKendrick.q,
+                        this.expKermackMcKendrick.v,
+                        this.expKermackMcKendrick.mor,
+                    )
                 }
             },
             calculateKermackMakKendrick() {
@@ -274,7 +311,7 @@
 
                 for (let j = 0; j < t; j += this.timeStep) {
                     let res = this.currentModel.calculateModel(s, i, r);
-
+                    console.log(res)
                     s += this.timeStep * res.ds;
                     let di = this.timeStep * res.di;
                     i += di;

@@ -313,10 +313,13 @@
 
 <style scoped>
     table {
-        border: 1px solid #42b983;
-        border-radius: 3px;
-        background-color: #fff;
-        color: black;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
     }
 
     .b-button {
@@ -325,25 +328,6 @@
 
     .row {
         margin-top: 10px;
-    }
-
-    th {
-        background-color: #3672b9;
-        color: rgba(255, 255, 255, 0.66);
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    td {
-        background-color: white;
-    }
-
-    th, td {
-        min-width: 120px;
-        padding: 10px 20px;
     }
 
 </style>

@@ -64,8 +64,8 @@
                 <b-row id="gameHumanExp" v-if="!showSpinner">
                     <b-col :key="ind" v-for="(value, ind) in valueArray">
                         <label>{{currentParam}} = {{value}}</label>
-                        <label>Longest period = {{maxTimeBetweenValues[ind][0]}}</label>
                         <br>
+                        <label>Longest period = {{maxTimeBetweenValues[ind][0]}}, </label>
                         <label>Overall period = {{maxTimeBetweenValues[ind][1]}}</label>
                         <basic-chart-box :chart-options="chartOptions" :series="seriesArray[ind]"
                                          style="width: 700px"/>
@@ -306,6 +306,13 @@
                     }
                 },
             }
+        },
+        mounted() {
+            let opt = {
+                show: false,
+                seriesName: 'Prey population'
+            };
+            this.chartOptions.yaxis.push(opt, opt)
         },
         methods: {
             saveTableData() {
@@ -557,6 +564,7 @@
         let upd = this.update;
         let tick = this.maxTick;
         let isAlive = this.experimentRun;
+        let that = this;
         let p = new Promise(function (resolve, reject) {
             setTimeout(() => {
                 let p = parameters;
@@ -576,6 +584,16 @@
                         data: dataPredator
                     }
                 ];
+                series.push({
+                    name: "Prey min",
+                    type: "area",
+                    data: [[0, that.preyMinCount], [that.maxTick, that.preyMinCount]]
+                });
+                series.push({
+                    name: "Prey max",
+                    type: "area",
+                    data: [[0, that.preyMaxCount], [that.maxTick, that.preyMaxCount]]
+                });
                 resolve(series);
             }, 500);
         });

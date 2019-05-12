@@ -74,14 +74,12 @@
             </b-col>
 
         </b-row>
-        <b-row id="experiment-table" style="margin-left: 5px">
+        <b-col id="experiment-table" style="margin-left: 5px">
             <b-row>
                 <h2>Changing parameter {{currentParam}}</h2>
             </b-row>
-            <br><br>
-            <br><br>
             <b-row style="margin-top: 40px; margin-left: 10px">
-                <table width="800px">
+                <table>
                     <thead>
                     <th>Parameter value</th>
                     <th>Equilibrium point</th>
@@ -93,11 +91,11 @@
                         <td>{{e.paramValue.toFixed(2)}}</td>
                         <td>{{round(e.eqPoint)}}</td>
                         <td>
-                            <table style="margin-left: 8px">
+                            <table class="table-1">
                                 <tbody>
                                 <tr v-for="entry in e.jacobianMatrix">
-                                    <td v-for="key in entry" v-if="key">
-                                        {{key.toFixed(2)}}
+                                    <td v-for="key in round(entry)">
+                                        {{key}}
                                     </td>
                                 </tr>
                                 </tbody>
@@ -108,7 +106,7 @@
                     </tbody>
                 </table>
             </b-row>
-        </b-row>
+        </b-col>
     </div>
 </template>
 
@@ -116,7 +114,12 @@
     import BasicChartBox from '../../diagrams/BasicChartBox'
     import BehaviourDiargam from '../../diagrams/BehaviourDiargam'
     import {saveExperimentPdf} from "../../../assets/pdfUtils";
-    import {createWorkbook, createWorkSheet, saveWorkbook, checkNan} from "../../../assets/xlsx_utils";
+    import {
+        createWorkbook,
+        createWorkSheet,
+        saveWorkbook,
+        checkNan
+    } from "../../../assets/xlsx_utils";
     import {roundArray} from "../../../assets/pdfUtils";
 
     export default {
@@ -259,6 +262,7 @@
                 for (let i = 0; i < eq.length; i++) {
                     let el = eq[i];
                     let q = this.model.jacobian(el[0], el[1]);
+                    console.log(q);
                     this.equilibriumArray.push({
                         paramValue: ind,
                         eqPoint: [...el],
@@ -292,40 +296,24 @@
 </script>
 
 <style scoped>
-    table {
-        border: 1px dashed #b9b9b7;
-        border-radius: 2px;
-        background-color: #fff;
-        color: black;
-    }
-
     b-button {
         margin: 10px;
     }
 
-    th {
-        background-color: #3672b9;
-        color: rgba(255, 255, 255, 0.66);
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    td {
-        background-color: white;
+    table {
+        width: 100%;
     }
 
     th, td {
-        min-width: 100%;
-        padding: 10px 10px;
-        margin-left: 10px;
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
     }
 
     .col {
         margin-top: 5px;
     }
+
     .row {
         margin-top: 5px;
     }

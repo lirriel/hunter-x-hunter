@@ -111,10 +111,11 @@ export class SIRSwithVital extends SIRS {
 
     calculateModel(S, I, R) {
         const N = S + I + R;
+        console.log(this.b + " " + this.m + " " + N)
         return {
-            ds: this.mor * N - super.b * S * I / N + super.m * R - this.v * S,
-            di: super.b * S * I / N - super.q * I - super.m * I,
-            dr: super.q * I - super.m * R - this.v * R
+            ds: this.mor * N - this.b * S * I / N + this.m * R - this.v * S,
+            di: this.b * S * I / N - this.q * I - this.m * I,
+            dr: this.q * I - this.m * R - this.v * R
         }
     }
 

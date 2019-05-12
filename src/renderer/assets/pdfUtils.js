@@ -208,6 +208,9 @@ export function getParamsText(modelType, currentParams) {
 export function roundArray(sampleArray) {
     if (sampleArray) {
         return sampleArray.map(function (each_element) {
+            if (isNaN(each_element)) {
+                return 0;
+            }
             return Number(each_element.toFixed(2));
         });
     } else return []
