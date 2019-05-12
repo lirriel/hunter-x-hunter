@@ -22,22 +22,22 @@
                     },
                     {
                         href: '/lotka-volterra',
-                        title: 'Lotka-Volterra',
+                        title: 'Predator Prey Model',
                         icon: 'fa fa-dragon'
                     },
                     {
                         href: '/kermack-makkendrick',
-                        title: 'Kermack-MakKendrick',
+                        title: 'Epidemological Model',
                         icon: 'fa fa-procedures'
                     },
                     {
                         href: '/jacob-monod',
-                        title: 'Jacob-Monod',
+                        title: 'Chemostat model',
                         icon: 'fa fa-bug'
                     },
                     {
                         href: '/game',
-                        title: 'Game',
+                        title: 'Simulation',
                         icon: 'fa fa-chess-board'
                     }
                 ],

@@ -49,6 +49,7 @@
     import JacobMonodController from "../control-panels/JacobMonodController"
     import BasicChartBox from '../diagrams/BasicChartBox'
     import CalculateCustomParameters from '../CalculateCustomParameters'
+    import {JacobMonod} from "../../assets/jacobMonod";
 
     export default {
         name: "JacobMonod",

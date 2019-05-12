@@ -216,6 +216,13 @@ export function roundArray(sampleArray) {
     } else return []
 }
 
+export function setNumber(x) {
+    if (isNan(x)) {
+        return 0;
+    }
+    return x;
+}
+
 function getScale(canvas, w, h) {
     let scale = 1;
     if (canvas.clientHeight > canvas.clientWidth) {

@@ -128,20 +128,23 @@
                     <b-table :fields="fields" :items="items" hover/>
                 </b-row>
                 <b-row v-if="isExperimentFinished">
-                    <vs-input label="Chart id" placeholder="0" type="number"
-                              v-model="getChartInd"/>
-                    <b-row style="margin-top: 10px">
-                        <b-button v-on:click="getSeriesHuman(getChartInd)"
+                    <b-col sm="3">
+                        <vs-input label="Chart id" placeholder="0" type="number"
+                                  v-model="getChartInd"/>
+                    </b-col>
+                    <b-col style="margin-top: 10px">
+                        <b-button style="height: 40px; margin-top: 20px"
+                                  v-on:click="getSeriesHuman(getChartInd)"
                                   variant="outline-primary">
                             <i class="far fa-chart-bar"></i>
                             Get chart
                         </b-button>
-                        <b-button style="margin-left: 10px;" v-on:click="saveChartData(getChartInd)"
+                        <b-button style="margin-left: 10px; height: 40px; margin-top: 20px"
+                                  v-on:click="saveChartData(getChartInd)"
                                   variant="outline-success"><i class="fas fa-file-excel"></i>
                             Save chart data
                         </b-button>
-                    </b-row>
-
+                    </b-col>
                 </b-row>
                 <b-row v-if="isExperimentFinished">
                     <b-row style="margin-top: 10px">

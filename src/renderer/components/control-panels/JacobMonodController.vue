@@ -169,62 +169,67 @@
                     this.expJMonod.K
                 );
                 this.$emit('model', {model: this.currentModel});
-                this.calculateForTime(this.time);
-                this.series = [
-                    {
-                        name: "bacteria",
-                        data: this.dataX
-                    },
-                    {
-                        name: "nutrient",
-                        data: this.dataS
+                this.calculateForTime(this.time).then(result => {
+                    this.dataX = result.x;
+                    this.dataS = result.s;
+                    this.dataXToS = result.behave;
+                    this.series = [
+                        {
+                            name: "bacteria",
+                            data: this.dataX
+                        },
+                        {
+                            name: "nutrient",
+                            data: this.dataS
+                        }
+                    ];
+                    let _params = null;
+                    if (this.isJMonod === true) {
+                        _params = this.expJMonod;
                     }
-                ];
-                let _params = null;
-                if (this.isJMonod === true) {
-                    _params = this.expJMonod;
-                }
-                this.$emit("series", {series: this.series, params: _params});
-                this.seriesBehave = [
-                    {
-                        name: "Bacteria behave",
-                        data: this.dataXToS
-                    }
-                ];
-                this.$emit("seriesBehave", {series: this.seriesBehave, params: _params});
+                    this.$emit("series", {series: this.series, params: _params});
+                    this.seriesBehave = [
+                        {
+                            name: "Bacteria behave",
+                            data: this.dataXToS
+                        }
+                    ];
+                    this.$emit("seriesBehave", {series: this.seriesBehave, params: _params});
+                })
             },
             calculateForTime(t) {
-                this.dataX = [];
-                this.dataS = [];
+                let that = this;
+                return new Promise(resolve => {
+                    let dataX = [];
+                    let dataS = [];
+                    let dataXToS = [];
 
-                this.dataXToS = [];
+                    let xValue = that.expJMonod.x;
+                    let sValue = that.expJMonod.s;
+                    let mCurve = [];
 
-                let xValue = this.expJMonod.x;
-                let sValue = this.expJMonod.s;
-                let mCurve = [];
+                    dataX.push([0, xValue]);
+                    dataS.push([0, sValue]);
+                    dataXToS.push([sValue, xValue]);
 
-                this.dataX.push([0, xValue]);
-                this.dataS.push([0, sValue]);
+                    for (let j = that.timeStep; j < t; j += that.timeStep) {
+                        let res = that.model.calculateModel(xValue, sValue);
 
-                this.dataXToS.push([sValue, xValue]);
+                        xValue += that.timeStep * res.dx;
+                        sValue += that.timeStep * res.ds;
 
-                for (let j = this.timeStep; j < t; j += this.timeStep) {
-                    let res = this.model.calculateModel(xValue, sValue);
+                        mCurve.push([sValue, that.model.getMonodCurve(sValue)]);
 
-                    xValue += this.timeStep * res.dx;
-                    sValue += this.timeStep * res.ds;
-
-                    mCurve.push([sValue, this.model.getMonodCurve(sValue)]);
-
-                    this.dataX.push([j, xValue]);
-                    this.dataS.push([j, sValue]);
-
-                    this.dataXToS.push([sValue, xValue]);
-                }
-                this.$emit("curve", [{
-                    name: "monod curve",
-                    data: [...mCurve]
-                }])
+                        dataX.push([j, xValue]);
+                        dataS.push([j, sValue]);
+                        dataXToS.push([sValue, xValue]);
+                    }
+                    that.$emit("curve", [{
+                        name: "monod curve",
+                        data: [...mCurve]
+                    }]);
+                    resolve({x: dataX, s: dataS, behave: dataXToS})
+                })
             },
             standardMuFunction(_s) {
                 return this.expJMonod.muMax * _s / (_s + this.expJMonod.k);

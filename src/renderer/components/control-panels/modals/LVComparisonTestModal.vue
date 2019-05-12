@@ -226,50 +226,55 @@
                 this.series = this.currentSeries;
             },
             calculateForTime(ind) {
-                this.dataPrey = [];
-                this.dataPredator = [];
-                let dataBehave = [];
+                let that = this;
+                new Promise(resolve => {
+                    let dataPrey = [];
+                    let dataPredator = [];
+                    let dataBehave = [];
 
-                let x = this.prey;
-                let y = this.predator;
+                    let x = that.prey;
+                    let y = that.predator;
 
-                this.dataPrey.push([0, x]);
-                this.dataPredator.push([0, y]);
-                dataBehave.push([x, y]);
+                    dataPrey.push([0, x]);
+                    dataPredator.push([0, y]);
+                    dataBehave.push([x, y]);
 
-                for (let i = 0; i < this.time; i += this.timeStep) {
-                    let res = this.model.calculateModel(x, y);
-                    x += this.timeStep * res.prey;
-                    y += this.timeStep * res.predator;
+                    for (let i = 0; i < that.time; i += that.timeStep) {
+                        let res = that.model.calculateModel(x, y);
+                        x += that.timeStep * res.prey;
+                        y += that.timeStep * res.predator;
 
-                    this.dataPrey.push([i, checkNan(x)]);
-                    this.dataPredator.push([i, checkNan(y)]);
-                    dataBehave.push([checkNan(x), checkNan(y)])
-                }
-                this.currentSeries.push({
-                    name: "Prey population - " + ind,
-                    data: [...this.dataPrey]
-                });
-                this.currentSeries.push({
-                    name: "Predator population - " + ind,
-                    data: [...this.dataPredator]
-                });
-                this.seriesBehave.push({
-                    name: "Behave - " + ind,
-                    data: [...dataBehave]
-                });
-                let eq = this.model.getEquilibrium();
-                for (let i = 0; i < eq.length; i++) {
-                    let el = eq[i];
-                    let q = this.model.jacobian(el[0], el[1]);
-                    console.log(q);
-                    this.equilibriumArray.push({
-                        paramValue: ind,
-                        eqPoint: [...el],
-                        jacobianMatrix: [...q],
-                        stability: this.model.jacobianAnalysis(q)
-                    })
-                }
+                        dataPrey.push([i, checkNan(x)]);
+                        dataPredator.push([i, checkNan(y)]);
+                        dataBehave.push([checkNan(x), checkNan(y)])
+                    }
+                    resolve({prey: dataPrey, predator: dataPredator, behave: dataBehave})
+                }).then(result => {
+                    this.currentSeries.push({
+                        name: "Prey population - " + ind,
+                        data: result.prey
+                    });
+                    this.currentSeries.push({
+                        name: "Predator population - " + ind,
+                        data: result.predator
+                    });
+                    this.seriesBehave.push({
+                        name: "Behave - " + ind,
+                        data: result.behave
+                    });
+                    let eq = this.model.getEquilibrium();
+                    for (let i = 0; i < eq.length; i++) {
+                        let el = eq[i];
+                        let q = this.model.jacobian(el[0], el[1]);
+                        console.log(q);
+                        this.equilibriumArray.push({
+                            paramValue: ind,
+                            eqPoint: [...el],
+                            jacobianMatrix: [...q],
+                            stability: this.model.jacobianAnalysis(q)
+                        })
+                    }
+                })
             },
             saveExperiment() {
                 saveExperimentPdf(this.model, "experiment-series", "experiment-behave", "experiment-table");

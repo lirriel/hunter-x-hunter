@@ -212,7 +212,8 @@
 
                 dataX: [],
                 dataS: [],
-
+                paramX: [],
+                paramS: [],
                 series: []
             }
         },
@@ -222,10 +223,8 @@
                 this.seriesBehave = [];
                 this.ev = [];
                 this.equilibriumArray = [];
-
-                let paramX = [];
-                let paramS = [];
-
+                this.paramX = [];
+                this.paramS = [];
                 for (let i = this.min; i < this.max; i += this.step) {
                     this.model[this.currentParam] = i;
                     if (this.currentParam === "s") {
@@ -236,57 +235,61 @@
                     }
 
                     this.calculateForTime(i);
-                    paramX.push([i, this.dataX[this.timeIndex][1]]);
-                    paramS.push([i, this.dataS[this.timeIndex][1]]);
                 }
-                this.seriesParameterToX = [
-                    {
-                        name: "Nutrient",
-                        data: [...paramS]
-                    },
-                    {
-                        name: "Bacteria",
-                        data: [...paramX]
-                    }
-                ]
+
             },
             calculateForTime(ind) {
-                this.dataX = [];
-                this.dataS = [];
-                let dataXToS = [];
+                let that = this;
+                new Promise(resolve => {
+                    let dataX = [];
+                    let dataS = [];
+                    let dataXtoS = [];
 
-                let xValue = this.x;
-                let sValue = this.s;
+                    let xValue = that.x;
+                    let sValue = that.s;
 
-                this.dataX.push([0, xValue]);
-                this.dataS.push([0, sValue]);
+                    dataX.push([0, xValue]);
+                    dataS.push([0, sValue]);
 
-                dataXToS.push([xValue, sValue]);
+                    dataXtoS.push([xValue, sValue]);
 
-                for (let j = 0; j < this.time; j += this.timeStep) {
-                    let res = this.model.calculateModel(xValue, sValue);
+                    for (let j = 0; j < that.time; j += that.timeStep) {
+                        let res = that.model.calculateModel(xValue, sValue);
 
-                    xValue += this.timeStep * res.dx;
-                    sValue += this.timeStep * res.ds;
+                        xValue += that.timeStep * res.dx;
+                        sValue += that.timeStep * res.ds;
 
-                    this.dataX.push([j, xValue]);
-                    this.dataS.push([j, sValue]);
+                        dataX.push([j, xValue]);
+                        dataS.push([j, sValue]);
+                        dataXtoS.push([xValue, sValue]);
+                    }
+                    resolve({x: dataX, s: dataS, xs: dataXtoS})
+                }).then(result => {
+                    this.series.push({
+                        name: "Bacteria - " + ind,
+                        data: result.x
+                    });
+                    this.series.push({
+                        name: "Nutrient - " + ind,
+                        data: result.s
+                    });
 
-                    dataXToS.push([xValue, sValue]);
-                }
-
-                this.series.push({
-                    name: "Bacteria - " + ind,
-                    data: [...this.dataX]
-                });
-                this.series.push({
-                    name: "Nutrient - " + ind,
-                    data: [...this.dataS]
-                });
-
-                this.seriesBehave.push({
-                    name: "X to S - " + ind,
-                    data: [...dataXToS]
+                    this.seriesBehave.push({
+                        name: "X to S - " + ind,
+                        data: result.xs
+                    });
+                    this.paramX.push([ind, result.x[this.timeIndex][1]]);
+                    this.paramS.push([ind, result.s[this.timeIndex][1]]);
+                    this.seriesParameterToX = [
+                        {
+                            name: "Nutrient",
+                            data: [...this.paramS]
+                        },
+                        {
+                            name: "Bacteria",
+                            data: [...this.paramX]
+                        }
+                    ]
                 })
             },
             saveExperiment() {

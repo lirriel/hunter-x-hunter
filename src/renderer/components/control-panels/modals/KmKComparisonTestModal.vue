@@ -265,91 +265,94 @@
                 this.series = this.currentSeries;
             },
             calculateForTime(ind) {
-                this.dataS = [];
-                this.dataI = [];
-                this.dataR = [];
+                let that = this;
+                new Promise(resolve => {
+                    let dataS = [];
+                    let dataI = [];
+                    let dataR = [];
 
-                let dataSToI = [];
-                let is = [];
-                let dataSToR = [];
-                let dataIToR = [];
+                    let dataSToI = [];
+                    let isMax = [];
+                    let dataSToR = [];
+                    let dataIToR = [];
 
-                let s = this.s;
-                let i = this.i;
-                let r = this.r;
+                    let s = that.s;
+                    let i = that.i;
+                    let r = that.r;
 
-                is.push([0, s + i + r]);
-                is.push([s + i + r, 0]);
+                    isMax.push([0, s + i + r]);
+                    isMax.push([s + i + r, 0]);
 
-                this.dataS.push([0, s]);
-                this.dataI.push([0, i]);
-                this.dataR.push([0, r]);
-
-                dataSToI.push([s, i]);
-                dataSToR.push([s, r]);
-                dataIToR.push([r, i]);
-
-                for (let j = 0; j < this.time; j += this.timeStep) {
-                    let res = this.model.calculateModel(s, i, r);
-
-                    s += this.timeStep * res.ds;
-                    i += this.timeStep * res.di;
-                    r += this.timeStep * res.dr;
-
-                    this.dataS.push([j, s]);
-                    this.dataI.push([j, i]);
-                    this.dataR.push([j, r]);
+                    dataS.push([0, s]);
+                    dataI.push([0, i]);
+                    dataR.push([0, r]);
 
                     dataSToI.push([s, i]);
                     dataSToR.push([s, r]);
                     dataIToR.push([r, i]);
 
-                    if (i === 0) {
-                        break;
+                    for (let j = 0; j < that.time; j += that.timeStep) {
+                        let res = that.model.calculateModel(s, i, r);
+
+                        s += that.timeStep * res.ds;
+                        i += that.timeStep * res.di;
+                        r += that.timeStep * res.dr;
+
+                        dataS.push([j, s]);
+                        dataI.push([j, i]);
+                        dataR.push([j, r]);
+
+                        dataSToI.push([s, i]);
+                        dataSToR.push([s, r]);
+                        dataIToR.push([r, i]);
+
+                        if (i === 0) {
+                            break;
+                        }
+                        resolve({s: dataS, i: dataI, r: dataR, si: dataSToI, sr: dataSToR, ir: dataIToR, max: isMax})
                     }
-                }
+                }).then(result => {
+                    this.currentSeries.push({
+                        name: "S - " + ind,
+                        data: result.s
+                    });
+                    this.currentSeries.push({
+                        name: "I - " + ind,
+                        data: result.i
+                    });
+                    this.currentSeries.push({
+                        name: "R - " + ind,
+                        data: result.r
+                    });
 
-                this.currentSeries.push({
-                    name: "S - " + ind,
-                    data: [...this.dataS]
-                });
-                this.currentSeries.push({
-                    name: "I - " + ind,
-                    data: [...this.dataI]
-                });
-                this.currentSeries.push({
-                    name: "R - " + ind,
-                    data: [...this.dataR]
-                });
+                    this.phaseTrajSeries.push({
+                        name: "Behave - I to S -" + ind,
+                        data: result.si
+                    });
+                    this.phaseTrajSeries.push({
+                        name: "MAX - " + ind,
+                        data: result.max
+                    });
 
-                this.phaseTrajSeries.push({
-                    name: "Behave - I to S -" + ind,
-                    data: [...dataSToI]
-                });
-                this.phaseTrajSeries.push({
-                    name: "MAX - " + ind,
-                    data: [...is]
-                });
+                    this.seriesStoR.push({
+                        name: "Behave - R to S - " + ind,
+                        data: result.sr
+                    });
+                    this.seriesStoR.push({
+                        name: "MAX - " + ind,
+                        data: result.max
+                    });
 
-                this.seriesStoR.push({
-                    name: "Behave - R to S - " + ind,
-                    data: [...dataSToR]
-                });
-                this.seriesStoR.push({
-                    name: "MAX - " + ind,
-                    data: [...is]
-                });
-
-                this.seriesItoR.push({
-                    name: "Behave - I to R -" + ind,
-                    data: [...dataIToR]
-                });
-                this.seriesItoR.push({
-                    name: "MAX - " + ind,
-                    data: [...is]
-                });
-
-                this.drawPhaseTrajectories(ind);
+                    this.seriesItoR.push({
+                        name: "Behave - I to R -" + ind,
+                        data: result.ir
+                    });
+                    this.seriesItoR.push({
+                        name: "MAX - " + ind,
+                        data: result.max
+                    });
+                    this.drawPhaseTrajectories(ind);
+                })
             },
             saveExperiment() {
                 saveExperimentPdf(this.model, "experiment-series-kmk",
@@ -427,6 +430,7 @@
     .col {
         margin-top: 5px;
     }
+
     .row {
         margin-top: 5px;
     }

@@ -244,103 +244,121 @@
             },
             calculateKermackMakKendrick() {
                 this.update(this.currentType);
-                this.calculateForTime(this.time);
-                let r0 = this.currentModel.getBasicReproductionNumber(this.S);
-                this.series = [
-                    {
-                        name: "Susceptible",
-                        data: this.dataS
-                    },
-                    {
-                        name: "Infected",
-                        data: this.dataI
-                    },
-                    {
-                        name: "Recovered",
-                        data: this.dataR
-                    }
-                ];
-                let _params = this.expKermackMcKendrick;
-                this.$emit('series', {series: this.series, params: _params});
-                this.$emit('r0', this.currentModel.getBasicReproductionNumber(this.S));
-                let eq = this.currentModel.getEquilibrium(this.S, this.I, this.R);
-                this.seriesBehave = [
-                    {
-                        name: "S to I",
-                        data: this.dataSToI
-                    },
-                    {
-                        name: "S to R",
-                        data: this.dataSToR
-                    },
-                    {
-                        name: "I to R",
-                        data: this.dataIToR
-                    },
-                    {
-                        name: "Equilibrium Points",
-                        type: 'line',
-                        data: eq
-                    }
-                ];
-                this.$emit('seriesBehave', {series: this.seriesBehave, params: _params});
-                this.$emit('epidemicInfo', this.epidemicInfo)
+                this.calculateForTime(this.time).then(result => {
+                    this.dataS = result.s;
+                    this.dataI = result.i;
+                    this.dataR = result.r;
+                    this.dataSToI = result.si;
+                    this.dataSToR = result.sr;
+                    this.dataIToI = result.ir;
+                    let r0 = this.currentModel.getBasicReproductionNumber(this.S);
+                    this.series = [
+                        {
+                            name: "Susceptible",
+                            data: this.dataS
+                        },
+                        {
+                            name: "Infected",
+                            data: this.dataI
+                        },
+                        {
+                            name: "Recovered",
+                            data: this.dataR
+                        }
+                    ];
+                    let _params = this.expKermackMcKendrick;
+                    this.$emit('series', {series: this.series, params: _params});
+                    this.$emit('r0', this.currentModel.getBasicReproductionNumber(this.S));
+                    let eq = this.currentModel.getEquilibrium(this.S, this.I, this.R);
+                    this.seriesBehave = [
+                        {
+                            name: "S to I",
+                            data: this.dataSToI
+                        },
+                        {
+                            name: "S to R",
+                            data: this.dataSToR
+                        },
+                        {
+                            name: "I to R",
+                            data: this.dataIToR
+                        },
+                        {
+                            name: "Equilibrium Points",
+                            type: 'line',
+                            data: eq
+                        }
+                    ];
+                    this.$emit('seriesBehave', {series: this.seriesBehave, params: _params});
+                    this.$emit('epidemicInfo', this.epidemicInfo)
+                })
             },
             calculateForTime(t) {
-                this.dataS = [];
-                this.dataI = [];
-                this.dataR = [];
+                let that = this;
+                return new Promise(resolve => {
+                    let dataS = [];
+                    let dataI = [];
+                    let dataR = [];
 
-                this.dataSToI = [];
-                this.dataSToR = [];
-                this.dataIToR = [];
+                    let dataSToI = [];
+                    let dataSToR = [];
+                    let dataIToR = [];
 
-                let s_0 = this.S;
+                    let s_0 = that.S;
 
-                let s = this.S;
-                let i = this.I;
-                let r = this.R;
+                    let s = that.S;
+                    let i = that.I;
+                    let r = that.R;
 
-                this.getMessage();
+                    that.getMessage();
 
-                this.dataS.push([0, s]);
-                this.dataI.push([0, i]);
-                this.dataR.push([0, r]);
+                    dataS.push([0, s]);
+                    dataI.push([0, i]);
+                    dataR.push([0, r]);
 
-                let pr = i;
-                this.epidemicInfo.peak = [-1, -1];
+                    let pr = i;
+                    that.epidemicInfo.peak = [-1, -1];
 
-                for (let j = 0; j < t; j += this.timeStep) {
-                    let res = this.currentModel.calculateModel(s, i, r);
-                    console.log(res);
-                    s += this.timeStep * res.ds;
-                    let di = this.timeStep * res.di;
-                    i += di;
-                    r += this.timeStep * res.dr;
+                    for (let j = 0; j < t; j += that.timeStep) {
+                        let res = that.currentModel.calculateModel(s, i, r);
+                        console.log(res);
+                        s += that.timeStep * res.ds;
+                        let di = that.timeStep * res.di;
+                        i += di;
+                        r += that.timeStep * res.dr;
 
-                    if ((di * pr <= 0 || di === 0) && this.epidemicInfo.peak[1] < i) {
-                        this.epidemicInfo.peak = [j, i]
+                        if ((di * pr <= 0 || di === 0) && that.epidemicInfo.peak[1] < i) {
+                            that.epidemicInfo.peak = [j, i]
+                        }
+                        pr = that.timeStep * res.di;
+
+                        if (Math.abs(i - r) <= 0.05) {
+                            that.epidemicInfo.recoverThreshold = [j, i]
+                        }
+                        if (Math.abs(s - i) <= 0.05) {
+                            that.epidemicInfo.outbreakThreshold = [j, i]
+                        }
+
+                        dataS.push([j, s]);
+                        dataI.push([j, i]);
+                        dataR.push([j, r]);
+
+                        dataSToI.push([s, i]);
+                        dataSToR.push([s, r]);
+                        dataIToR.push([r, i]);
                     }
-                    pr = this.timeStep * res.di;
 
-                    if (Math.abs(i - r) <= 0.05) {
-                        this.epidemicInfo.recoverThreshold = [j, i]
-                    }
-                    if (Math.abs(s - i) <= 0.05) {
-                        this.epidemicInfo.outbreakThreshold = [j, i]
-                    }
-
-                    this.dataS.push([j, s]);
-                    this.dataI.push([j, i]);
-                    this.dataR.push([j, r]);
-
-                    this.dataSToI.push([s, i]);
-                    this.dataSToR.push([s, r]);
-                    this.dataIToR.push([r, i]);
-                }
-
-                this.drawPhaseTrajectories();
-                this.drawBehaveCurve(s_0);
+                    that.drawPhaseTrajectories();
+                    that.drawBehaveCurve(s_0);
+                    resolve({
+                        s: dataS,
+                        i: dataI,
+                        r: dataR,
+                        si: dataSToI,
+                        sr: dataIToR,
+                        ir: dataIToR
+                    })
+                })
             },
             saveData() {
                 var wb = createWorkbook();

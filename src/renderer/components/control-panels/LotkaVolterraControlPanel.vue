@@ -478,11 +478,11 @@
         </div>
         <b-modal id="modal-test-compare" scrollable size="xl" title="parameter run test">
             <l-v-comparison-test-modal :model="currentModel"
-                                   :params="currentExperimentParams"
-                                   :predator="predator"
-                                   :prey="prey"
-                                   :time="time"
-                                   :time-step="timeStep"
+                                       :params="currentExperimentParams"
+                                       :predator="predator"
+                                       :prey="prey"
+                                       :time="time"
+                                       :time-step="timeStep"
             />
         </b-modal>
     </div>
@@ -664,67 +664,84 @@
                         this.experimentLotkaVolterraContiniousTimeAlleeEffect.b);
                     this.currentExperimentParams = this.experimentLotkaVolterraContiniousTimeAlleeEffect;
                 }
-                this.$emit('model', {model: this.currentModel, predator: this.predator, prey: this.prey})
+                this.$emit('model', {
+                    model: this.currentModel,
+                    predator: this.predator,
+                    prey: this.prey
+                })
             },
             calculateLotkaVolterra() {
                 this.assignParams(this.currentType);
-                this.calculateForTime(this.time);
-                this.series = [
-                    {
-                        name: "Prey population",
-                        data: this.dataPrey
-                    },
-                    {
-                        name: "Predator population",
-                        data: this.dataPredator
+                this.series = [];
+                this.seriesBehave = [];
+                this.calculateForTime(this.time).then(result => {
+                    this.dataPrey = result.prey;
+                    this.dataPredator = result.predator;
+                    this.dataBehave = result.behave;
+                    this.series = [
+                        {
+                            name: "Prey population",
+                            data: [...this.dataPrey]
+                        },
+                        {
+                            name: "Predator population",
+                            data: [...this.dataPredator]
+                        }
+                    ];
+                    this.$emit('series', {
+                        series: this.series,
+                        params: this.experimentLotkaVolterra
+                    });
+                    this.$emit('modelType', this.currentType);
+                    let vArray = [];
+                    for (let i = 0; i < this.dataBehave.length; i++) {
+                        let v = this.currentModel.phaseSpacePlot(
+                            this.dataBehave[i][0],
+                            this.dataBehave[i][1]
+                        );
+                        vArray.push([this.dataBehave[i][1], this.dataBehave[i][0], v]);
                     }
-                ];
-                this.$emit('series', {series: this.series, params: this.experimentLotkaVolterra});
-                this.$emit('modelType', this.currentType);
-                let vArray = [];
-                for (let i = 0; i < this.dataBehave.length; i++) {
-                    let v = this.currentModel.phaseSpacePlot(
-                        this.dataBehave[i][0],
-                        this.dataBehave[i][1]
-                    );
-                    vArray.push([this.dataBehave[i][1], this.dataBehave[i][0], v]);
-                }
-                let eq = this.currentModel.getEquilibrium();
-                this.seriesBehave = [
-                    {
-                        name: "Behaviour",
-                        type: 'line',
-                        data: this.dataBehave
-                    },
-                    {
-                        name: "Equilibrium Points",
-                        type: 'line',
-                        data: eq
-                    }
-                ];
-                this.$emit('behaviour', this.seriesBehave);
+                    let eq = this.currentModel.getEquilibrium();
+                    this.seriesBehave = [
+                        {
+                            name: "Behaviour",
+                            type: 'line',
+                            data: this.dataBehave
+                        },
+                        {
+                            name: "Equilibrium Points",
+                            type: 'line',
+                            data: eq
+                        }
+                    ];
+                    this.$emit('behaviour', this.seriesBehave);
+                })
             },
             calculateForTime(t) {
-                this.dataPrey = [];
-                this.dataPredator = [];
-                this.dataBehave = [];
+                let that = this;
+                return new Promise(resolve => {
+                    let dataPrey = [];
+                    let dataPredator = [];
+                    let dataBehave = [];
 
-                let x = this.prey;
-                let y = this.predator;
+                    let x = that.prey;
+                    let y = that.predator;
 
-                this.dataPrey.push([0, x]);
-                this.dataPredator.push([0, y]);
-                this.dataBehave.push([y, x]);
+                    dataPrey.push([0, x]);
+                    dataPredator.push([0, y]);
+                    dataBehave.push([y, x]);
 
-                for (let i = this.timeStep; i < t; i += this.timeStep) {
-                    let res = this.currentModel.calculateModel(x, y);
-                    x += this.timeStep * res.prey;
-                    y += this.timeStep * res.predator;
+                    for (let i = that.timeStep; i < t; i += that.timeStep) {
+                        let res = that.currentModel.calculateModel(x, y);
+                        x += that.timeStep * res.prey;
+                        y += that.timeStep * res.predator;
 
-                    this.dataPrey.push([i, x]);
-                    this.dataPredator.push([i, y]);
-                    this.dataBehave.push([x, y])
-                }
+                        dataPrey.push([i, x]);
+                        dataPredator.push([i, y]);
+                        dataBehave.push([x, y])
+                    }
+                    resolve({prey: dataPrey, predator: dataPredator, behave: dataBehave})
+                })
             },
             saveData() {
                 var wb = createWorkbook();
@@ -762,7 +779,10 @@
                 } else if (this.isRosenzweigMacArthur === true) {
                     curParams = this.experimentRosenzweigMacArthur;
                 }
-                this.$emit('compare', {series: this.seriesCompare, params: Object.assign({}, curParams)});
+                this.$emit('compare', {
+                    series: this.seriesCompare,
+                    params: Object.assign({}, curParams)
+                });
             },
             savePdf() {
                 this.$emit('savePdf', true)
