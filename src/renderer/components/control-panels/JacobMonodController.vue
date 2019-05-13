@@ -129,6 +129,7 @@
     import {JacobMonod} from "../../assets/jacobMonod";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
     import JMonodComparisonTestModal from './modals/JMonodComparisonTestModal'
+    import {setNumber} from "../../assets/pdfUtils";
 
     export default {
         name: "JacobMonodController",
@@ -218,11 +219,11 @@
                         xValue += that.timeStep * res.dx;
                         sValue += that.timeStep * res.ds;
 
-                        mCurve.push([sValue, that.model.getMonodCurve(sValue)]);
+                        mCurve.push([sValue, that.model.getMonodCurve(setNumber(sValue))]);
 
-                        dataX.push([j, xValue]);
-                        dataS.push([j, sValue]);
-                        dataXToS.push([sValue, xValue]);
+                        dataX.push([j, setNumber(xValue)]);
+                        dataS.push([j, setNumber(sValue)]);
+                        dataXToS.push([setNumber(sValue), setNumber(xValue)]);
                     }
                     that.$emit("curve", [{
                         name: "monod curve",

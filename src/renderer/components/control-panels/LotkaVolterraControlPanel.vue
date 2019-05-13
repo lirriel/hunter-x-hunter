@@ -1,7 +1,6 @@
 <template>
     <div class="shadow p-3 mb-5 bg-white rounded">
         <b-form-select :options="lvModelTypes" style="margin-bottom: 20px" v-model="currentType"/>
-
         <div v-if="isLotkaVolterra || isLotkaVolterraQuadratic">
             <b-row>
                 <b-col sm="4">
@@ -471,7 +470,18 @@
             </b-button>
         </div>
         <vs-divider/>
-        <div style="margin-top: 20px">
+        <div>
+            <b-button v-b-toggle.formula variant="outline-info">Show formula
+            </b-button>
+            <b-collapse class="mt-2" id="formula">
+                <b-card>
+                    <katex-element :expression='currentModel.getFormula()'
+                                   max-size="\rule{10px}{10px}"/>
+                </b-card>
+            </b-collapse>
+        </div>
+        <vs-divider/>
+        <div style="margin-top: 30px">
             <b-button v-b-modal.modal-test-compare variant="outline-primary">
                 <i class="fas fa-rocket"></i>Start tests
             </b-button>
@@ -498,6 +508,7 @@
     } from "../../assets/lotkaVolterra";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
     import LVComparisonTestModal from './modals/LVComparisonTestModal'
+    import {setNumber} from "../../assets/pdfUtils";
 
     export default {
         name: "LotkaVolterraControlPanel",
@@ -598,6 +609,7 @@
                                     this.isLotkaVolterraContiniousTimeAlleeEffect = false;
 
                 this.assignParams(data);
+                console.log(this.currentModel.getFormula())
             }
         },
         mounted() {
@@ -694,13 +706,13 @@
                     });
                     this.$emit('modelType', this.currentType);
                     let vArray = [];
-                    for (let i = 0; i < this.dataBehave.length; i++) {
-                        let v = this.currentModel.phaseSpacePlot(
-                            this.dataBehave[i][0],
-                            this.dataBehave[i][1]
-                        );
-                        vArray.push([this.dataBehave[i][1], this.dataBehave[i][0], v]);
-                    }
+                    // for (let i = 0; i < this.dataBehave.length; i++) {
+                    //     let v = this.currentModel.phaseSpacePlot(
+                    //         this.dataBehave[i][0],
+                    //         this.dataBehave[i][1]
+                    //     );
+                    //     vArray.push([this.dataBehave[i][1], this.dataBehave[i][0], v]);
+                    // }
                     let eq = this.currentModel.getEquilibrium();
                     this.seriesBehave = [
                         {
@@ -736,9 +748,9 @@
                         x += that.timeStep * res.prey;
                         y += that.timeStep * res.predator;
 
-                        dataPrey.push([i, x]);
-                        dataPredator.push([i, y]);
-                        dataBehave.push([x, y])
+                        dataPrey.push([i, setNumber(x)]);
+                        dataPredator.push([i, setNumber(y)]);
+                        dataBehave.push([setNumber(x), setNumber(y)])
                     }
                     resolve({prey: dataPrey, predator: dataPredator, behave: dataBehave})
                 })

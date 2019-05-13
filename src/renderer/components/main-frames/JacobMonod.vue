@@ -14,6 +14,18 @@
                 </div>
             </b-col>
         </b-row>
+        <vs-divider/>
+        <div>
+            <b-button v-b-toggle.formula variant="outline-info">Show formula
+            </b-button>
+            <b-collapse class="mt-2" id="formula">
+                <b-card>
+                    <katex-element :expression='currentModel.getFormula()'
+                                   max-size="\rule{10px}{10px}"/>
+                </b-card>
+            </b-collapse>
+        </div>
+        <vs-divider/>
         <b-row>
             <b-tabs style="width: 100%">
                 <b-tab active title="Behaviour">

@@ -2,7 +2,7 @@
     <div id="page">
         <h2>Lotka-Volterra model</h2>
         <b-row>
-            <b-col sm="3">
+            <b-col sm="4">
                 <lotka-volterra-control-panel @behaviour="onBehaviour"
                                               @compare="onCompare"
                                               @model="onModelChanged"
@@ -10,7 +10,7 @@
                                               @series="onSeries"
                 />
             </b-col>
-            <b-col id="seriesCharts" sm="9">
+            <b-col id="seriesCharts" sm="8">
                 <div>
                     <b-row>
                         <b-col>
@@ -34,6 +34,7 @@
                 </div>
             </b-col>
         </b-row>
+        <vs-divider/>
         <b-row>
             <b-tabs style="width: 100%;">
                 <b-tab active title="Behaviour">
@@ -146,9 +147,10 @@
                 bifurcationStartValue: 0,
                 bifurcationMaxValue: 10,
                 bifurcationStep: 1,
+                isPreyBifurcation: true,
                 currentModel: new BasicLotkaVolterra(0, 0, 0, 0),
                 predator: 0,
-                prey: 0
+                prey: 0,
             }
         },
         methods: {

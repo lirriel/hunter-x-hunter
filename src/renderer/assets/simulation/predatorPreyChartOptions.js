@@ -78,7 +78,7 @@ export let predatorPreyChartOptions =  {
         offsetX: 10
     },
     stroke: {
-        curve: "smooth",
+        curve: "straight",
         width: 2
     },
 };

@@ -15,6 +15,14 @@ export class BasicSIR extends Model {
         }
     }
 
+    getFormula() {
+        return "\\begin{cases} " +
+            "\\frac{dSusceptible}{dt}=-\\beta*S*I& \\\\ " +
+            "\\frac{dInfected}{dt}=\\beta*S*I-q*I& \\\\" +
+            "\\frac{dRecovered}{dt}=q*I&" +
+            "\\end{cases}"
+    }
+
     getEquilibrium(s_0, i_0, r_0) {
         let n_0 = s_0 + i_0;
         return [
@@ -92,6 +100,14 @@ export class SIRS extends BasicSIR {
         this.q = q;
     }
 
+    getFormula() {
+        return "\\begin{cases} " +
+            "\\frac{dSusceptible}{dt}=\\frac{-\\beta*S*I}{N} + \\mu*(N-S)& \\\\ " +
+            "\\frac{dInfected}{dt}=\\frac{\\beta*S*I}{N}-q*I-\\mu*I& \\\\" +
+            "\\frac{dRecovered}{dt}=q*I-\\mu*R& " +
+            "\\end{cases}"
+    }
+
     calculateModel(S, I, R) {
         const N = S + I + R;
         return {
@@ -107,6 +123,14 @@ export class SIRSwithVital extends SIRS {
         super(b, m, q);
         this.v = v;
         this.mor = mor;
+    }
+
+    getFormula() {
+        return "\\begin{cases} " +
+            "\\frac{dSusceptible}{dt}=mort*N-\\frac{\\beta*S*I}{N}+\\mu*R-v*S& \\\\ " +
+            "\\frac{dInfected}{dt}=\\frac{\\beta*S*I}{N}-q*I-\\mu*I& \\\\" +
+            "\\frac{dRecovered}{dt}=q*I-\\mu*R-v*R& " +
+            "\\end{cases}"
     }
 
     calculateModel(S, I, R) {
@@ -129,6 +153,13 @@ export class SIRSwithVital extends SIRS {
 export class KermackMakKendrickSIS extends SIRS {
     constructor(b, m, q) {
         super(b, m, q)
+    }
+
+    getFormula() {
+        return "\\begin{cases} " +
+            "\\frac{dSusceptible}{dt}=-\\beta*S*I+\\mu*(N-S)+q*I& \\\\ " +
+            "\\frac{dInfected}{dt}=\\beta*S*I-q*I-\\mu*I & " +
+            "\\end{cases}"
     }
 
     calculateModel(S, I, R) {

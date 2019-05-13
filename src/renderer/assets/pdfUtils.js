@@ -217,8 +217,11 @@ export function roundArray(sampleArray) {
 }
 
 export function setNumber(x) {
-    if (isNan(x)) {
+    if (isNaN(x)) {
         return 0;
+    }
+    if (!isFinite(x)) {
+        return Number.MAX_SAFE_INTEGER;
     }
     return x;
 }

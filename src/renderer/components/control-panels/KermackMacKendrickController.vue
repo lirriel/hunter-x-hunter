@@ -110,6 +110,18 @@
                 </b-col>
             </b-row>
         </div>
+        <vs-divider/>
+        <div v-if="currentModel">
+            <b-button v-b-toggle.formula variant="outline-info">Show formula
+            </b-button>
+            <b-collapse class="mt-2" id="formula">
+                <b-card>
+                    <katex-element :expression='currentModel.getFormula()'
+                                   max-size="\rule{10px}{10px}"/>
+                </b-card>
+            </b-collapse>
+        </div>
+        <vs-divider/>
         <div style="margin-top: 10px">
             <b-button v-on:click="calculateKermackMakKendrick" variant="outline-primary">
                 <i class="fas fa-calculator"></i>
@@ -149,6 +161,7 @@
     } from "../../assets/kermackMakKendrick";
     import KmKComparisonTestModal from './modals/KmKComparisonTestModal'
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
+    import {setNumber} from "../../assets/pdfUtils";
 
     export default {
         name: "KermackMacKendrickController",
@@ -339,13 +352,13 @@
                             that.epidemicInfo.outbreakThreshold = [j, i]
                         }
 
-                        dataS.push([j, s]);
-                        dataI.push([j, i]);
-                        dataR.push([j, r]);
+                        dataS.push([j, setNumber(s)]);
+                        dataI.push([j, setNumber(i)]);
+                        dataR.push([j, setNumber(r)]);
 
-                        dataSToI.push([s, i]);
-                        dataSToR.push([s, r]);
-                        dataIToR.push([r, i]);
+                        dataSToI.push([setNumber(s), setNumber(i)]);
+                        dataSToR.push([setNumber(s), setNumber(r)]);
+                        dataIToR.push([setNumber(r), setNumber(i)]);
                     }
 
                     that.drawPhaseTrajectories();

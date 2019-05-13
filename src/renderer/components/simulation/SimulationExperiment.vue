@@ -128,7 +128,7 @@
                     <b-table :fields="fields" :items="items" hover/>
                 </b-row>
                 <b-row v-if="isExperimentFinished">
-                    <b-col sm="3">
+                    <b-col sm="2">
                         <vs-input label="Chart id" placeholder="0" type="number"
                                   v-model="getChartInd"/>
                     </b-col>

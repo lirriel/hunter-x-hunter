@@ -23,8 +23,10 @@ import VueDragResize from 'vue-drag-resize'
 import VModal from 'vue-js-modal'
 import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css' //Vuesax styles
-import * as math from 'mathjs'
+import VueKatex from 'vue-katex'
+import 'katex/dist/katex.min.css'
 
+Vue.use(VueKatex);
 Vue.use(Vuesax);
 Vue.use(VModal);
 Vue.component('vue-drag-resize', VueDragResize);

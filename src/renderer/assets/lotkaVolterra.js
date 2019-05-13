@@ -1,4 +1,9 @@
 export class Model {
+
+    getFormula() {
+        return ""
+    }
+
     constructor() {
     }
 
@@ -50,6 +55,13 @@ export class BasicLotkaVolterra extends Model {
         this.g2 = gamma2;
     }
 
+    getFormula() {
+        return "\\begin{cases} " +
+            "\\frac{dPrey}{dt}=\\alpha*Prey - \\gamma_1*Predator & \\\\ " +
+            "\\frac{dPredator}{dt}=\\gamma_2*Prey*Predator - \\beta*Predator & " +
+            "\\end{cases}"
+    }
+
     /**
      * Basic Lotka-Volterra model
      * @param x prey
@@ -99,6 +111,13 @@ export class LotkaVolterraContiniousTimeFiniteCapacity extends Model {
         this.d = d;
     }
 
+    getFormula() {
+        return "\\begin{cases} " +
+            "\\frac{dPrey}{dt}=r*Prey - \\frac{1-Prey}{K} -\\frac{\\alpha*Predator*Prey}{c+Prey} & \\\\ " +
+            "\\frac{dPredator}{dt}=\\frac{\\beta*\\alpha*Prey*Predator}{c+Prey} - d*Predator & " +
+            "\\end{cases}"
+    }
+
     calculateModel(x, y) {
         return {
             prey: this.r * x * (1 - x / this.k) - this.a * x * y / (this.c + x),
@@ -142,6 +161,13 @@ export class LotkaVolterraContiniousTimeAlleeEffect {
 
     alle(x) {
         return x / (this.b + x);
+    }
+
+    getFormula() {
+        return "\\begin{cases} " +
+            "\\frac{dPrey}{dt}=r*\\frac{Prey}{\\beta+Prey}*Prey*(1-Prey) - \\alpha * Prey* Predator & \\\\ " +
+            "\\frac{dPredator}{dt}=\\alpha*Predator*(Prey-Predator)" +
+            "\\end{cases}"
     }
 
     calculateModel(x, y) {
@@ -203,6 +229,13 @@ export class LotkaVolterraFiniteCapacity extends Model {
         this.K = K;
     }
 
+    getFormula() {
+        return "\\begin{cases} " +
+            "\\frac{dPrey}{dt}=Prey*\\beta*(1-\\frac{x}{K}) - Prey*\\alpha*Predator & \\\\ " +
+            "\\frac{dPredator}{dt}=Predator*c*\\alpha*x - d*Predator & " +
+            "\\end{cases}"
+    }
+
     /**
      * Lotka-Volterra model with finite carrying capacity for the prey
      * @param x prey
@@ -230,6 +263,13 @@ export class RosenzweigMacArthur extends Model {
         this.k = k;
         this.m = m;
         this.c = c;
+    }
+
+    getFormula() {
+        return "\\begin{cases} " +
+            "\\frac{dPrey}{dt}=Prey*(1-\\frac{Prey}{K}) - \\frac{m*Prey*Predator}{1+Prey} & \\\\ " +
+            "\\frac{dPredator}{dt}=-c*Predator+\\frac{m+Predator*Prey}{1+Prey}& " +
+            "\\end{cases}"
     }
 
     calculateModel(x, y) {

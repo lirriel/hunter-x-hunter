@@ -25,6 +25,7 @@
                 </div>
             </b-col>
         </b-row>
+        <vs-divider/>
         <b-row>
             <b-tabs style="width: 100%">
                 <b-tab active title="Behaviour">
