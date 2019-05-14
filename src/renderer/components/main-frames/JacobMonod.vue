@@ -2,29 +2,18 @@
     <div>
         <h2>J.Monod Chemostat model</h2>
         <b-row>
-            <b-col sm="3">
+            <b-col sm="4">
                 <jacob-monod-controller @curve="onMonodCurve" @series="onSeries"
                                         @model="onModelChanged"
                                         @seriesBehave="onSeriesBehave"/>
             </b-col>
-            <b-col sm="9">
+            <b-col sm="8">
                 <div>
                     <basic-chart-box :chart-options="chartOptions" :series="series.series"
                                      id="jmSeries"/>
                 </div>
             </b-col>
         </b-row>
-        <vs-divider/>
-        <div>
-            <b-button v-b-toggle.formula variant="outline-info">Show formula
-            </b-button>
-            <b-collapse class="mt-2" id="formula">
-                <b-card>
-                    <katex-element :expression='currentModel.getFormula()'
-                                   max-size="\rule{10px}{10px}"/>
-                </b-card>
-            </b-collapse>
-        </div>
         <vs-divider/>
         <b-row>
             <b-tabs style="width: 100%">

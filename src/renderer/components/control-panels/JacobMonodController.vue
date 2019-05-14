@@ -96,6 +96,18 @@
                               v-model.number="timeStep"></b-form-input>
             </b-col>
         </b-row>
+        <vs-divider/>
+        <div>
+            <b-button v-b-toggle.formula variant="outline-info">Show formula
+            </b-button>
+            <b-collapse class="mt-2" id="formula">
+                <b-card>
+                    <katex-element :expression='model.getFormula()'
+                                   max-size="\rule{10px}{10px}"/>
+                </b-card>
+            </b-collapse>
+        </div>
+        <vs-divider/>
         <div style="margin-top: 10px">
             <b-button v-on:click="calculateJMonod" variant="outline-primary">
                 <i class="fas fa-calculator"></i>
@@ -156,7 +168,7 @@
                 time: 5,
                 timeStep: 0.2,
 
-                model: null,
+                model: new JacobMonod(0, 0, 0, 0, 0),
                 isJMonod: true
             }
         },
@@ -255,7 +267,7 @@
 <style scoped>
     label {
         font-family: 'Karla', sans-serif;
-        font-size: smaller;
+        font-size: medium;
     }
 
     .row {
