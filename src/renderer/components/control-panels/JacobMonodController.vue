@@ -113,6 +113,12 @@
                 <i class="fas fa-calculator"></i>
                 Calculate
             </b-button>
+            <b-button v-on:click="addToChart" variant="outline-info">
+                <i class="fas fa-greater-than"></i>
+            </b-button>
+            <b-button v-on:click="removeChart" variant="outline-danger">
+                <i class="far fa-window-close"></i>
+            </b-button>
             <br>
             <b-button style="margin-top: 10px" v-on:click="saveData" variant="outline-success">
                 <i class="fas fa-file-excel"></i>
@@ -173,6 +179,12 @@
             }
         },
         methods: {
+            addToChart() {
+                this.$emit('addToChart', [...this.series]);
+            },
+            removeChart() {
+                this.$emit('removeChart', true);
+            },
             calculateJMonod() {
                 this.model = new JacobMonod(
                     this.expJMonod.sIn,

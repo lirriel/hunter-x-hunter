@@ -8,6 +8,8 @@
                         @epidemicInfo="onEpidemicInfo"
                         @message="onmessage"
                         @model="onModelChanged"
+                        @addToChart="addToChart"
+                        @removeChart="removeChart"
                         @r0="onR"
                         @series="onSeries"
                         @seriesBehave="onSeriesBehave"/>
@@ -144,6 +146,15 @@
                             }
                         }
                     ],
+                    xaxis: {
+                        title: {
+                            text: "Time",
+                            style: {
+                                color: "#883157",
+                                fontSize: "14px"
+                            }
+                        }
+                    },
                     stroke: {
                         curve: "straight",
                         width: 1
@@ -155,12 +166,19 @@
                 behaveCurveFlag: false,
                 currentModel: new BasicSIR(0, 0),
                 msg: '',
-                info: {}
+                info: {},
+                comparedSeries: []
             }
         },
         methods: {
             onSeries(data) {
                 this.series = data;
+                if (this.comparedSeries.length >0 ){
+                    for (let i = 0; i < this.comparedSeries.length; i++) {
+                        this.series.series.push(this.comparedSeries[i])
+                    }
+                    console.log(this.series.series)
+                }
             },
             onSeriesBehave(data) {
                 this.seriesBehave = data;
@@ -168,6 +186,18 @@
             onBehaveCurve(data) {
                 this.behaveCurveFlag = data.flag;
                 this.seriesBehaveCurve = data.series;
+            },
+            addToChart(data) {
+                for (let i = 0; i < data.length; i++) {
+                    data[i].name += " - 1"
+                }
+                this.comparedSeries = data;
+            },
+            removeChart() {
+                if (this.comparedSeries.length > 0) {
+                    this.series.series = this.series.series.slice(0, 3);
+                    this.comparedSeries = []
+                }
             },
             onmessage(data) {
                 this.msg = data;

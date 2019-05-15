@@ -8,6 +8,8 @@
                                               @model="onModelChanged"
                                               @savePdf="onSavePdf"
                                               @series="onSeries"
+                                              @addToChart="addToChart"
+                                              @removeChart="removeChart"
                 />
             </b-col>
             <b-col id="seriesCharts" sm="8">
@@ -151,11 +153,17 @@
                 currentModel: new BasicLotkaVolterra(0, 0, 0, 0),
                 predator: 0,
                 prey: 0,
+                comparedSeries: []
             }
         },
         methods: {
             onSeries(data) {
                 this.series = data.series;
+                if (this.comparedSeries.length >0 ){
+                    this.series.push(this.comparedSeries[0])
+                    this.series.push(this.comparedSeries[1])
+                    console.log(this.series)
+                }
                 this.currentParams = data.params;
             },
             onBehaviour(data) {
@@ -190,6 +198,18 @@
                     name: "Bifurcation " + this.bifurcationParam,
                     data: dataBifurcation
                 }];
+            },
+            addToChart(data) {
+                for (let i = 0; i < data.length; i++) {
+                    data[i].name += " - 1"
+                }
+                this.comparedSeries = data;
+            },
+            removeChart() {
+                if (this.comparedSeries.length > 0) {
+                    this.series = this.series.slice(0, 2);
+                    this.comparedSeries = []
+                }
             },
             onSavePdf() {
                 if (this.compareFlag) {

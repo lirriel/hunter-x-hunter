@@ -459,6 +459,12 @@
                 <i class="fas fa-greater-than-equal"></i>
                 Compare
             </b-button>
+            <b-button v-on:click="addToChart" variant="outline-info">
+                <i class="fas fa-greater-than"></i>
+            </b-button>
+            <b-button v-on:click="removeChart" variant="outline-danger">
+                <i class="far fa-window-close"></i>
+            </b-button>
             <br>
             <b-button v-on:click="saveData" variant="outline-success">
                 <i class="fas fa-file-excel"></i>
@@ -622,6 +628,12 @@
             this.currentExperimentParams = this.experimentLotkaVolterra;
         },
         methods: {
+            addToChart() {
+                this.$emit('addToChart', [...this.series]);
+            },
+            removeChart() {
+                this.$emit('removeChart', true);
+            },
             assignParams(data) {
                 this.isLotkaVolterra =
                     this.isLotkaVolterraContTime =

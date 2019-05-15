@@ -1,4 +1,4 @@
-export let predatorPreyChartOptions =  {
+export let predatorPreyChartOptions = {
     title: {
         text: 'Predator-prey population size'
     },
@@ -17,7 +17,7 @@ export let predatorPreyChartOptions =  {
         x: {},
         y: {}
     },
-    colors: ["#4cffdd", "#FF1654", "#fffdfe","#d17430"],
+    colors: ["#4cffdd", "#FF1654", "#288c6c", "#ffa67f"],
     yaxis: [
         {
             axisTicks: {
@@ -71,8 +71,25 @@ export let predatorPreyChartOptions =  {
             title: {
                 text: "Predator population"
             }
+        },
+        {
+            show: false,
+            seriesName: 'Prey population'
+        },
+        {
+            show: false,
+            seriesName: 'Predator population'
         }
     ],
+    xaxis: {
+        title: {
+            text: "Time",
+            style: {
+                color: "#883157",
+                fontSize: "14px"
+            }
+        }
+    },
     legend: {
         horizontalAlign: "left",
         offsetX: 10
@@ -83,7 +100,7 @@ export let predatorPreyChartOptions =  {
     },
 };
 
-export let simpleChartOptions =  {
+export let simpleChartOptions = {
     chart: {
         zoom: {
             enabled: true

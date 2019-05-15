@@ -127,6 +127,12 @@
                 <i class="fas fa-calculator"></i>
                 Calculate
             </b-button>
+            <b-button v-on:click="addToChart" variant="outline-info">
+                <i class="fas fa-greater-than"></i>
+            </b-button>
+            <b-button v-on:click="removeChart" variant="outline-danger">
+                <i class="far fa-window-close"></i>
+            </b-button>
             <b-button style="margin-left: 10px" v-on:click="saveData" variant="outline-success">
                 <i class="fas fa-file-excel"></i>
                 Save Data
@@ -209,7 +215,8 @@
                     peak: [0, 0],
                     recoverThreshold: [0, 0],
                     outbreakThreshold: [0, 0],
-                }
+                },
+
             }
         },
         watch: {
@@ -218,6 +225,12 @@
             }
         },
         methods: {
+            addToChart() {
+                this.$emit('addToChart', [...this.series]);
+            },
+            removeChart() {
+                this.$emit('removeChart', true);
+            },
             update(data) {
                 this.isBasicSIR = this.isSIR = this.isSIS = false;
                 if (data === this.modelTypes[0]) {

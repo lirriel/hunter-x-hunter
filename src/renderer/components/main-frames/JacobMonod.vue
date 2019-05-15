@@ -5,6 +5,8 @@
             <b-col sm="4">
                 <jacob-monod-controller @curve="onMonodCurve" @series="onSeries"
                                         @model="onModelChanged"
+                                        @addToChart="addToChart"
+                                        @removeChart="removeChart"
                                         @seriesBehave="onSeriesBehave"/>
             </b-col>
             <b-col sm="8">
@@ -154,12 +156,18 @@
 
                 series: [],
                 seriesBehave: [],
-                seriesCurve: []
+                seriesCurve: [],
+                comparedSeries: []
             }
         },
         methods: {
             onSeries(data) {
                 this.series = data;
+                if (this.comparedSeries.length >0 ){
+                    this.series.series.push(this.comparedSeries[0])
+                    this.series.series.push(this.comparedSeries[1])
+                    console.log(this.series.series)
+                }
             },
             onSeriesBehave(data) {
                 this.seriesBehave = data;
@@ -169,6 +177,18 @@
             },
             onModelChanged(data) {
                 this.currentModel = data.model;
+            },
+            addToChart(data) {
+                for (let i = 0; i < data.length; i++) {
+                    data[i].name += " - 1"
+                }
+                this.comparedSeries = data;
+            },
+            removeChart() {
+                if (this.comparedSeries.length > 0) {
+                    this.series.series = this.series.series.slice(0, 2);
+                    this.comparedSeries = []
+                }
             },
         }
     }
