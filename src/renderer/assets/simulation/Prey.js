@@ -21,9 +21,10 @@ export class Prey extends Organism {
             && this.birthPeriodTimer === 0
             && (freeSpotPosition.x !== this.x || freeSpotPosition.y !== this.y)
         ) {
-            var newPrey = new Prey(randomInteger(50, 100), this.adulthoodAge,
+            let newPrey = new Prey(randomInteger(50, 100), this.adulthoodAge,
                 this.birthPeriod, freeSpotPosition.x, freeSpotPosition.y);
-            organisms.push(newPrey);
+            organisms[freeSpotPosition.x][freeSpotPosition.y] = newPrey;
+            // organisms.push(newPrey);
             this.birthPeriodTimer = this.birthPeriod;
         } else {
             this.move(organisms, maxX, maxY)

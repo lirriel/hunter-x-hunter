@@ -350,6 +350,7 @@
                 this.valueArray = [];
                 this.seriesArray = [];
                 this.maxTimeBetweenValues = [];
+                this.experimentHuman = [];
 
                 for (let i = this.min; i < this.max; i += this.step) {
                     this.valueArray.push(i);
@@ -428,6 +429,7 @@
                 this.items = [];
                 this.experimentCount = 0;
                 this.experimentMaxCount = 1;
+                this.experimentHuman = [];
                 for (let q = 0; q < this.params.length; q++) {
                     if (this.params[q].active === true) {
                         this.experimentMaxCount *= (this.params[q].max - this.params[q].min + this.params[q].step) / this.params[q].step
@@ -464,53 +466,54 @@
                 var y = params.height;
 
                 for (let i = 0; i < organisms.length; i++) {
-                    var organism = organisms[i];
-                    if (organism instanceof Predator) {
-                        organism.movePredator(organisms, x - 1, y - 1)
-                    } else if (organism instanceof Prey) {
-                        organism.movePrey(organisms, x - 1, y - 1)
-                    } else if (organism instanceof Person) {
-                        organism.moveHunter(organisms, x - 1, y - 1)
+                    for (let j = 0; j < organisms[i].length; j++) {
+                        var organism = organisms[i][j];
+                        if (organism instanceof Predator) {
+                            organism.movePredator(organisms, x - 1, y - 1)
+                        } else if (organism instanceof Prey) {
+                            organism.movePrey(organisms, x - 1, y - 1)
+                        } else if (organism instanceof Person) {
+                            organism.moveHunter(organisms, x - 1, y - 1)
+                        }
                     }
                 }
                 return this.getGrid(organisms);
-            }
-            ,
+            },
             getGrid: function (organisms) {
                 let countPrey = 0;
                 let countPredator = 0;
                 let countHuman = 0;
 
                 for (let i = 0; i < organisms.length; i++) {
-                    let o = organisms[i];
-                    if (o instanceof Predator) {
-                        countPredator++;
-                    } else if (o instanceof Prey) {
-                        countPrey++;
-                    } else if (o instanceof Person) {
-                        countHuman++;
+                    for (let j = 0; j < organisms[i].length; j++) {
+                        let o = organisms[i][j];
+                        if (o instanceof Predator) {
+                            countPredator++;
+                        } else if (o instanceof Prey) {
+                            countPrey++;
+                        } else if (o instanceof Person) {
+                            countHuman++;
+                        }
                     }
                 }
-
                 return [countPrey, countPredator, countHuman]
-            }
-            ,
+            },
             randomSeed: function (params, organisms) {
                 organisms = [];
                 Person.setPreyNeedLimit(params.preyNeedLimit);
                 Person.setPreyNeedStepsLimit(params.preyNeedStepsLimit);
 
                 for (let i = 0; i < params.width; i++) {
+                    organisms[i] = [];
                     for (let j = 0; j < params.height; j++) {
                         let rnd = Math.random();
                         let isAlive = rnd < params.isAliveProbability;
                         let isPredator = rnd < params.isPredatorProbability;
                         let isHuman = rnd < params.isHumanProbability;
 
-                        let organism = null;
                         if (isAlive === true) {
                             if (isHuman === true && params.isHumanRequired) {
-                                organism = new Person(
+                                organisms[i][j] = new Person(
                                     params.predatorLifespan,
                                     i, j,
                                     params.killPredatorPriority,
@@ -519,20 +522,19 @@
                                     params.noticeOrganismRange
                                 );
                             } else if (isPredator === true) {
-                                organism = new Predator(
+                                organisms[i][j] = new Predator(
                                     params.predatorLifespan,
                                     params.predatorAdulthoodAge,
                                     params.predatorBirthPeriod,
                                     params.predatorFeedPreyCount,
                                     i, j);
                             } else {
-                                organism = new Prey(
+                                organisms[i][j] = new Prey(
                                     params.preyLifespan,
                                     params.preyAdulthoodAge,
                                     params.preyBirthPeriod,
                                     i, j);
                             }
-                            organisms.push(organism)
                         }
                     }
                 }

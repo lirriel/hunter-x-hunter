@@ -334,7 +334,6 @@
 
                     for (let j = 0; j < t; j += that.timeStep) {
                         let res = that.currentModel.calculateModel(s, i, r);
-                        console.log(res);
                         s += that.timeStep * res.ds;
                         let di = that.timeStep * res.di;
                         i += di;

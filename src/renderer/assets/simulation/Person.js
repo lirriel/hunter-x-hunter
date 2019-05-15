@@ -1,6 +1,7 @@
-import {Organism, removeOrganism, turnStep} from "./Organism";
+import {Organism, randomInteger, removeOrganism, steps, turnStep} from "./Organism";
 import {Predator} from "./Predator";
 import {Prey} from "./Prey";
+import * as math from "mathjs";
 
 var killRangeOrganisms = [];
 var huntRangeOrganisms = [];
@@ -40,7 +41,7 @@ export class Person extends Organism {
         let huntedDistance = Array(8).fill(Number.MAX_SAFE_INTEGER);
         for (let i = 0; i < 8; i++) {
             if (surrounding[i] === true) {
-                var huntTurnStep = turnStep(i, this.x, this.y);
+                let huntTurnStep = turnStep(i, this.x, this.y);
                 huntedDistance[i] = huntedPrey.calculateDistance(huntTurnStep.x, huntTurnStep.y);
             }
         }
@@ -52,14 +53,17 @@ export class Person extends Organism {
                 moveNumber = it;
             }
         }
-        var turnPosition = turnStep(moveNumber, this.x, this.y);
+        let turnPosition = turnStep(moveNumber, this.x, this.y);
+        organisms[this.x][this.y] = null;
+        organisms[turnPosition.x][turnPosition.y] = this;
         this.setPosition(turnPosition.x, turnPosition.y);
     }
 
     moveHunter(organisms, maxX, maxY) {
         this.tickAge();
         if (this.age > this.lifespan || this.hungerStepsCounter <= 0) {
-            organisms = organisms.splice(organisms.indexOf(this), 1);
+            removeOrganism(organisms, this);
+            // organisms = organisms.splice(organisms.indexOf(this), 1);
             return;
         }
         let minPredatorDist = Number.MAX_SAFE_INTEGER;
@@ -69,29 +73,31 @@ export class Person extends Organism {
         let closestPrey = null;
         killRangeOrganisms = [];
         huntRangeOrganisms = [];
-        for (let i = 0; i < organisms.length; i++) {
-            let currentOrganism = organisms[i];
-            if (currentOrganism instanceof Prey || currentOrganism instanceof Predator) {
-                let dist = currentOrganism.calculateDistanceWith(this);
 
-                if (dist <= this.killRange) {
-                    killRangeOrganisms.push(currentOrganism)
-                } else if (dist <= this.noticeOrganismRange) {
-                    huntRangeOrganisms.push(currentOrganism)
-                }
-
-                if (currentOrganism instanceof Prey) {
-                    if (dist < minPreyDist) {
-                        closestPrey = currentOrganism;
-                        minPreyDist = dist;
-                    }
-                } else if (currentOrganism instanceof Predator) {
-                    if (dist < minPredatorDist) {
-                        closestPredator = currentOrganism;
-                        minPredatorDist = dist;
-                    }
+        var direction = 0;
+        let init = [this.x + steps[direction][0], this.y + steps[direction][1]];
+        let currentDist = this.calculateDistance(init[0], init[1]);
+        let stepInd = 1;
+        while (currentDist <= this.noticeOrganismRange && (closestPrey == null || closestPredator == null)) {
+            if (init[0] >= 0 && init[1] >= 0 && init[0] <= maxX && init[1] <= maxY) {
+                let o = organisms[init[0]][init[1]];
+                if (o && o instanceof Prey) {
+                    closestPrey = o;
+                    minPreyDist = this.calculateDistanceWith(o);
+                } else if (o && o instanceof  Predator) {
+                    closestPredator = o;
+                    minPredatorDist = this.calculateDistanceWith(o);
                 }
             }
+            stepInd++;
+            direction = (direction + 1) % 8;
+            let ar = math.multiply(steps[direction], stepInd);
+            init = [this.x + ar[0], this.y + ar[1]];
+            currentDist = this.calculateDistance(init[0], init[1]);
+        }
+        if (closestPrey == null && closestPredator == null) {
+            this.move(organisms, this.x, this.y);
+            return;
         }
         if (minPredatorDist * this.killPreyPriority > minPredatorDist * this.killPredatorPriority) {
             this.hunt(organisms, closestPrey, minPreyDist, maxX, maxY)
@@ -120,8 +126,6 @@ export class Person extends Organism {
             }
         } else if (dist <= this.noticeOrganismRange) {
             this.calculateInstinct(organisms, o, x, y)
-        } else {
-            this.move(organisms, x, y);
         }
     }
 }

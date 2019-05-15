@@ -15,6 +15,7 @@
                     <app-grid
                             :currentspeed="speed"
                             :message="message"
+                            :current-speed="speed"
                             @series="onSeries"
                             style="margin-right: 40px"/>
                 </transition>
@@ -68,7 +69,7 @@
                 isImport: false,
                 isExport: false,
 
-                speed: 100,
+                speed: 400,
                 intervalID: 0,
 
                 mainComponent: 'gamePage',
@@ -177,10 +178,10 @@
                     this.isRunning = !this.isRunning;
                     this.restartInterval();
                 } else if (event === 'slowDown') {
-                    this.speed > 100 ? this.changeSpeed(-100) : this.changeSpeed(-20);
+                    this.changeSpeed(-50);
                     this.restartInterval();
                 } else if (event === 'speedUp') {
-                    this.speed < 100 ? this.changeSpeed(20) : this.changeSpeed(100);
+                    this.changeSpeed(50);
                     this.restartInterval();
                 } else {
                     this.updateMessage(event);
@@ -206,11 +207,6 @@
             },
             changeSpeed: function (speed) {
                 this.speed += speed;
-                if (this.speed < 20) {
-                    this.speed = 20;
-                } else if (this.speed > 800) {
-                    this.speed = 500;
-                }
             },
         },
     };

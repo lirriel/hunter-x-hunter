@@ -102,14 +102,20 @@
             update: function () {
                 let maxWidth = this.simulationParams.width - 1;
                 let maxHeight = this.simulationParams.height - 1;
-                for (let i = 0; i < this.organisms.length; i++) {
-                    let organism = this.organisms[i];
-                    if (organism instanceof Predator) {
-                        organism.movePredator(this.organisms, maxWidth, maxHeight)
-                    } else if (organism instanceof Prey) {
-                        organism.movePrey(this.organisms, maxWidth, maxHeight)
-                    } else if (organism instanceof Person) {
-                        organism.moveHunter(this.organisms, maxWidth, maxHeight)
+                let organisms = [...this.organismsGrid];
+                for (let i = 0; i < this.organismsGrid.length; i++) {
+                    for (let j = 0; j < this.organismsGrid[i].length; j++) {
+                        // let organism = this.organismsGrid[i][j];
+                        let organism = organisms[i][j];
+                        if (organism) {c
+                            if (organism instanceof Predator) {
+                                organism.movePredator(this.organismsGrid, maxWidth, maxHeight)
+                            } else if (organism instanceof Prey) {
+                                organism.movePrey(this.organismsGrid, maxWidth, maxHeight)
+                            } else if (organism instanceof Person) {
+                                organism.moveHunter(this.organismsGrid, maxWidth, maxHeight)
+                            }
+                        }
                     }
                 }
             },
@@ -122,21 +128,22 @@
                 }
             },
             getGrid: function () {
-                this.resetGrid();
+                // this.resetGrid();
                 let countPrey = 0;
                 let countPredator = 0;
                 let countHuman = 0;
-                for (let i = 0; i < this.organisms.length; i++) {
-                    let o = this.organisms[i];
-                    if (o.x >= 0 && o.y >= 0) {
-                        if (o instanceof Predator) {
-                            countPredator++;
-                        } else if (o instanceof Prey) {
-                            countPrey++;
-                        } else if (o instanceof Person) {
-                            countHuman++;
+                for (let i = 0; i < this.organismsGrid.length; i++) {
+                    for (let j = 0; j < this.organismsGrid[i].length; j++) {
+                        let o = this.organismsGrid[i][j];
+                        if (o && o.x >= 0 && o.y >= 0) {
+                            if (o instanceof Predator) {
+                                countPredator++;
+                            } else if (o instanceof Prey) {
+                                countPrey++;
+                            } else if (o instanceof Person) {
+                                countHuman++;
+                            }
                         }
-                        this.organismsGrid[o.x][o.y] = o;
                     }
                 }
 
@@ -175,28 +182,24 @@
                 this.dataPrey = [];
                 this.dataPredator = [];
                 this.dataBehave = [];
-                this.organisms = [];
-                this.getGrid();
+                this.resetGrid();
                 this.$emit('series', {series: this.series, seriesBehave: this.seriesBehave});
             },
             randomSeed: function () {
-                this.reset();
-
                 Person.setPreyNeedLimit(this.simulationParams.preyNeedLimit);
                 Person.setPreyNeedStepsLimit(this.simulationParams.preyNeedStepsLimit);
                 Predator.hungerSteps = this.simulationParams.hungerSteps;
-
                 for (let i = 0; i < this.simulationParams.width; i++) {
+                    this.organismsGrid[i] = [];
                     for (let j = 0; j < this.simulationParams.height; j++) {
                         let rnd = Math.random();
                         let isAlive = rnd < this.simulationParams.isAliveProbability;
                         let isPredator = rnd < this.simulationParams.isPredatorProbability;
                         let isHuman = rnd < this.simulationParams.isHumanProbability;
 
-                        let organism = null;
                         if (isAlive === true) {
                             if (isHuman === true && this.simulationParams.isHumanRequired) {
-                                organism = new Person(
+                                this.organismsGrid[i][j] = new Person(
                                     this.simulationParams.predatorLifespan,
                                     i, j,
                                     this.simulationParams.killPredatorPriority,
@@ -205,22 +208,22 @@
                                     this.simulationParams.noticeOrganismRange
                                 );
                             } else if (isPredator === true) {
-                                organism = new Predator(
+                                this.organismsGrid[i][j] = new Predator(
                                     this.simulationParams.predatorLifespan,
                                     this.simulationParams.predatorAdulthoodAge,
                                     this.simulationParams.predatorBirthPeriod,
                                     this.simulationParams.predatorFeedPreyCount,
                                     i, j);
                             } else {
-                                organism = new Prey(
+                                this.organismsGrid[i][j] = new Prey(
                                     this.simulationParams.preyLifespan,
                                     this.simulationParams.preyAdulthoodAge,
                                     this.simulationParams.preyBirthPeriod,
                                     i, j);
                             }
-                            this.organisms.push(organism)
+                        } else {
+                            this.organismsGrid[i][j] = null;
                         }
-                        this.organismsGrid[i][j] = organism;
                     }
                 }
             },

@@ -25,7 +25,9 @@ export class Organism {
     }
 
     calculateDistanceWith(otherOrganism) {
-        return Math.sqrt(Math.pow(this.x - otherOrganism.x, 2) + Math.pow(this.y - otherOrganism.y, 2))
+        return Math.sqrt(
+            Math.pow(this.x - otherOrganism.x, 2) + Math.pow(this.y - otherOrganism.y, 2)
+        )
     }
 
     calculateDistance(x, y) {
@@ -33,9 +35,11 @@ export class Organism {
     }
 
     move(organisms, maxGridX, maxGridY) {
-        var surroundingArray = this.checkCoordinates(organisms, maxGridX, maxGridY);
-        var newSpot = this.findFreeSpot(surroundingArray);
+        let surroundingArray = this.checkCoordinates(organisms, maxGridX, maxGridY);
+        let newSpot = this.findFreeSpot(surroundingArray);
         if (newSpot) {
+            organisms[this.x][this.y] = null;
+            organisms[newSpot.x][newSpot.y] = this;
             this.setPosition(newSpot.x, newSpot.y);
         }
     }
@@ -54,17 +58,14 @@ export class Organism {
         if (this.y >= maxGridY) {
             surroundingArray[6] = surroundingArray[5] = surroundingArray[4] = false;
         }
-        let current = this;
-        organisms.forEach(function (organism) {
-            for (let i = 0; i < 8; i++) {
-                if (surroundingArray[i] === true) {
-                    let position = turnStep(i, current.x, current.y);
-                    if (position.x === organism.x && position.y === organism.y) {
-                        surroundingArray[i] = false;
-                    }
+        for (let i = 0; i < 8; i++) {
+            if (surroundingArray[i] === true) {
+                let position = turnStep(i, this.x, this.y);
+                if (organisms[position.x][position.y]) {
+                    surroundingArray[i] = false;
                 }
             }
-        });
+        }
         return surroundingArray;
     }
 
@@ -95,10 +96,19 @@ export class Organism {
 
 }
 
+export var steps = [
+    [0, 1],
+    [-1, 1],
+    [-1, 0],
+    [-1, -1],
+    [0, -1],
+    [1, -1],
+    [1, 0],
+    [1, 1]
+];
+
 export function randomInteger(min, max) {
-    var rand = min + Math.random() * (max + 1 - min);
-    rand = Math.floor(rand);
-    return rand;
+    return Math.floor(min + Math.random() * (max + 1 - min));
 }
 
 export function turnStep(caseNumber, x, y) {
@@ -139,5 +149,5 @@ export function turnStep(caseNumber, x, y) {
 }
 
 export function removeOrganism(organisms, organism) {
-    organisms.splice(organisms.indexOf(organism), 1);
+    organisms[organism.x][organism.y] = null;
 }

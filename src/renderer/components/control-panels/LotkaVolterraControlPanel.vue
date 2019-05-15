@@ -609,7 +609,6 @@
                                     this.isLotkaVolterraContiniousTimeAlleeEffect = false;
 
                 this.assignParams(data);
-                console.log(this.currentModel.getFormula())
             }
         },
         mounted() {

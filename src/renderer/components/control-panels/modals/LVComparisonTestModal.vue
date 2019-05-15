@@ -266,7 +266,6 @@
                     for (let i = 0; i < eq.length; i++) {
                         let el = eq[i];
                         let q = this.model.jacobian(el[0], el[1]);
-                        console.log(q);
                         this.equilibriumArray.push({
                             paramValue: ind,
                             eqPoint: [...el],

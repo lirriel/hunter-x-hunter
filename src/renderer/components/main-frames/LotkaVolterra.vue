@@ -166,7 +166,6 @@
                 this.seriesCompare.push(data);
             },
             onModelChanged(data) {
-                console.log("Model changed");
                 this.currentModel = data.model;
                 this.predator = data.predator;
                 this.prey = data.prey;

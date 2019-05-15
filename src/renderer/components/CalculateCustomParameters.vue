@@ -119,8 +119,6 @@
         },
         watch: {
             inputModel: function (d) {
-                console.log(d);
-                console.log(Object.getPrototypeOf(d));
                 this.eqScope = Object.assign({}, d);
             }
         },
@@ -135,7 +133,6 @@
             },
             save() {
                 this.eqScope[this.key] = this.value;
-                console.log(this.eqScope);
                 this.isAdd = false;
             },
             fori() {

@@ -1,5 +1,6 @@
-import {Organism, randomInteger, removeOrganism, turnStep} from "./Organism";
+import {Organism, randomInteger, removeOrganism, steps, turnStep} from "./Organism";
 import {Prey} from "./Prey";
+import * as math from 'mathjs';
 
 export class Predator extends Organism {
     constructor(lifespan, adulthoodAge, birthPeriod, feedPreyCount, x, y) {
@@ -9,28 +10,30 @@ export class Predator extends Organism {
         this.feedPreyTimer = 0;
     }
 
-    setHungerSteps(steps) {
+    static setHungerSteps(steps) {
         Predator.hungerSteps = steps;
     }
 
     calculateInstinct(organisms, huntedPrey, maxX, maxY) {
-        var surrounding = this.checkCoordinates(organisms, maxX, maxY);
-        var huntedDistance = Array(8).fill(Number.MAX_SAFE_INTEGER);
+        let surrounding = this.checkCoordinates(organisms, maxX, maxY);
+        let huntedDistance = Array(8).fill(Number.MAX_SAFE_INTEGER);
         for (let i = 0; i < 8; i++) {
             if (surrounding[i] === true) {
-                var huntTurnStep = turnStep(i, this.x, this.y);
+                let huntTurnStep = turnStep(i, this.x, this.y);
                 huntedDistance[i] = huntedPrey.calculateDistance(huntTurnStep.x, huntTurnStep.y);
             }
         }
-        var minDist = maxX * maxY;
-        var moveNumber = -1;
+        let minDist = maxX * maxY;
+        let moveNumber = -1;
         for (let it = 0; it < 8; it++) {
             if ((surrounding[it] === true) && (huntedDistance[it] < minDist)) {
                 minDist = huntedDistance[it];
                 moveNumber = it;
             }
         }
-        var turnPosition = turnStep(moveNumber, this.x, this.y);
+        let turnPosition = turnStep(moveNumber, this.x, this.y);
+        organisms[this.x][this.y] = null;
+        organisms[turnPosition.x][turnPosition.y] = this;
         this.setPosition(turnPosition.x, turnPosition.y);
     }
 
@@ -40,43 +43,49 @@ export class Predator extends Organism {
             removeOrganism(organisms, this);
             return;
         }
-        var currentPredator = this;
-        var minDist = Number.MAX_SAFE_INTEGER;
-        var prey = null;
-        var preyFlag = false;
-        for (let i = 0; i < organisms.length; i++) {
-            let organism = organisms[i];
-            if (organism instanceof Prey) {
-                preyFlag = true;
-                var distance = organism.calculateDistanceWith(currentPredator);
-                if (distance <= Math.sqrt(2)) {
-                    removeOrganism(organisms, organism);
-                    // organisms = organisms.splice(organisms.indexOf(organism), 1);
-                    currentPredator.hunger = Predator.hungerSteps;
-                    currentPredator.feedPreyTimer++;
-                    if (currentPredator.feedPreyTimer >= currentPredator.feedPreyCount) {
-                        var surrounding = currentPredator.checkCoordinates(organisms, maxX, maxY);
-                        var position = currentPredator.findFreeSpot(surrounding);
+        let currentPredator = this;
+        // let minDist = Number.MAX_SAFE_INTEGER;
+        let prey = null;
+        let preyFlag = false;
+        var direction = 0;
+        let init = [this.x + steps[direction][0], this.y + steps[direction][1]];
+        let currentDist = this.calculateDistance(init[0], init[1]);
+        let stepInd = 1;
+        while (currentDist <= Predator.range && preyFlag == false) {
+            if (init[0] >= 0 && init[1] >= 0 && init[0] <= maxX && init[1] <= maxY) {
+                let o = organisms[init[0]][init[1]];
+                if (o && o instanceof Prey) {
+                    if (currentDist <= Math.sqrt(2)) {
+                        removeOrganism(organisms, organisms[init[0]][init[1]]);
+                        this.hunger = Predator.hungerSteps;
+                        this.feedPreyTimer++;
+                        if (this.feedPreyTimer >= this.feedPreyCount) {
+                            let surrounding = this.checkCoordinates(organisms, maxX, maxY);
+                            let position = this.findFreeSpot(surrounding);
 
-                        if (position.x !== currentPredator.x && position.y !== currentPredator.y) {
-                            var newPredator = new Predator(randomInteger(80, 90),
-                                currentPredator.adulthoodAge, currentPredator.birthPeriod,
-                                currentPredator.feedPreyCount, position.x, position.y);
-                            organisms.push(newPredator);
-                            currentPredator.feedPreyTimer = 0;
+                            if (position.x !== this.x && position.y !== this.y) {
+                                let newPredator = new Predator(randomInteger(80, 90),
+                                    this.adulthoodAge, this.birthPeriod,
+                                    this.feedPreyCount, this.x, this.y);
+                                organisms[position.x][position.y] = newPredator;
+                                // organisms.push(newPredator);
+                                currentPredator.feedPreyTimer = 0;
+                            }
                         }
-                    }
-                } else {
-                    if (distance < minDist) {
-                        minDist = distance;
-                        prey = organism;
+                        preyFlag = true;
+                        break;
                     }
                 }
             }
+            stepInd++;
+            direction = (direction + 1) % 8;
+            let ar = math.multiply(steps[direction], stepInd);
+            init = [this.x + ar[0], this.y + ar[1]];
+            currentDist = this.calculateDistance(init[0], init[1]);
         }
         if (prey !== null) {
-            if (minDist < Predator.range) {
-                this.calculateInstinct(organisms, prey, maxX, maxY);
+            if (currentDist < Predator.range) {
+                this.calculateInstinct(organisms, organisms[init[0]][init[1]], maxX, maxY);
             } else {
                 this.move(organisms, maxX, maxY);
             }
@@ -85,8 +94,49 @@ export class Predator extends Organism {
             this.move(organisms, maxX, maxY);
             this.hunger--;
         }
+        /* for (let i = 0; i < organisms.length; i++) {
+             let organism = organisms[i];
+             if (organism instanceof Prey) {
+                 preyFlag = true;
+                 let distance = organism.calculateDistanceWith(currentPredator);
+                 if (distance <= Math.sqrt(2)) {
+                     removeOrganism(organisms, organism);
+                     // organisms = organisms.splice(organisms.indexOf(organism), 1);
+                     currentPredator.hunger = Predator.hungerSteps;
+                     currentPredator.feedPreyTimer++;
+                     if (currentPredator.feedPreyTimer >= currentPredator.feedPreyCount) {
+                         let surrounding = currentPredator.checkCoordinates(organisms, maxX, maxY);
+                         let position = currentPredator.findFreeSpot(surrounding);
+
+                         if (position.x !== currentPredator.x && position.y !== currentPredator.y) {
+                             let newPredator = new Predator(randomInteger(80, 90),
+                                 currentPredator.adulthoodAge, currentPredator.birthPeriod,
+                                 currentPredator.feedPreyCount, position.x, position.y);
+                             organisms.push(newPredator);
+                             currentPredator.feedPreyTimer = 0;
+                         }
+                     }
+                 } else {
+                     if (distance < minDist) {
+                         minDist = distance;
+                         prey = organism;
+                     }
+                 }
+             }
+         }
+         if (prey !== null) {
+             if (minDist < Predator.range) {
+                 this.calculateInstinct(organisms, prey, maxX, maxY);
+             } else {
+                 this.move(organisms, maxX, maxY);
+             }
+             this.hunger--;
+         } else if (preyFlag === false) {
+             this.move(organisms, maxX, maxY);
+             this.hunger--;
+         }*/
     }
 }
 
 Predator.hungerSteps = 40;
-Predator.range = 10;
+Predator.range = 5;
