@@ -168,7 +168,7 @@
     import {saveSimulationExperimentPdf} from "../../assets/pdfUtils";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../assets/xlsx_utils";
     import {simulationParams} from "../../assets/simulation/simulationParams";
-    import {predatorPreyChartOptions} from "../../assets/simulation/predatorPreyChartOptions";
+    import {minMaxChartOptions} from "../../assets/simulation/predatorPreyChartOptions";
 
     export default {
         name: "SimulationExperiment",
@@ -233,7 +233,7 @@
                 dataPredator: [],
 
                 /////////////////////////////////
-                chartOptions: predatorPreyChartOptions,
+                chartOptions: minMaxChartOptions,
                 params: [
                     {name: "killPredatorPriority", min: 0.1, max: 1, step: 0.1, active: false},
                     {name: "killPreyPriority", min: 0.1, max: 1, step: 0.1, active: false},
@@ -331,11 +331,11 @@
             },
             saveChartData(ind) {
                 var wb = createWorkbook();
-                for (let j = 0; j < this.seriesArray[ind].length; j++) {
-                    var series = this.seriesArray[ind][j];
+                for (let j = 0; j < this.experimentHuman[ind].length; j++) {
+                    var series = this.experimentHuman[ind][j];
                     var data = Array.from(series.data);
-                    data.splice(0, 0, [series.name, "time"]);
-                    wb = createWorkSheet(wb, data, series.name + "_" + i + "");
+                    data.splice(0, 0, ["time", series.name]);
+                    wb = createWorkSheet(wb, data, series.name + "_" + j + "");
                 }
                 saveWorkbook("predatorPreySimulationExperiment", wb);
             },
@@ -550,7 +550,7 @@
                     for (let j = 0; j < this.seriesArray[i].length; j++) {
                         var series = this.seriesArray[i][j];
                         var data = Array.from(series.data);
-                        data.splice(0, 0, [series.name, "time"]);
+                        data.splice(0, 0, ["time", series.name]);
                         wb = createWorkSheet(wb, data, series.name + "_" + i + "");
                     }
                 }

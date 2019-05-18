@@ -120,6 +120,7 @@
                 }
             },
             resetGrid() {
+                this.organismsGrid = [];
                 for (let i = 0; i < this.simulationParams.width; i++) {
                     this.organismsGrid[i] = [];
                     for (let j = 0; j < this.simulationParams.height; j++) {
@@ -189,6 +190,7 @@
                 Person.setPreyNeedLimit(this.simulationParams.preyNeedLimit);
                 Person.setPreyNeedStepsLimit(this.simulationParams.preyNeedStepsLimit);
                 Predator.hungerSteps = this.simulationParams.hungerSteps;
+                this.organisms = [];
                 for (let i = 0; i < this.simulationParams.width; i++) {
                     this.organismsGrid[i] = [];
                     for (let j = 0; j < this.simulationParams.height; j++) {
@@ -232,11 +234,11 @@
                 var wb = createWorkbook();
                 // add data prey
                 var data = Array.from(this.dataPrey);
-                data.splice(0, 0, ["prey amount", "time"]);
+                data.splice(0, 0, ["time", "prey amount"]);
                 wb = createWorkSheet(wb, data, "prey");
                 // add dataI
                 data = Array.from(this.dataPredator);
-                data.splice(0, 0, ["predator amount", "time"]);
+                data.splice(0, 0, ["time", "predator amount"]);
                 wb = createWorkSheet(wb, data, "predator");
                 // save
                 saveWorkbook("predatorPreySimulation", wb);

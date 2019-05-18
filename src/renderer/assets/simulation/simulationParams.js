@@ -21,6 +21,6 @@ export let simulationParams = {
     preyNeedLimit: 10,
     preyNeedStepsLimit: 12,
 
-    width: 40,
+    width: 20,
     height: 20,
 };

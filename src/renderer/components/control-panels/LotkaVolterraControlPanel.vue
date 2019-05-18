@@ -796,16 +796,17 @@
                         data: this.compareDataPredator
                     }
                 ];
-                var curParams = null;
-                if (this.isLotkaVolterra === true || this.isLotkaVolterraQuadratic) {
-                    curParams = this.experimentLotkaVolterra;
-                } else if (this.isLotkaVolterraFiniteCapacity === true) {
-                    curParams = this.experimentLotkaVolterraFiniteCapacity;
-                } else if (this.isLotkaVolterraContTime === true) {
-                    curParams = this.experimentLotkaVolterraContTime;
-                } else if (this.isRosenzweigMacArthur === true) {
-                    curParams = this.experimentRosenzweigMacArthur;
-                }
+                var curParams = this.currentModel;
+                // if (this.isLotkaVolterra === true || this.isLotkaVolterraQuadratic) {
+                //     curParams = this.experimentLotkaVolterra;
+                // } else if (this.isLotkaVolterraFiniteCapacity === true) {
+                //     curParams = this.experimentLotkaVolterraFiniteCapacity;
+                // } else if (this.isLotkaVolterraContTime === true) {
+                //     curParams = this.experimentLotkaVolterraContTime;
+                // } else if (this.isRosenzweigMacArthur === true) {
+                //     curParams = this.experimentRosenzweigMacArthur;
+                // }
+                // curParams
                 this.$emit('compare', {
                     series: this.seriesCompare,
                     params: Object.assign({}, curParams)
