@@ -259,6 +259,10 @@
                         xValue += that.timeStep * res.dx;
                         sValue += that.timeStep * res.ds;
 
+                        if (xValue <= 0 || sValue <= 0) {
+                            break;
+                        }
+
                         dataX.push([j, xValue]);
                         dataS.push([j, sValue]);
                         dataXtoS.push([xValue, sValue]);

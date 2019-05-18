@@ -17,7 +17,7 @@
                     <h6>Initial value analysis: {{msg}}</h6>
                 </div>
                 <div class="shadow p-3 mb-5 bg-white rounded" v-if="r0 != 0">
-                    <h6>Basic reproduction number : {{r0}}</h6>
+                    <h6>Basic reproduction number : {{r0.toFixed(2)}}</h6>
                 </div>
             </b-col>
             <b-col sm="9">
@@ -138,7 +138,7 @@
                                 showDuplicates: false,
                                 trim: true,
                                 formatter: function (value) {
-                                    return value.toFixed(2)
+                                    return parseFloat(value).toFixed(2)
                                 }
                             },
                             title: {
@@ -152,6 +152,11 @@
                             style: {
                                 color: "#883157",
                                 fontSize: "14px"
+                            }
+                        },
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
                             }
                         }
                     },

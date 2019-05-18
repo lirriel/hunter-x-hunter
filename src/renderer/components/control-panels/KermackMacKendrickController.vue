@@ -352,15 +352,19 @@
                         i += di;
                         r += that.timeStep * res.dr;
 
+                        if (s <= 0 || i <= 0 || r <= 0) {
+                            break;
+                        }
+
                         if ((di * pr <= 0 || di === 0) && that.epidemicInfo.peak[1] < i) {
                             that.epidemicInfo.peak = [j, i]
                         }
                         pr = that.timeStep * res.di;
 
-                        if (Math.abs(i - r) <= 0.05) {
+                        if (Math.abs(i - r) <= 1) {
                             that.epidemicInfo.recoverThreshold = [j, i]
                         }
-                        if (Math.abs(s - i) <= 0.05) {
+                        if (Math.abs(s - i) <= 1) {
                             that.epidemicInfo.outbreakThreshold = [j, i]
                         }
 

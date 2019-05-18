@@ -298,6 +298,10 @@
                         i += that.timeStep * res.di;
                         r += that.timeStep * res.dr;
 
+                        if (s <= 0 || i <= 0 || r <= 0) {
+                            break;
+                        }
+
                         dataS.push([j, s]);
                         dataI.push([j, i]);
                         dataR.push([j, r]);
@@ -366,7 +370,7 @@
             },
             drawPhaseTrajectories(ind) {
                 let arr = [];
-                /*  if (this.model instanceof BasicSIR) {
+                 if (this.model instanceof BasicSIR) {
                       for (let i = 0; i < this.dataSToI.length; i++) {
                           arr.push([
                               this.dataSToI[0],
@@ -376,7 +380,7 @@
                           ]);
                       }
                   }
-                  this.phaseTrajSeries.push({
+                  /*this.phaseTrajSeries.push({
                       data: arr,
                       name: "phase trajectories - " + ind
                   });*/
@@ -389,6 +393,11 @@
                         style: {
                             color: "#883157",
                             fontSize: "14px"
+                        }
+                    },
+                    labels: {
+                        formatter: function (value) {
+                            return parseFloat(value).toFixed(2)
                         }
                     }
                 };

@@ -244,6 +244,10 @@
                         x += that.timeStep * res.prey;
                         y += that.timeStep * res.predator;
 
+                        if (x <= 0 || y <= 0) {
+                            break;
+                        }
+
                         dataPrey.push([i, checkNan(x)]);
                         dataPredator.push([i, checkNan(y)]);
                         dataBehave.push([checkNan(x), checkNan(y)])

@@ -528,7 +528,7 @@
                     'Lotka-Volterra with continuous time',
                     'Rosenzweig and MacArthur model',
                     'Lotka-Volterra finite capacity',
-                    'Lotka-Volterra Continious Time with Allee Effect'
+                    'Lotka-Volterra continuous-time with Allee Effect'
                 ],
                 currentType: 'Lotka-Volterra',
                 experimentLotkaVolterra: {
@@ -758,6 +758,10 @@
                         let res = that.currentModel.calculateModel(x, y);
                         x += that.timeStep * res.prey;
                         y += that.timeStep * res.predator;
+
+                        if (x <= 0 || y <= 0) {
+                            break;
+                        }
 
                         dataPrey.push([i, setNumber(x)]);
                         dataPredator.push([i, setNumber(y)]);

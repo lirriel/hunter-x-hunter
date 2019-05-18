@@ -39,6 +39,11 @@
                                 color: "#883157",
                                 fontSize: "14px"
                             }
+                        },
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
+                            }
                         }
                     },
                     yaxis: {
@@ -47,6 +52,11 @@
                             style: {
                                 color: "#883157",
                                 fontSize: "14px"
+                            }
+                        },
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
                             }
                         }
                     },

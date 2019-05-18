@@ -243,6 +243,10 @@
                         xValue += that.timeStep * res.dx;
                         sValue += that.timeStep * res.ds;
 
+                        if (xValue <= 0 || sValue <= 0) {
+                            break;
+                        }
+
                         mCurve.push([sValue, that.model.getMonodCurve(setNumber(sValue))]);
 
                         dataX.push([j, setNumber(xValue)]);

@@ -3,13 +3,13 @@
         <h2>Lotka-Volterra model</h2>
         <b-row>
             <b-col sm="4">
-                <lotka-volterra-control-panel @behaviour="onBehaviour"
+                <lotka-volterra-control-panel @addToChart="addToChart"
+                                              @behaviour="onBehaviour"
                                               @compare="onCompare"
                                               @model="onModelChanged"
+                                              @removeChart="removeChart"
                                               @savePdf="onSavePdf"
                                               @series="onSeries"
-                                              @addToChart="addToChart"
-                                              @removeChart="removeChart"
                 />
             </b-col>
             <b-col id="seriesCharts" sm="8">
@@ -28,8 +28,8 @@
                             <b-col>
                                 <label style="font-color: gray">{{s.params}}</label>
                                 <basic-chart-box :chart-options="chartOptions"
-                                                 style="width: 600px"
-                                                 :series="s.series"/>
+                                                 :series="s.series"
+                                                 style="width: 600px"/>
                             </b-col>
                         </div>
                     </b-row>
@@ -77,7 +77,8 @@
                 </b-tab>
                 <b-tab title="Customize">
                     <div class="inside-tab">
-                        <calculate-custom-parameters :input-model="currentModel"></calculate-custom-parameters>
+                        <calculate-custom-parameters
+                                :input-model="currentModel"></calculate-custom-parameters>
                     </div>
                 </b-tab>
             </b-tabs>
@@ -132,6 +133,26 @@
                         x: {},
                         y: {}
                     },
+                    xaxis: {
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
+                            }
+                        },
+                        title: {
+                            text: this.bifurcationParam
+                        }
+                    },
+                    yaxis: [{
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
+                            }
+                        },
+                        title: {
+                            text: "Prey"
+                        }
+                    }],
                     legend: {
                         horizontalAlign: "left",
                         offsetX: 10
@@ -156,12 +177,21 @@
                 comparedSeries: []
             }
         },
+        watch: {
+            isPreyBifurcation: function (data) {
+                if (data === true) {
+                    this.bifurcationChartOptions.yaxis[0].title.text = "Prey"
+                } else {
+                    this.bifurcationChartOptions.yaxis[0].title.text = "Predator"
+                }
+            }
+        },
         methods: {
             onSeries(data) {
                 this.series = data.series;
-                if (this.comparedSeries.length >0 ){
-                    this.series.push(this.comparedSeries[0])
-                    this.series.push(this.comparedSeries[1])
+                if (this.comparedSeries.length > 0) {
+                    this.series.push(this.comparedSeries[0]);
+                    this.series.push(this.comparedSeries[1]);
                     console.log(this.series)
                 }
                 this.currentParams = data.params;

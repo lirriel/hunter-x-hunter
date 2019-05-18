@@ -107,7 +107,7 @@
                     for (let j = 0; j < this.organismsGrid[i].length; j++) {
                         // let organism = this.organismsGrid[i][j];
                         let organism = organisms[i][j];
-                        if (organism) {c
+                        if (organism) {
                             if (organism instanceof Predator) {
                                 organism.movePredator(this.organismsGrid, maxWidth, maxHeight)
                             } else if (organism instanceof Prey) {

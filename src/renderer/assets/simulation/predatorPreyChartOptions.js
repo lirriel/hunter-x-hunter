@@ -38,7 +38,7 @@ export let predatorPreyChartOptions = {
                 showDuplicates: false,
                 trim: true,
                 formatter: function (value) {
-                    return value.toFixed(2)
+                    return parseFloat(value).toFixed(2)
                 }
             },
             title: {
@@ -65,7 +65,7 @@ export let predatorPreyChartOptions = {
                 showDuplicates: false,
                 trim: true,
                 formatter: function (value) {
-                    return value.toFixed(2);
+                    return parseFloat(value).toFixed(2)
                 }
             },
             title: {
@@ -87,6 +87,11 @@ export let predatorPreyChartOptions = {
             style: {
                 color: "#883157",
                 fontSize: "14px"
+            }
+        },
+        labels: {
+            formatter: function (value) {
+                return parseFloat(value).toFixed(2)
             }
         }
     },
@@ -124,4 +129,11 @@ export let simpleChartOptions = {
         curve: "straight",
         width: 2
     },
+    xaxis: {
+        labels: {
+            formatter: function (value) {
+                return parseFloat(value).toFixed(2)
+            }
+        }
+    }
 };
