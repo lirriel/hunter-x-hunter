@@ -9,7 +9,6 @@ export class Prey extends Organism {
         this.tickAge();
         if (this.age > this.lifespan) {
             removeOrganism(organisms, this);
-            // organisms = organisms.splice(organisms.indexOf(this), 1);
             return;
         }
         let surrounding = this.checkCoordinates(organisms, maxX, maxY);
@@ -24,7 +23,6 @@ export class Prey extends Organism {
             let newPrey = new Prey(randomInteger(50, 100), this.adulthoodAge,
                 this.birthPeriod, freeSpotPosition.x, freeSpotPosition.y);
             organisms[freeSpotPosition.x][freeSpotPosition.y] = newPrey;
-            // organisms.push(newPrey);
             this.birthPeriodTimer = this.birthPeriod;
         } else {
             this.move(organisms, maxX, maxY)

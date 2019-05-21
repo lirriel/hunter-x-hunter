@@ -94,6 +94,20 @@
                         x: {},
                         y: {}
                     },
+                    xaxis: {
+                        title: {
+                            text: "Time",
+                            style: {
+                                color: "#883157",
+                                fontSize: "14px"
+                            }
+                        },
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
+                            }
+                        }
+                    },
                     yaxis: [
                         {
                             axisTicks: {
@@ -114,7 +128,7 @@
                                 showDuplicates: false,
                                 trim: true,
                                 formatter: function (value) {
-                                    return value.toFixed(2)
+                                    return parseFloat(value).toFixed(2)
                                 }
                             },
                             title: {
@@ -141,7 +155,7 @@
                                 showDuplicates: false,
                                 trim: true,
                                 formatter: function (value) {
-                                    return value.toFixed(2);
+                                    return parseFloat(value).toFixed(2)
                                 }
                             },
                             title: {

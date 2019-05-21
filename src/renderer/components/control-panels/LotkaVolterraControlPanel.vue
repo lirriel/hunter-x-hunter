@@ -532,12 +532,12 @@
                 ],
                 currentType: 'Lotka-Volterra',
                 experimentLotkaVolterra: {
-                    prey: 20,
-                    predator: 3,
-                    a: 0.9,
-                    g1: 0.3,
-                    b: 0.6,
-                    g2: 0.06,
+                    prey: 10,
+                    predator: 10,
+                    a: 0.6,
+                    g1: 0.014,
+                    b: 0.7,
+                    g2: 0.014,
                 },
                 experimentLotkaVolterraFiniteCapacity: {
                     prey: 20,
@@ -555,11 +555,11 @@
                 experimentLotkaVolterraContTime: {
                     prey: 20,
                     predator: 3,
-                    r: 0.6,
-                    k: 126,
-                    a: 0.6,
-                    c: 0.06,
-                    b: 0.56,
+                    r: 1.6,
+                    k: 125,
+                    a: 3.2,
+                    c: 50,
+                    b: 0.6,
                     d: 0.56,
                 },
                 experimentRosenzweigMacArthur: {
@@ -716,14 +716,6 @@
                         params: this.experimentLotkaVolterra
                     });
                     this.$emit('modelType', this.currentType);
-                    let vArray = [];
-                    // for (let i = 0; i < this.dataBehave.length; i++) {
-                    //     let v = this.currentModel.phaseSpacePlot(
-                    //         this.dataBehave[i][0],
-                    //         this.dataBehave[i][1]
-                    //     );
-                    //     vArray.push([this.dataBehave[i][1], this.dataBehave[i][0], v]);
-                    // }
                     let eq = this.currentModel.getEquilibrium();
                     this.seriesBehave = [
                         {
@@ -797,16 +789,6 @@
                     }
                 ];
                 var curParams = this.currentModel;
-                // if (this.isLotkaVolterra === true || this.isLotkaVolterraQuadratic) {
-                //     curParams = this.experimentLotkaVolterra;
-                // } else if (this.isLotkaVolterraFiniteCapacity === true) {
-                //     curParams = this.experimentLotkaVolterraFiniteCapacity;
-                // } else if (this.isLotkaVolterraContTime === true) {
-                //     curParams = this.experimentLotkaVolterraContTime;
-                // } else if (this.isRosenzweigMacArthur === true) {
-                //     curParams = this.experimentRosenzweigMacArthur;
-                // }
-                // curParams
                 this.$emit('compare', {
                     series: this.seriesCompare,
                     params: Object.assign({}, curParams)

@@ -61,7 +61,7 @@ export class Person extends Organism {
 
     moveHunter(organisms, maxX, maxY) {
         this.tickAge();
-        if (this.age > this.lifespan || this.hungerStepsCounter <= 0) {
+        if (this.age > this.lifespan) {
             removeOrganism(organisms, this);
             // organisms = organisms.splice(organisms.indexOf(this), 1);
             return;
@@ -96,7 +96,7 @@ export class Person extends Organism {
             currentDist = this.calculateDistance(init[0], init[1]);
         }
         if (closestPrey == null && closestPredator == null) {
-            this.move(organisms, this.x, this.y);
+            this.move(organisms, maxX, maxY);
             return;
         }
         if (minPredatorDist * this.killPreyPriority > minPredatorDist * this.killPredatorPriority) {
@@ -116,6 +116,7 @@ export class Person extends Organism {
                         removeOrganism(organisms, o)
                     } else {
                         Person.preyNeedStepsLimit++;
+                        this.move(organisms, x, y);
                     }
                 } else {
                     removeOrganism(organisms, o);

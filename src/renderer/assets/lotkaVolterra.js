@@ -152,8 +152,9 @@ export class LotkaVolterraContiniousTimeFiniteCapacity extends Model {
 
 
 // www.researchgate.net/publication/259412939_Stabaility_analysis_of_a_lotka-volterra_type_predator-prey_system_involving_allee_effects
-export class LotkaVolterraContiniousTimeAlleeEffect {
+export class LotkaVolterraContiniousTimeAlleeEffect extends Model {
     constructor(r, a, b) {
+        super();
         this.r = r;
         this.a = a;
         this.b = b;

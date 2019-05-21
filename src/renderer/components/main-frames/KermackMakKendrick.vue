@@ -77,6 +77,7 @@
     import {roundArray} from "../../assets/pdfUtils";
     import CalculateCustomParameters from '../CalculateCustomParameters'
     import {BasicSIR} from "../../assets/kermackMakKendrick";
+    import {sirChartOptions} from "../../assets/simulation/predatorPreyChartOptions";
 
     export default {
         name: "KermackMakKendrick",
@@ -91,80 +92,7 @@
             return {
                 currentParams: {},
                 r0: 0,
-                chartOptions: {
-                    title: {
-                        text: 'Infection population size'
-                    },
-                    chart: {
-                        zoom: {
-                            enabled: true
-                        },
-                    },
-                    legend: {
-                        position: 'bottom',
-                        horizontalAlign: "left",
-                        offsetX: 10,
-                        onItemClick: {
-                            toggleDataSeries: true
-                        },
-                    },
-                    grid: {
-                        clipMarkers: false
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    tooltip: {
-                        x: {},
-                        y: {}
-                    },
-                    yaxis: [
-                        {
-                            axisTicks: {
-                                show: true
-                            },
-                            axisBorder: {
-                                show: true,
-                                color: "#FF1654"
-                            },
-                            labels: {
-                                style: {
-                                    color: "#FF1654"
-                                },
-                                show: true,
-                                rotate: -45,
-                                rotateAlways: false,
-                                hideOverlappingLabels: true,
-                                showDuplicates: false,
-                                trim: true,
-                                formatter: function (value) {
-                                    return parseFloat(value).toFixed(2)
-                                }
-                            },
-                            title: {
-                                text: "Group size"
-                            }
-                        }
-                    ],
-                    xaxis: {
-                        title: {
-                            text: "Time",
-                            style: {
-                                color: "#883157",
-                                fontSize: "14px"
-                            }
-                        },
-                        labels: {
-                            formatter: function (value) {
-                                return parseFloat(value).toFixed(2)
-                            }
-                        }
-                    },
-                    stroke: {
-                        curve: "straight",
-                        width: 1
-                    },
-                },
+                chartOptions: sirChartOptions,
                 series: [],
                 seriesBehave: [],
                 seriesBehaveCurve: [],
@@ -182,7 +110,6 @@
                     for (let i = 0; i < this.comparedSeries.length; i++) {
                         this.series.series.push(this.comparedSeries[i])
                     }
-                    console.log(this.series.series)
                 }
             },
             onSeriesBehave(data) {

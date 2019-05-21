@@ -28,7 +28,7 @@
                                 <label for="input-prey">Prey probability</label>
                             </b-col>
                             <b-col sm="6">
-                                <b-form-input id="input-prey" max="1000.00" min="0.00" step="0.001"
+                                <b-form-input id="input-prey" max="1.00" :min="simulationParams.isPredatorProbability" step="0.001"
                                               v-model.number="simulationParams.isAliveProbability"/>
                             </b-col>
                         </b-row>
@@ -37,7 +37,7 @@
                                 <label for="input-predator">Predator probability</label>
                             </b-col>
                             <b-col sm="6">
-                                <b-form-input id="input-predator" max="1000.00" min="0.00"
+                                <b-form-input id="input-predator" max="1000.00" :min="simulationParams.isHumanProbability"
                                               step="0.001"
                                               v-model.number="simulationParams.isPredatorProbability"/>
                             </b-col>

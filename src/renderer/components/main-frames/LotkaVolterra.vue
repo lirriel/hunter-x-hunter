@@ -62,15 +62,21 @@
                                           v-model.number="bifurcationMaxValue"/>
                                 <vs-input label="Step" placeholder="0" type="number"
                                           v-model.number="bifurcationStep"/>
-                                <b-button v-on:click="getBifurcationD" variant="outline-primary">
+                                <vs-divider/>
+                                <vs-input label="Opacity" max="1" min="0.01" placeholder="0"
+                                          type="number"
+                                          v-model.number="opacity"/>
+                                <!--<b-button v-on:click="getBifurcationD" variant="outline-primary">-->
+                                <b-button v-on:click="drawB" variant="outline-primary">
                                     <i class="fas fa-puzzle-piece"></i>
                                     Generate
                                 </b-button>
                             </b-col>
                             <b-col id="lvBifuraction" sm="9">
-                                <basic-chart-box :chart-options="bifurcationChartOptions"
-                                                 :series="seriesBifurcation"
-                                                 id="bfId" style="width: 800px"/>
+                                <canvas height="600" id="c" width="1000"></canvas>
+                                <!--<basic-chart-box :chart-options="bifurcationChartOptions"-->
+                                <!--:series="seriesBifurcation"-->
+                                <!--id="bfId" style="width: 800px"/>-->
                             </b-col>
                         </b-row>
                     </div>
@@ -166,10 +172,11 @@
                 seriesCompare: [],
                 seriesBehave: [],
                 seriesBifurcation: [],
-                bifurcationParam: '',
-                bifurcationStartValue: 0,
-                bifurcationMaxValue: 10,
-                bifurcationStep: 1,
+                bifurcationParam: 'a',
+                opacity: 0.2,
+                bifurcationStartValue: 0.1,
+                bifurcationMaxValue: 1,
+                bifurcationStep: 0.1,
                 isPreyBifurcation: true,
                 currentModel: new BasicLotkaVolterra(0, 0, 0, 0),
                 predator: 0,
@@ -187,12 +194,14 @@
             }
         },
         methods: {
+            drawB() {
+                startDraw(this)
+            },
             onSeries(data) {
                 this.series = data.series;
                 if (this.comparedSeries.length > 0) {
                     this.series.push(this.comparedSeries[0]);
                     this.series.push(this.comparedSeries[1]);
-                    console.log(this.series)
                 }
                 this.currentParams = data.params;
             },
@@ -213,15 +222,16 @@
                 let curModel = this.currentModel;
                 var x = this.prey;
                 var y = this.predator;
+                let timeStep = this.bifurcationStep / 10;
                 for (let i = this.bifurcationStartValue; i <= this.bifurcationMaxValue; i += this.bifurcationStep) {
                     curModel[this.bifurcationParam] = i;
                     let res = curModel.calculateModel(x, y);
                     if (this.isPreyBifurcation === true) {
-                        x += res.prey;
-                        dataBifurcation.push([i, x]);
+                        // x += res.prey;
+                        dataBifurcation.push([i, this.prey + res.prey]);
                     } else {
-                        y += res.predator;
-                        dataBifurcation.push([i, y]);
+                        // y += res.predator;
+                        dataBifurcation.push([i, this.predator + res.predator]);
                     }
                 }
                 this.seriesBifurcation = [{
@@ -240,7 +250,8 @@
                     this.series = this.series.slice(0, 2);
                     this.comparedSeries = []
                 }
-            },
+            }
+            ,
             onSavePdf() {
                 if (this.compareFlag) {
                     saveIdAsPdf(
@@ -266,6 +277,56 @@
             }
         }
     }
+
+    function startDraw(that) {
+        let curModel = Object.assign(Object.create(Object.getPrototypeOf(that.currentModel)), that.currentModel);
+        let stepCounter;
+        var c = document.getElementById("c"),
+            ctx = c.getContext("2d"),
+            w = c.width,
+            h = c.height,
+            st = (that.bifurcationMaxValue - that.bifurcationStartValue) / w,
+            b = 0.4,
+            c1 = 0.4,
+            d = 0.2,
+            fx = function (x1, r, y1) {
+                return [r * x1 * (1 - x1) - x1 * (b * y1), y1 * (c1 * x1 - d)];
+            },
+            it = function (r) {
+                curModel[that.bifurcationParam] = r;
+                var idx = 0,
+                    x = that.prey,
+                    xt = 0.1 / x,
+                    y = that.predator,
+                    xc = w * ((r - that.bifurcationStartValue) / (that.bifurcationMaxValue - that.bifurcationStartValue));
+                while (idx++ < 2000) {
+                    let res = curModel.calculateModel(x, y);
+                    x += res.prey;
+                    y += res.predator;
+                    if (x <= 0 || y <= 0) {
+                        break;
+                    }
+                    ctx.fillRect(xc, h - (xt * x * h), 1, 1);
+                }
+            };
+        ctx.fillStyle = "rgba(32,64,128," + that.opacity + ")";
+        ctx.clearRect(0, 0, w, h);
+        for (let r = that.bifurcationStartValue; r <= that.bifurcationMaxValue; r += st) {
+            (function (r1) {
+                setTimeout(function () {
+                    it(r1);
+                }, 0);
+            })(r);
+        }
+        ctx.moveTo(0, h);
+        ctx.lineTo(w, h);
+        ctx.stroke();
+
+        ctx.moveTo(0, h);
+        ctx.lineTo(0, 0);
+        ctx.stroke();
+    }
+
 </script>
 
 <style>

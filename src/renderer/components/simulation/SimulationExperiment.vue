@@ -65,8 +65,8 @@
                     <b-col :key="ind" v-for="(value, ind) in valueArray">
                         <label>{{currentParam}} = {{value}}</label>
                         <br>
-                        <label>Longest period = {{maxTimeBetweenValues[ind][0]}}, </label>
-                        <label>Overall period = {{maxTimeBetweenValues[ind][1]}}</label>
+                        <label v-if="maxTimeBetweenValues">Longest period = {{maxTimeBetweenValues[ind][0]}}, </label>
+                        <label v-if="maxTimeBetweenValues">Overall period = {{maxTimeBetweenValues[ind][1]}}</label>
                         <basic-chart-box :chart-options="chartOptions" :series="seriesArray[ind]"
                                          style="width: 700px"/>
                     </b-col>
@@ -352,9 +352,9 @@
                 this.maxTimeBetweenValues = [];
                 this.experimentHuman = [];
 
-                for (let i = this.min; i < this.max; i += this.step) {
+                for (let i = this.min; i <= this.max; i += this.step) {
                     this.valueArray.push(i);
-                    this.getPromise().then(result => {
+                    this.getPromise(i).then(result => {
                         result.push({
                             name: "Prey min",
                             type: "area",
@@ -560,9 +560,10 @@
     }
 
     function runSimulationExperiment(parameters, arr) {
+        let parameters1 = Object.assign({}, parameters);
         for (let i = 0; i < arr.length; i++) {
             if (arr[i]) {
-                parameters[this.params[i].name] = arr[i];
+                parameters1[this.params[i].name] = arr[i];
             }
         }
         let rndSeed = this.randomSeed;
@@ -572,7 +573,7 @@
         let that = this;
         let p = new Promise(function (resolve, reject) {
             setTimeout(() => {
-                let p = parameters;
+                let p = parameters1;
                 let dataPrey = [];
                 let dataPredator = [];
                 let organisms = [];
@@ -620,12 +621,12 @@
                     this.maxTimeOverall.push(t);
                     this.items.push({
                         index: this.experimentCount.toFixed(2),
-                        killPredatorPriority: parameters[this.params[0].name].toFixed(2),
-                        killPreyPriority: parameters[this.params[1].name].toFixed(2),
-                        killRange: parameters[this.params[2].name].toFixed(2),
-                        noticeOrganismRange: parameters[this.params[3].name].toFixed(2),
-                        preyNeedLimit: parameters[this.params[4].name].toFixed(2),
-                        preyNeedStepsLimit: parameters[this.params[5].name].toFixed(2),
+                        killPredatorPriority: parameters1[this.params[0].name].toFixed(2),
+                        killPreyPriority: parameters1[this.params[1].name].toFixed(2),
+                        killRange: parameters1[this.params[2].name].toFixed(2),
+                        noticeOrganismRange: parameters1[this.params[3].name].toFixed(2),
+                        preyNeedLimit: parameters1[this.params[4].name].toFixed(2),
+                        preyNeedStepsLimit: parameters1[this.params[5].name].toFixed(2),
                         maxOverallTime: t,
                         longestMax: t1
                     })

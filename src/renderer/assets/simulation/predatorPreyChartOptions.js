@@ -244,3 +244,78 @@ export let simpleChartOptions = {
         }
     }
 };
+
+export let sirChartOptions = {
+    title: {
+        text: 'Infection population size'
+    },
+    chart: {
+        zoom: {
+            enabled: true
+        },
+    },
+    legend: {
+        position: 'bottom',
+        horizontalAlign: "left",
+        offsetX: 10,
+        onItemClick: {
+            toggleDataSeries: true
+        },
+    },
+    grid: {
+        clipMarkers: false
+    },
+    dataLabels: {
+        enabled: false
+    },
+    tooltip: {
+        x: {},
+        y: {}
+    },
+    yaxis: [
+        {
+            axisTicks: {
+                show: true
+            },
+            axisBorder: {
+                show: true,
+                color: "#FF1654"
+            },
+            labels: {
+                style: {
+                    color: "#FF1654"
+                },
+                show: true,
+                rotate: -45,
+                rotateAlways: false,
+                hideOverlappingLabels: true,
+                showDuplicates: false,
+                trim: true,
+                formatter: function (value) {
+                    return parseFloat(value).toFixed(2)
+                }
+            },
+            title: {
+                text: "Group size"
+            }
+        }
+    ],
+    xaxis: {
+        title: {
+            text: "Time",
+            style: {
+                color: "#883157",
+                fontSize: "14px"
+            }
+        },
+        labels: {
+            formatter: function (value) {
+                return parseFloat(value).toFixed(2)
+            }
+        }
+    },
+    stroke: {
+        curve: "straight",
+        width: 1
+    },
+}

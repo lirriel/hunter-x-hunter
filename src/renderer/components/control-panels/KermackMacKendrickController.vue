@@ -176,11 +176,11 @@
             return {
                 S: 100,
                 I: 10,
-                R: 20,
+                R: 0,
                 expKermackMcKendrick: {
                     S: 1000,
                     I: 2,
-                    R: 10,
+                    R: 0,
                     b: 0.01,
                     q: 0.8,
                     m: 1,

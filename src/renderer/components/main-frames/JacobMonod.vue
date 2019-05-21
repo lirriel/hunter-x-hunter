@@ -166,7 +166,6 @@
                 if (this.comparedSeries.length >0 ){
                     this.series.series.push(this.comparedSeries[0])
                     this.series.series.push(this.comparedSeries[1])
-                    console.log(this.series.series)
                 }
             },
             onSeriesBehave(data) {

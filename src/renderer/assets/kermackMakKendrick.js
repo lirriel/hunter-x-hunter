@@ -111,8 +111,8 @@ export class SIRS extends BasicSIR {
     calculateModel(S, I, R) {
         const N = S + I + R;
         return {
-            ds: -this.b * S * I / N + this.m * (N - S),
-            di: this.b * S * I / N - this.q * I - this.m * I,
+            ds: -this.b * S * I + this.m * (N - S),
+            di: this.b * S * I - this.q * I - this.m * I,
             dr: this.q * I - this.m * R
         }
     }
@@ -133,11 +133,15 @@ export class SIRSwithVital extends SIRS {
             "\\end{cases}"
     }
 
+    getBasicReproductionNumber(s) {
+        return this.b * s / (this.q + this.mor);
+    }
+
     calculateModel(S, I, R) {
         const N = S + I + R;
         return {
-            ds: this.mor * N - this.b * S * I / N + this.m * R - this.v * S,
-            di: this.b * S * I / N - this.q * I - this.m * I,
+            ds: this.mor * N - this.b * S * I + this.m * R - this.v * S,
+            di: this.b * S * I - this.q * I - this.m * I,
             dr: this.q * I - this.m * R - this.v * R
         }
     }

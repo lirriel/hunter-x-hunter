@@ -121,6 +121,7 @@
     import {saveExperimentPdf} from "../../../assets/pdfUtils";
     import {createWorkbook, createWorkSheet, saveWorkbook} from "../../../assets/xlsx_utils";
     import {KermackMakKendrickSIS} from "../../../assets/kermackMakKendrick";
+    import {sirChartOptions} from "../../../assets/simulation/predatorPreyChartOptions";
 
     export default {
         name: "KmKComparisonTestModal",
@@ -174,27 +175,7 @@
                     descr: []
                 },
                 info: [],
-                chartOptions: {
-                    chart: {
-                        zoom: {
-                            enabled: true
-                        },
-                    },
-                    grid: {
-                        clipMarkers: false
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    tooltip: {
-                        x: {},
-                        y: {}
-                    },
-                    stroke: {
-                        curve: "straight",
-                        width: 1
-                    },
-                },
+                chartOptions: sirChartOptions,
 
                 chartOptionsSR: null,
                 chartOptionsSI: null,
