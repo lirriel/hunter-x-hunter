@@ -60,23 +60,24 @@
                                           v-model.number="bifurcationStartValue"/>
                                 <vs-input label="Max value" placeholder="0" type="number"
                                           v-model.number="bifurcationMaxValue"/>
-                                <vs-input label="Step" placeholder="0" type="number"
-                                          v-model.number="bifurcationStep"/>
-                                <vs-divider/>
                                 <vs-input label="Opacity" max="1" min="0.01" placeholder="0"
                                           type="number"
                                           v-model.number="opacity"/>
+                                <vs-input label="Indexes" max="100" min="2000" placeholder="0"
+                                          type="number"
+                                          v-model.number="indexes"/>
                                 <!--<b-button v-on:click="getBifurcationD" variant="outline-primary">-->
                                 <b-button v-on:click="drawB" variant="outline-primary">
                                     <i class="fas fa-puzzle-piece"></i>
                                     Generate
                                 </b-button>
+                                <b-button v-on:click="saveB" variant="outline-danger">
+                                    <i class="far fa-file-pdf"></i>
+                                    Save pdf
+                                </b-button>
                             </b-col>
                             <b-col id="lvBifuraction" sm="9">
-                                <canvas height="600" id="c" width="1000"></canvas>
-                                <!--<basic-chart-box :chart-options="bifurcationChartOptions"-->
-                                <!--:series="seriesBifurcation"-->
-                                <!--id="bfId" style="width: 800px"/>-->
+                                <canvas height="620" id="c" width="850"></canvas>
                             </b-col>
                         </b-row>
                     </div>
@@ -98,7 +99,7 @@
     import BehaviourDiargam from '../diagrams/BehaviourDiargam'
     import LotkaVolterraControlPanel from '../control-panels/LotkaVolterraControlPanel'
     import BasicChartBox from '../diagrams/BasicChartBox'
-    import {saveIdAsPdf} from "../../assets/pdfUtils";
+    import {saveIdAsPdf, saveBifurcationDiargam} from "../../assets/pdfUtils";
     import {predatorPreyChartOptions} from "../../assets/simulation/predatorPreyChartOptions";
     import CalculateCustomParameters from '../CalculateCustomParameters'
     import {BasicLotkaVolterra} from "../../assets/lotkaVolterra";
@@ -114,6 +115,7 @@
         },
         data() {
             return {
+                bdType: "scatter",
                 compareFlag: false,
                 currentParams: null,
                 dataPrey: [],
@@ -123,7 +125,9 @@
                 dataBehave: [],
                 dataBifurcation: [],
                 timeArray: [],
+                indexes: 10,
                 bifurcationChartOptions: {
+                    type: 'scatter',
                     title: {
                         text: "Bifurcation diagram"
                     },
@@ -141,6 +145,7 @@
                     },
                     xaxis: {
                         labels: {
+                            show: false,
                             formatter: function (value) {
                                 return parseFloat(value).toFixed(2)
                             }
@@ -164,7 +169,7 @@
                         offsetX: 10
                     },
                     stroke: {
-                        width: 1
+                        width: 0.01
                     },
                 },
                 chartOptions: predatorPreyChartOptions,
@@ -197,6 +202,16 @@
             drawB() {
                 startDraw(this)
             },
+            saveB() {
+                var who = "prey";
+                if (this.isPreyBifurcation == false) {
+                    who = "predator"
+                }
+                var msg = "Changing parameter " + this.bifurcationParam + " in a range ["
+                    + this.bifurcationStartValue + ", " + this.bifurcationMaxValue + "] for " + who
+                + " population. ";
+                saveBifurcationDiargam(msg, this.currentModel)
+            },
             onSeries(data) {
                 this.series = data.series;
                 if (this.comparedSeries.length > 0) {
@@ -216,28 +231,6 @@
                 this.currentModel = data.model;
                 this.predator = data.predator;
                 this.prey = data.prey;
-            },
-            getBifurcationD() {
-                let dataBifurcation = [];
-                let curModel = this.currentModel;
-                var x = this.prey;
-                var y = this.predator;
-                let timeStep = this.bifurcationStep / 10;
-                for (let i = this.bifurcationStartValue; i <= this.bifurcationMaxValue; i += this.bifurcationStep) {
-                    curModel[this.bifurcationParam] = i;
-                    let res = curModel.calculateModel(x, y);
-                    if (this.isPreyBifurcation === true) {
-                        // x += res.prey;
-                        dataBifurcation.push([i, this.prey + res.prey]);
-                    } else {
-                        // y += res.predator;
-                        dataBifurcation.push([i, this.predator + res.predator]);
-                    }
-                }
-                this.seriesBifurcation = [{
-                    name: "Bifurcation " + this.bifurcationParam,
-                    data: dataBifurcation
-                }];
             },
             addToChart(data) {
                 for (let i = 0; i < data.length; i++) {
@@ -280,11 +273,14 @@
 
     function startDraw(that) {
         let curModel = Object.assign(Object.create(Object.getPrototypeOf(that.currentModel)), that.currentModel);
-        let stepCounter;
+        var bd = [];
+        var xMax = 0;
         var c = document.getElementById("c"),
             ctx = c.getContext("2d"),
-            w = c.width,
-            h = c.height,
+            dw = 50,
+            w = c.width - dw,
+            dh = 20,
+            h = c.height - dh,
             st = (that.bifurcationMaxValue - that.bifurcationStartValue) / w,
             b = 0.4,
             c1 = 0.4,
@@ -296,17 +292,51 @@
                 curModel[that.bifurcationParam] = r;
                 var idx = 0,
                     x = that.prey,
-                    xt = 0.1 / x,
                     y = that.predator,
                     xc = w * ((r - that.bifurcationStartValue) / (that.bifurcationMaxValue - that.bifurcationStartValue));
-                while (idx++ < 2000) {
+                while (idx++ < that.indexes) {
                     let res = curModel.calculateModel(x, y);
                     x += res.prey;
                     y += res.predator;
                     if (x <= 0 || y <= 0) {
                         break;
                     }
-                    ctx.fillRect(xc, h - (xt * x * h), 1, 1);
+                    var t = x;
+                    if (that.isPreyBifurcation === false) {
+                        t = y;
+                    }
+                    if (t * h > xMax) {
+                        xMax = t * h;
+                    }
+                    bd.push([xc, t * h])
+                }
+                if (xc >= (w-1)) {
+                    var xt = 0.001;
+                    if (xMax > h) {
+                        xt = h/xMax;
+                    } else {
+                        xt = xMax/h;
+                    }
+                    ctx.clearRect(0, 0, w + dw, h + dh);
+                    ctx.fillStyle = "rgba(32,64,128," + that.opacity + ")";
+                    for (let i = 0; i < bd.length; i++) {
+                        ctx.fillRect(bd[i][0] + dw, h - (xt * bd[i][1]), 1, 1);
+                    }
+                    ctx.moveTo(dw, h);
+                    ctx.lineTo(w + dw, h);
+                    ctx.stroke();
+
+                    ctx.moveTo(dw, h);
+                    ctx.lineTo(dw, 0);
+                    ctx.stroke();
+
+                    ctx.fillStyle = "rgba(7, 47, 95, 2)";
+                    ctx.font = "20px Arial";
+                    ctx.fillText(xMax.toFixed(2), 1, 20);
+                    ctx.fillText(that.bifurcationChartOptions.yaxis[0].title.text, 1, h/2);
+                    ctx.fillText(0, dw, h + dh);
+                    ctx.fillText(that.bifurcationParam, w/2, h + dh);
+                    ctx.fillText(that.bifurcationMaxValue, w - 30, h + dh);
                 }
             };
         ctx.fillStyle = "rgba(32,64,128," + that.opacity + ")";
@@ -318,13 +348,6 @@
                 }, 0);
             })(r);
         }
-        ctx.moveTo(0, h);
-        ctx.lineTo(w, h);
-        ctx.stroke();
-
-        ctx.moveTo(0, h);
-        ctx.lineTo(0, 0);
-        ctx.stroke();
     }
 
 </script>
@@ -337,6 +360,10 @@
 
     .b-button {
         margin-top: 10px;
+    }
+
+    .vs-input{
+        margin-bottom: 10px;
     }
 
     .inside-tab {

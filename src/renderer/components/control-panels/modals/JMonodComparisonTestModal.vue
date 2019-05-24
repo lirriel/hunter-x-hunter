@@ -10,9 +10,13 @@
                             <label>Min</label>
                         </b-col>
                         <b-col sm="6">
-                            <b-form-input placeholder="Start value"
+                            <b-form-input :state="checkRange(min, 0, 1000)"
+                                          aria-describedby="input-msg-1" placeholder="Start value"
                                           type="number"
                                           v-model.number="min"/>
+                            <b-form-invalid-feedback id="input-msg-1">
+                                {{areaMsg(0, 1000)}}
+                            </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                     <b-row>
@@ -20,9 +24,13 @@
                             <label>Max</label>
                         </b-col>
                         <b-col sm="6">
-                            <b-form-input placeholder="Max value"
+                            <b-form-input :state="checkRange(max, min, 1000)"
+                                          aria-describedby="input-msg-2" placeholder="Max value"
                                           type="number"
                                           v-model.number="max"/>
+                            <b-form-invalid-feedback id="input-msg-2">
+                                {{areaMsg(min, 1000)}}
+                            </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                     <b-row>
@@ -30,9 +38,13 @@
                             <label>Step</label>
                         </b-col>
                         <b-col sm="6">
-                            <b-form-input placeholder="step"
+                            <b-form-input :state="checkRange(step, min, max)"
+                                          aria-describedby="input-msg-3" placeholder="step"
                                           type="number"
                                           v-model.number="step"/>
+                            <b-form-invalid-feedback id="input-msg-3">
+                                {{areaMsg(min, max)}}
+                            </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
 
@@ -41,9 +53,13 @@
                             <label>Time index</label>
                         </b-col>
                         <b-col sm="6">
-                            <b-form-input placeholder="Time index"
+                            <b-form-input :state="checkRange(timeIndex, 0, 1000)"
+                                          aria-describedby="input-msg-6" placeholder="Time index"
                                           type="number"
                                           v-model.number="timeIndex"/>
+                            <b-form-invalid-feedback id="input-msg-6">
+                                {{areaMsg(0, 1000)}}
+                            </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                     <b-col>
@@ -218,6 +234,12 @@
             }
         },
         methods: {
+            checkRange(value, min, max) {
+                return value >= min && value <= max;
+            },
+            areaMsg(min, max) {
+                return `Value should between ${min} and ${max}`
+            },
             calculate() {
                 this.series = [];
                 this.seriesBehave = [];

@@ -16,25 +16,31 @@
                 <vs-divider/>
                 <b-row style="margin-top: 20px;">
                     <b-col>
-                        <vs-input label="Start value" placeholder="0" type="number" v-model="min"/>
+                        <vs-input-number  color="#388e3c" label="Start value" max="1000" min="0" placeholder="0"
+                                         step="0.1" type="number" v-model="min"/>
                     </b-col>
                     <b-col>
-                        <vs-input label="Max value" placeholder="1" type="number" v-model="max"/>
+                        <vs-input-number  color="#388e3c" :min="min" label="Max value" max="1000" placeholder="1"
+                                         step="0.1" type="number" v-model="max"/>
                     </b-col>
                     <b-col>
-                        <vs-input label="Step" placeholder="1" type="number" v-model="step"/>
+                        <vs-input-number  color="#388e3c" :max="max" :min="min" label="Step" placeholder="1"
+                                         step="0.01" type="number" v-model="step"/>
                     </b-col>
                     <b-col>
-                        <vs-input label="Prey min count" placeholder="1" type="number"
-                                  v-model="preyMinCount"/>
+                        <vs-input-number  color="#388e3c" label="Prey min count" max="1000" min="0" placeholder="1"
+                                         step="1" type="number"
+                                         v-model="preyMinCount"/>
                     </b-col>
                     <b-col>
-                        <vs-input label="Prey max count" placeholder="1" type="number"
-                                  v-model="preyMaxCount"/>
+                        <vs-input-number  color="#388e3c" :min="preyMinCount" label="Prey max count" max="1000"
+                                         placeholder="1" step="1" type="number"
+                                         v-model="preyMaxCount"/>
                     </b-col>
                     <b-col>
-                        <vs-input label="Number of ticks" placeholder="1" type="number"
-                                  v-model="maxTick"/>
+                        <vs-input-number  color="#388e3c" label="Number of ticks" max="100" min="1" placeholder="1"
+                                         step="1" type="number"
+                                         v-model="maxTick"/>
                     </b-col>
                 </b-row>
                 <vs-divider/>
@@ -65,8 +71,10 @@
                     <b-col :key="ind" v-for="(value, ind) in valueArray">
                         <label>{{currentParam}} = {{value}}</label>
                         <br>
-                        <label v-if="maxTimeBetweenValues">Longest period = {{maxTimeBetweenValues[ind][0]}}, </label>
-                        <label v-if="maxTimeBetweenValues">Overall period = {{maxTimeBetweenValues[ind][1]}}</label>
+                        <label v-if="maxTimeBetweenValues">Longest period =
+                            {{maxTimeBetweenValues[ind][0]}}, </label>
+                        <label v-if="maxTimeBetweenValues">Overall period =
+                            {{maxTimeBetweenValues[ind][1]}}</label>
                         <basic-chart-box :chart-options="chartOptions" :series="seriesArray[ind]"
                                          style="width: 700px"/>
                     </b-col>
@@ -318,6 +326,12 @@
             this.chartOptions.yaxis.push(opt, opt)
         },
         methods: {
+            checkRange(value, min, max) {
+                return value >= min && value <= max;
+            },
+            areaMsg(min, max) {
+                return `Value should between ${min} and ${max}`
+            },
             saveTableData() {
                 var wb = createWorkbook();
                 var data = [Object.keys(this.fields)];

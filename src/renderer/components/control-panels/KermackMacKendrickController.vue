@@ -7,8 +7,12 @@
                     <label>Susceptible</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input placeholder="S" type="number"
+                    <b-form-input :state="checkRange(S, 0, 100000)" aria-describedby="input-msg-1"
+                                  placeholder="S" type="number"
                                   v-model.number="S"/>
+                    <b-form-invalid-feedback id="input-msg-1">
+                        {{areaMsg(0, 100000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
             </b-row>
 
@@ -17,8 +21,12 @@
                     <label>Infected</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input placeholder="I" type="number"
+                    <b-form-input :state="checkRange(I, 0, 10000)" aria-describedby="input-msg-2"
+                                  placeholder="I" type="number"
                                   v-model.number="I"/>
+                    <b-form-invalid-feedback id="input-msg-2">
+                        {{areaMsg(0, 10000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
             </b-row>
 
@@ -27,9 +35,14 @@
                     <label>Recovered</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input max="1000.00" min="0.00" placeholder="R" step="0.01"
+                    <b-form-input :state="checkRange(timeStep, 0, 10000)"
+                                  aria-describedby="input-msg-3" max="1000.00" min="0.00"
+                                  placeholder="R" step="0.01"
                                   type="number"
                                   v-model.number="R"/>
+                    <b-form-invalid-feedback id="input-msg-3">
+                        {{areaMsg(0, 10000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
             </b-row>
 
@@ -38,9 +51,14 @@
                     <label>Chance to be infected</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input max="1000.00" min="0.00" placeholder="b" step="0.01"
+                    <b-form-input :state="checkRange(expKermackMcKendrick.b, 0, 1000)"
+                                  aria-describedby="input-msg-4" max="1000.00" min="0.00"
+                                  placeholder="b" step="0.01"
                                   type="number"
                                   v-model.number="expKermackMcKendrick.b"/>
+                    <b-form-invalid-feedback id="input-msg-4">
+                        {{areaMsg(0, 1000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
             </b-row>
 
@@ -49,9 +67,14 @@
                     <label>Chance to be recovered</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input max="1000.00" min="0.00" placeholder="q" step="0.01"
+                    <b-form-input :state="checkRange(expKermackMcKendrick.q, 0, 1000)"
+                                  aria-describedby="input-msg-5" max="1000.00" min="0.00"
+                                  placeholder="q" step="0.01"
                                   type="number"
                                   v-model.number="expKermackMcKendrick.q"/>
+                    <b-form-invalid-feedback id="input-msg-5">
+                        {{areaMsg(0, 1000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
             </b-row>
 
@@ -60,8 +83,13 @@
                     <label>Immunity loss rate</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input max="1000.00" min="0.00" placeholder="m" step="0.01" type="number"
+                    <b-form-input :state="checkRange(expKermackMcKendrick.m, 0, 1000)"
+                                  aria-describedby="input-msg-6" max="1000.00" min="0.00"
+                                  placeholder="m" step="0.01" type="number"
                                   v-model.number="expKermackMcKendrick.m"/>
+                    <b-form-invalid-feedback id="input-msg-6">
+                        {{areaMsg(0, 1000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
 
             </b-row>
@@ -71,8 +99,13 @@
                     <label>Birth rate</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input max="1000.00" min="0.00" placeholder="m" step="0.01" type="number"
+                    <b-form-input :state="checkRange(expKermackMcKendrick.v, 0, 1000)"
+                                  aria-describedby="input-msg-7" max="1000.00" min="0.00"
+                                  placeholder="m" step="0.01" type="number"
                                   v-model.number="expKermackMcKendrick.v"/>
+                    <b-form-invalid-feedback id="input-msg-7">
+                        {{areaMsg(0, 1000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
 
             </b-row>
@@ -81,8 +114,13 @@
                     <label>Morality rate</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input max="1000.00" min="0.00" placeholder="m" step="0.01" type="number"
+                    <b-form-input :state="checkRange(expKermackMcKendrick.mor, 0, 1000)"
+                                  aria-describedby="input-msg-8" max="1000.00" min="0.00"
+                                  placeholder="m" step="0.01" type="number"
                                   v-model.number="expKermackMcKendrick.mor"/>
+                    <b-form-invalid-feedback id="input-msg-8">
+                        {{areaMsg(0, 1000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
 
             </b-row>
@@ -92,9 +130,14 @@
                     <label>Time</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input max="1000.00" min="0.00" placeholder="Time" step="0.01"
+                    <b-form-input :state="checkRange(time, 0, 1000)"
+                                  aria-describedby="input-msg-9" max="1000.00" min="0.00"
+                                  placeholder="Time" step="0.01"
                                   type="number"
                                   v-model.number="time"/>
+                    <b-form-invalid-feedback id="input-msg-9">
+                        {{areaMsg(0, 1000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
             </b-row>
 
@@ -103,10 +146,15 @@
                     <label>Time step</label>
                 </b-col>
                 <b-col sm="8">
-                    <b-form-input max="1000.00" min="0.00" placeholder="Time step"
+                    <b-form-input :state="checkRange(timeStep, 0, time)"
+                                  aria-describedby="input-msg-10" max="1000.00" min="0.00"
+                                  placeholder="Time step"
                                   step="0.00000001"
                                   type="number"
                                   v-model.number="timeStep"/>
+                    <b-form-invalid-feedback id="input-msg-10">
+                        {{areaMsg(0, 1000)}}
+                    </b-form-invalid-feedback>
                 </b-col>
             </b-row>
         </div>
@@ -225,6 +273,12 @@
             }
         },
         methods: {
+            checkRange(value, min, max) {
+                return value >= min && value <= max;
+            },
+            areaMsg(min, max) {
+                return `Value should between ${min} and ${max}`
+            },
             addToChart() {
                 this.$emit('addToChart', [...this.series]);
             },
@@ -471,7 +525,7 @@
         font-size: smaller;
     }
 
-    .b-row {
+    .row {
         margin-bottom: 10px;
     }
 </style>

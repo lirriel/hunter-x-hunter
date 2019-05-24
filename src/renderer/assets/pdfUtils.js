@@ -83,8 +83,22 @@ function saveBehaveDiargamm(pdf, filename, diagramId) {
     })
 }
 
-function saveBifurcationDiargamm(pdf, filename, diagramId) {
-    return html2canvas(document.getElementById(diagramId), {
+export function saveBifurcationDiargam(msg, currentModel) {
+    let filename = "bifurcation";
+    let pdf = new jsPDF.jsPDF('portrait', 'mm', 'a4');
+    pdfW = pdf.internal.pageSize.width;
+    let pdfH = pdf.internal.pageSize.height;
+    pdf.setFontSize(20);
+    var y = 16;
+    pdf.text(10, y, "Bifurcation diagram");
+    y += 10;
+    pdf.setFontSize(10);
+    pdf.text(10, y, pdf.splitTextToSize(msg, MAX_WIDTH));
+    y += 10;
+    pdf.text(10, y, pdf.splitTextToSize(getParamsText("", currentModel), MAX_WIDTH));
+    y += 5;
+
+    return html2canvas(document.getElementById("c"), {
         imageTimeout: 10000,
         useCORS: true
     }).then(canvas => {
@@ -98,6 +112,8 @@ function saveBifurcationDiargamm(pdf, filename, diagramId) {
         );
         pdf.addImage(img, 'JPEG', 25, y + 10,
             xScale * canvas.clientWidth, xScale * canvas.clientHeight);
+        pdf.save(filename + '.pdf');
+        document.getElementById('pdf').innerHTML = '';
     })
 }
 
@@ -201,7 +217,7 @@ export function getParamsText(modelType, currentParams) {
     for (let key in currentParams) {
         params += key + ' = ' + currentParams[key] + ", ";
     }
-    return "Considering a model of type \"" + modelType + "\" with parameters " + params + "."
+    return "Considering a model of type \"" + currentParams.constructor.name + "\" with parameters " + params + "."
 }
 
 

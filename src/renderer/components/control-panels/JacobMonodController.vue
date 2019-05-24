@@ -5,8 +5,13 @@
                 <label>Bacteria biomass</label>
             </b-col>
             <b-col sm="8">
-                <b-form-input max="1000.00" min="0.00" placeholder="Bacteria" step="0.01"
+                <b-form-input :state="checkRange(expJMonod.x, 0, 1000)"
+                              aria-describedby="input-msg-1" max="1000.00" min="0.00"
+                              placeholder="Bacteria" step="0.01"
                               type="number" v-model.number="expJMonod.x"></b-form-input>
+                <b-form-invalid-feedback id="input-msg-1">
+                    {{areaMsg(0, 1000)}}
+                </b-form-invalid-feedback>
             </b-col>
         </b-row>
 
@@ -15,8 +20,13 @@
                 <label>Nutrient (S)</label>
             </b-col>
             <b-col sm="8">
-                <b-form-input max="1000.00" min="0.00" placeholder="S" step="0.01" type="number"
+                <b-form-input :state="checkRange(expJMonod.s, 0, 1000)"
+                              aria-describedby="input-msg-2" max="1000.00" min="0.00"
+                              placeholder="S" step="0.01" type="number"
                               v-model.number="expJMonod.s"></b-form-input>
+                <b-form-invalid-feedback id="input-msg-2">
+                    {{areaMsg(0, 1000)}}
+                </b-form-invalid-feedback>
             </b-col>
         </b-row>
 
@@ -25,9 +35,14 @@
                 <label>Input nutrient flow(S-input)</label>
             </b-col>
             <b-col sm="8">
-                <b-form-input max="1000.00" min="0.00" placeholder="S-in" step="0.01"
+                <b-form-input :state="checkRange(expJMonod.sIn, 0, 1000)"
+                              aria-describedby="input-msg-3" max="1000.00" min="0.00"
+                              placeholder="S-in" step="0.01"
                               type="number"
                               v-model.number="expJMonod.sIn"></b-form-input>
+                <b-form-invalid-feedback id="input-msg-3">
+                    {{areaMsg(0, 1000)}}
+                </b-form-invalid-feedback>
             </b-col>
         </b-row>
 
@@ -36,10 +51,15 @@
                 <label>Dilution rate (dr)</label>
             </b-col>
             <b-col sm="8">
-                <b-form-input max="1000.00" min="0.00" placeholder="dr" step="0.01" type="number"
+                <b-form-input :state="checkRange(expJMonod.dr, 0, 1000)"
+                              aria-describedby="input-msg-4" max="1000.00" min="0.00"
+                              placeholder="dr" step="0.01" type="number"
                               v-model.number="expJMonod.dr"></b-form-input>
             </b-col>
 
+            <b-form-invalid-feedback id="input-msg-4">
+                {{areaMsg(0, 1000)}}
+            </b-form-invalid-feedback>
         </b-row>
 
         <b-row>
@@ -47,9 +67,14 @@
                 <label>Growth rate uptake (alpha)</label>
             </b-col>
             <b-col sm="8">
-                <b-form-input max="1000.00" min="0.00" placeholder="alpha" step="0.01"
+                <b-form-input :state="checkRange(expJMonod.alpha, 0, 1000)"
+                              aria-describedby="input-msg-5" max="1000.00" min="0.00"
+                              placeholder="alpha" step="0.01"
                               type="number"
                               v-model.number="expJMonod.alpha"></b-form-input>
+                <b-form-invalid-feedback id="input-msg-5">
+                    {{areaMsg(0, 1000)}}
+                </b-form-invalid-feedback>
             </b-col>
         </b-row>
 
@@ -58,9 +83,14 @@
                 <label>Saturation const (K)</label>
             </b-col>
             <b-col sm="8">
-                <b-form-input max="1000.00" min="0.00" placeholder="k" step="0.01"
+                <b-form-input :state="checkRange(expJMonod.K, 0, 1000)"
+                              aria-describedby="input-msg-6" max="1000.00" min="0.00"
+                              placeholder="k" step="0.01"
                               type="number"
                               v-model.number="expJMonod.K"></b-form-input>
+                <b-form-invalid-feedback id="input-msg-6">
+                    {{areaMsg(0, 1000)}}
+                </b-form-invalid-feedback>
             </b-col>
         </b-row>
 
@@ -69,9 +99,14 @@
                 <label>mu-Max growth rate</label>
             </b-col>
             <b-col sm="8">
-                <b-form-input max="1000.00" min="0.00" placeholder="muMax" step="0.01"
+                <b-form-input :state="checkRange(expJMonod.mMax, 0, 1000)"
+                              aria-describedby="input-msg-7" max="1000.00" min="0.00"
+                              placeholder="muMax" step="0.01"
                               type="number"
                               v-model.number="expJMonod.mMax"></b-form-input>
+                <b-form-invalid-feedback id="input-msg-7">
+                    {{areaMsg(0, 1000)}}
+                </b-form-invalid-feedback>
             </b-col>
         </b-row>
 
@@ -80,8 +115,13 @@
                 <label>Time</label>
             </b-col>
             <b-col sm="8">
-                <b-form-input max="1000.00" min="0.00" placeholder="Time" step="0.01" type="number"
+                <b-form-input :state="checkRange(time, 0, 1000)"
+                              aria-describedby="input-msg-8" max="1000.00" min="0.00"
+                              placeholder="Time" step="0.01" type="number"
                               v-model.number="time"></b-form-input>
+                <b-form-invalid-feedback id="input-msg-8">
+                    {{areaMsg(0, 1000)}}
+                </b-form-invalid-feedback>
             </b-col>
         </b-row>
 
@@ -90,10 +130,15 @@
                 <label>Time step</label>
             </b-col>
             <b-col sm="8">
-                <b-form-input max="1000.00" min="0.00" placeholder="Time step"
+                <b-form-input :state="checkRange(timeStep, 0, time)"
+                              aria-describedby="input-msg-9" max="1000.00" min="0.00"
+                              placeholder="Time step"
                               step="0.00000001"
                               type="number"
                               v-model.number="timeStep"></b-form-input>
+                <b-form-invalid-feedback id="input-msg-9">
+                    {{areaMsg(0, 1000)}}
+                </b-form-invalid-feedback>
             </b-col>
         </b-row>
         <vs-divider/>
@@ -179,6 +224,12 @@
             }
         },
         methods: {
+            checkRange(value, min, max) {
+                return value >= min && value <= max;
+            },
+            areaMsg(min, max) {
+                return `Value should between ${min} and ${max}`
+            },
             addToChart() {
                 this.$emit('addToChart', [...this.series]);
             },

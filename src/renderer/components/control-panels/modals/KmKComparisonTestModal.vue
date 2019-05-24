@@ -10,10 +10,14 @@
                             <label>Min</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Start value"
+                            <b-form-input :state="checkRange(min, 0, 1000)"
+                              aria-describedby="input-msg-1" max="1000.00" min="0.00" placeholder="Start value"
                                           step="0.0001"
                                           type="number"
                                           v-model.number="min"/>
+                        <b-form-invalid-feedback id="input-msg-1">
+                        {{areaMsg(0, 1000)}}
+                    </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                     <b-row>
@@ -21,10 +25,14 @@
                             <label>Max</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.00" placeholder="Max value"
+                            <b-form-input :state="checkRange(max, min, 1000)"
+                              aria-describedby="input-msg-2" max="1000.00" min="0.00" placeholder="Max value"
                                           step="0.0001"
                                           type="number"
                                           v-model.number="max"/>
+                        <b-form-invalid-feedback id="input-msg-2">
+                        {{areaMsg(min, 1000)}}
+                    </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                     <b-row>
@@ -32,10 +40,14 @@
                             <label>Step</label>
                         </b-col>
                         <b-col sm="8">
-                            <b-form-input max="1000.00" min="0.0000" placeholder="step"
+                            <b-form-input :state="checkRange(step, min, max)"
+                              aria-describedby="input-msg-6" max="1000.00" min="0.0000" placeholder="step"
                                           step="0.000001"
                                           type="number"
                                           v-model.number="step"/>
+                        <b-form-invalid-feedback id="input-msg-6">
+                        {{areaMsg(min, max)}}
+                    </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                     <b-col>
@@ -192,6 +204,12 @@
             }
         },
         methods: {
+            checkRange(value, min, max) {
+                return value >= min && value <= max;
+            },
+            areaMsg(min, max) {
+                return `Value should between ${min} and ${max}`
+            },
             load() {
                 this.chartOptionsRI = copyObject(this.chartOptions);
                 this.chartOptionsSI = copyObject(this.chartOptions);
@@ -294,7 +312,15 @@
                         if (i === 0) {
                             break;
                         }
-                        resolve({s: dataS, i: dataI, r: dataR, si: dataSToI, sr: dataSToR, ir: dataIToR, max: isMax})
+                        resolve({
+                            s: dataS,
+                            i: dataI,
+                            r: dataR,
+                            si: dataSToI,
+                            sr: dataSToR,
+                            ir: dataIToR,
+                            max: isMax
+                        })
                     }
                 }).then(result => {
                     this.currentSeries.push({
@@ -351,20 +377,20 @@
             },
             drawPhaseTrajectories(ind) {
                 let arr = [];
-                 if (this.model instanceof BasicSIR) {
-                      for (let i = 0; i < this.dataSToI.length; i++) {
-                          arr.push([
-                              this.dataSToI[0],
-                              this.model.getPhaseTrajectories(
-                                  this.dataSToI[0], this.dataSToI[1]
-                              )
-                          ]);
-                      }
-                  }
-                  /*this.phaseTrajSeries.push({
-                      data: arr,
-                      name: "phase trajectories - " + ind
-                  });*/
+                if (this.model instanceof BasicSIR) {
+                    for (let i = 0; i < this.dataSToI.length; i++) {
+                        arr.push([
+                            this.dataSToI[0],
+                            this.model.getPhaseTrajectories(
+                                this.dataSToI[0], this.dataSToI[1]
+                            )
+                        ]);
+                    }
+                }
+                /*this.phaseTrajSeries.push({
+                    data: arr,
+                    name: "phase trajectories - " + ind
+                });*/
 
             },
             getAxis(txt) {
