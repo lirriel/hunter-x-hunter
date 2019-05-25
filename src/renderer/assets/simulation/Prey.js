@@ -13,19 +13,15 @@ export class Prey extends Organism {
         }
         let surrounding = this.checkCoordinates(organisms, maxX, maxY);
         let freeSpotPosition = this.findFreeSpot(surrounding);
-        if (!freeSpotPosition) {
-            freeSpotPosition = {x: this.x, y: this.y}
-        }
-        if (this.age > this.adulthoodAge
-            && this.birthPeriodTimer === 0
-            && (freeSpotPosition.x !== this.x || freeSpotPosition.y !== this.y)
-        ) {
-            let newPrey = new Prey(randomInteger(50, 100), this.adulthoodAge,
-                this.birthPeriod, freeSpotPosition.x, freeSpotPosition.y);
-            organisms[freeSpotPosition.x][freeSpotPosition.y] = newPrey;
-            this.birthPeriodTimer = this.birthPeriod;
-        } else {
-            this.move(organisms, maxX, maxY)
+        if (freeSpotPosition.x !== this.x || freeSpotPosition.y !== this.y) {
+            if (this.age > this.adulthoodAge && this.birthPeriodTimer === 0) {
+                let newPrey = new Prey(randomInteger(50, 100), this.adulthoodAge,
+                    this.birthPeriod, freeSpotPosition.x, freeSpotPosition.y);
+                organisms[freeSpotPosition.x][freeSpotPosition.y] = newPrey;
+                this.birthPeriodTimer = this.birthPeriod;
+            } else {
+                this.moveTo(organisms, freeSpotPosition.x, freeSpotPosition.y)
+            }
         }
     }
 }

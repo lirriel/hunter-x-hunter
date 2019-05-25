@@ -168,9 +168,10 @@ export class KermackMakKendrickSIS extends SIRS {
 
     calculateModel(S, I, R) {
         const N = S + I;
+        console.log("in: " + S + "," + I + "," + R + ",");
         return {
-            ds: -super.b * S * I + super.m * (N - S) + super.q * I,
-            di: super.b * S * I - super.q * I - super.m * I,
+            ds: -this.b * S * I + this.m * (N - S) + this.q * I,
+            di: this.b * S * I - this.q * I - this.m * I,
             dr: 0
         }
     }

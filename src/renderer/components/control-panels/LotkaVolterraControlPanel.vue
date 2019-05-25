@@ -795,8 +795,8 @@
                 prey: 10,
                 predator: 10,
                 experimentLotkaVolterraContTime: {
-                    prey: 20,
-                    predator: 3,
+                    prey: 10,
+                    predator: 10,
                     r: 1.6,
                     k: 125,
                     a: 3.2,
@@ -805,18 +805,18 @@
                     d: 0.56,
                 },
                 experimentRosenzweigMacArthur: {
-                    prey: 1,
-                    predator: 1,
+                    prey: 10,
+                    predator: 10,
                     k: 2,
                     m: 3,
                     c: 4
                 },
                 experimentLotkaVolterraContiniousTimeAlleeEffect: {
-                    prey: 0.005,
-                    predator: 0.01,
-                    r: 2.5,
-                    a: 17,
-                    b: 0.05
+                    prey: 10,
+                    predator: 10,
+                    r: 0.3,
+                    a: 0.06,
+                    b: 0.02
                 },
                 compareFlag: false,
                 dataPrey: [],

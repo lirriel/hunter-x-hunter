@@ -74,7 +74,7 @@ export class Person extends Organism {
         killRangeOrganisms = [];
         huntRangeOrganisms = [];
 
-        var direction = 0;
+        var direction = randomInteger(0, 7);
         let init = [this.x + steps[direction][0], this.y + steps[direction][1]];
         let currentDist = this.calculateDistance(init[0], init[1]);
         let stepInd = 1;

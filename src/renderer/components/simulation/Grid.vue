@@ -102,11 +102,11 @@
             update: function () {
                 let maxWidth = this.simulationParams.width - 1;
                 let maxHeight = this.simulationParams.height - 1;
-                let organisms = [...this.organismsGrid];
+                // let organisms = [...this.organismsGrid];
                 for (let i = 0; i < this.organismsGrid.length; i++) {
                     for (let j = 0; j < this.organismsGrid[i].length; j++) {
-                        // let organism = this.organismsGrid[i][j];
-                        let organism = organisms[i][j];
+                        let organism = this.organismsGrid[i][j];
+                        // let organism = organisms[i][j];
                         if (organism) {
                             if (organism instanceof Predator) {
                                 organism.movePredator(this.organismsGrid, maxWidth, maxHeight)

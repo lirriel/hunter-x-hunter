@@ -406,7 +406,8 @@
                         i += di;
                         r += that.timeStep * res.dr;
 
-                        if (s <= 0 || i <= 0 || r <= 0) {
+                        console.log(s + " " + i + " " + r);
+                        if (s <= 0 || i <= 0) {
                             break;
                         }
 

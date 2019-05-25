@@ -37,9 +37,9 @@
             };
         },
         watch: {
-          statusObj: function (data) {
-              this.$emit('wasUpdated', this.status.isAlive);
-          }
+            statusObj: function (data) {
+                this.$emit('wasUpdated', this.status.isAlive);
+            }
         },
         methods: {
             reborn: function (bool) {

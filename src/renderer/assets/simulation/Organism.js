@@ -17,7 +17,7 @@ export class Organism {
     tickAge() {
         this.age++;
         if (this.age >= this.adulthoodAge) {
-            if (this.birthPeriodTimer === 0) {
+            if (this.birthPeriodTimer < 0) {
                 this.birthPeriodTimer = this.birthPeriod;
             }
             this.birthPeriodTimer--;
@@ -39,8 +39,18 @@ export class Organism {
         let newSpot = this.findFreeSpot(surroundingArray);
         if (newSpot) {
             organisms[this.x][this.y] = null;
-            organisms[newSpot.x][newSpot.y] = this;
             this.setPosition(newSpot.x, newSpot.y);
+            organisms[newSpot.x][newSpot.y] = this;
+            console.log("move to " + JSON.stringify(newSpot));
+        }
+    }
+
+    moveTo(organisms, x, y) {
+        let newSpot = {x: x, y: y};
+        if (newSpot) {
+            organisms[this.x][this.y] = null;
+            this.setPosition(newSpot.x, newSpot.y);
+            organisms[newSpot.x][newSpot.y] = this;
         }
     }
 
@@ -77,7 +87,7 @@ export class Organism {
             }
         }
         if (countEmpty === 0) {
-            return;
+            return {x: this.x, y: this.y};
         }
         let randomPosition = randomInteger(0, 7);
         let currentPosition = 0;

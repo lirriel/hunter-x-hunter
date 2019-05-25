@@ -18,12 +18,14 @@ export class Predator extends Organism {
     calculateInstinct(organisms, huntedPrey, maxX, maxY) {
         let surrounding = this.checkCoordinates(organisms, maxX, maxY);
         let huntedDistance = Array(8).fill(Number.MAX_SAFE_INTEGER);
+        console.log(JSON.stringify(huntedPrey))
         for (let i = 0; i < 8; i++) {
             if (surrounding[i] === true) {
                 let huntTurnStep = turnStep(i, this.x, this.y);
                 huntedDistance[i] = huntedPrey.calculateDistance(huntTurnStep.x, huntTurnStep.y);
             }
         }
+        console.log(huntedDistance)
         let minDist = maxX * maxY;
         let moveNumber = -1;
         for (let it = 0; it < 8; it++) {
@@ -33,9 +35,13 @@ export class Predator extends Organism {
             }
         }
         let turnPosition = turnStep(moveNumber, this.x, this.y);
-        organisms[this.x][this.y] = null;
-        organisms[turnPosition.x][turnPosition.y] = this;
-        this.setPosition(turnPosition.x, turnPosition.y);
+        console.log(turnPosition)
+        if (turnPosition.x !== this.x || turnPosition.y !== this.y) {
+            organisms[this.x][this.y] = null;
+            organisms[turnPosition.x][turnPosition.y] = this;
+            console.log("move to " + JSON.stringify(turnPosition));
+            this.setPosition(turnPosition.x, turnPosition.y);
+        }
     }
 
     movePredator(organisms, maxX, maxY) {
@@ -45,10 +51,9 @@ export class Predator extends Organism {
             return;
         }
         let currentPredator = this;
-        // let minDist = Number.MAX_SAFE_INTEGER;
         let prey = null;
         let preyFlag = false;
-        var direction = 0;
+        var direction = randomInteger(0, 7);
         let init = [this.x + steps[direction][0], this.y + steps[direction][1]];
         let currentDist = this.calculateDistance(init[0], init[1]);
         let stepInd = 1;
@@ -60,17 +65,18 @@ export class Predator extends Organism {
                         removeOrganism(organisms, o);
                         this.hunger = Predator.hungerSteps;
                         this.feedPreyTimer++;
-                        if (this.feedPreyTimer >= this.feedPreyCount) {
+                        if (this.feedPreyTimer >= this.feedPreyCount && this.birthPeriodTimer == 0) {
                             let surrounding = this.checkCoordinates(organisms, maxX, maxY);
                             let position = this.findFreeSpot(surrounding);
+                            console.log("eat prey")
 
-                            if (position.x !== this.x && position.y !== this.y) {
+                            if (position.x !== this.x || position.y !== this.y) {
                                 let newPredator = new Predator(randomInteger(80, 90),
                                     this.adulthoodAge, this.birthPeriod,
-                                    this.feedPreyCount, this.x, this.y);
+                                    this.feedPreyCount, position.x, position.y);
                                 organisms[position.x][position.y] = newPredator;
-                                // organisms.push(newPredator);
-                                currentPredator.feedPreyTimer = 0;
+                                currentPredator.feedPreyTimer %= this.feedPreyCount;
+                                console.log("give birth")
                             }
                         }
                     } else {
@@ -86,6 +92,10 @@ export class Predator extends Organism {
             init = [this.x + ar[0], this.y + ar[1]];
             currentDist = this.calculateDistance(init[0], init[1]);
         }
+        console.log(this)
+        console.log(prey)
+        console.log(currentDist)
+        console.log(Predator.range)
         if (prey !== null) {
             if (currentDist <= Predator.range) {
                 this.calculateInstinct(organisms, prey, maxX, maxY);
@@ -100,5 +110,5 @@ export class Predator extends Organism {
     }
 }
 
-Predator.hungerSteps = 40;
-Predator.range = 5;
+Predator.hungerSteps = 8;
+Predator.range = 10;
