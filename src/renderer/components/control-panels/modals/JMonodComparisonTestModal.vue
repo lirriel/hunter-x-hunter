@@ -177,6 +177,10 @@
                                 color: "#883157",
                                 fontSize: "14px"
                             }
+                        }, labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
+                            }
                         }
                     },
                     xaxis: {
@@ -185,6 +189,11 @@
                             style: {
                                 color: "#883157",
                                 fontSize: "14px"
+                            }
+                        },
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
                             }
                         }
                     },
@@ -219,7 +228,34 @@
                         x: {},
                         y: {}
                     },
-
+                    xaxis: {
+                        title: {
+                            text: "Time",
+                            style: {
+                                color: "#883157",
+                                fontSize: "14px"
+                            }
+                        },
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
+                            }
+                        }
+                    },
+                    yaxis: {
+                        title: {
+                            text: "Biomass",
+                            style: {
+                                color: "#409caa",
+                                fontSize: "14px"
+                            }
+                        },
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
+                            }
+                        }
+                    },
                     stroke: {
                         curve: "straight",
                         width: 1
@@ -291,17 +327,18 @@
                     }
                     resolve({x: dataX, s: dataS, xs: dataXtoS})
                 }).then(result => {
+                    var indFixed = ind.toFixed(2);
                     this.series.push({
-                        name: "Bacteria - " + ind,
+                        name: "Bacteria - " + indFixed,
                         data: result.x
                     });
                     this.series.push({
-                        name: "Nutrient - " + ind,
+                        name: "Nutrient - " + indFixed,
                         data: result.s
                     });
 
                     this.seriesBehave.push({
-                        name: "X to S - " + ind,
+                        name: "X to S - " + indFixed,
                         data: result.xs
                     });
                     this.paramX.push([ind, result.x[this.timeIndex][1]]);

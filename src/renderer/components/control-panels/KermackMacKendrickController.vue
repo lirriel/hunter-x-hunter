@@ -237,9 +237,9 @@
                 },
                 modelTypes: ["Basic SIR", "SIR with repeat infection", "SIS", "SIRS with vital dynamics"],
                 currentType: "Basic SIR",
-                currentModel: null,
+                currentModel: new BasicSIR(0.01, 0.8),
 
-                isBasicSIR: false,
+                isBasicSIR: true,
                 isSIR: false,
                 isSIS: false,
 
@@ -406,7 +406,6 @@
                         i += di;
                         r += that.timeStep * res.dr;
 
-                        console.log(s + " " + i + " " + r);
                         if (s <= 0 || i <= 0) {
                             break;
                         }

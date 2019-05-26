@@ -24,6 +24,9 @@
         data() {
             return {
                 chartOptions: {
+                    title: {
+                        text: "Phase plane diagram"
+                    },
                     chart: {
                         zoom: {
                             enabled: true

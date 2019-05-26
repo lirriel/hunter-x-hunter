@@ -18,14 +18,12 @@ export class Predator extends Organism {
     calculateInstinct(organisms, huntedPrey, maxX, maxY) {
         let surrounding = this.checkCoordinates(organisms, maxX, maxY);
         let huntedDistance = Array(8).fill(Number.MAX_SAFE_INTEGER);
-        console.log(JSON.stringify(huntedPrey))
         for (let i = 0; i < 8; i++) {
             if (surrounding[i] === true) {
                 let huntTurnStep = turnStep(i, this.x, this.y);
                 huntedDistance[i] = huntedPrey.calculateDistance(huntTurnStep.x, huntTurnStep.y);
             }
         }
-        console.log(huntedDistance)
         let minDist = maxX * maxY;
         let moveNumber = -1;
         for (let it = 0; it < 8; it++) {
@@ -35,7 +33,6 @@ export class Predator extends Organism {
             }
         }
         let turnPosition = turnStep(moveNumber, this.x, this.y);
-        console.log(turnPosition)
         if (turnPosition.x !== this.x || turnPosition.y !== this.y) {
             organisms[this.x][this.y] = null;
             organisms[turnPosition.x][turnPosition.y] = this;
@@ -68,7 +65,6 @@ export class Predator extends Organism {
                         if (this.feedPreyTimer >= this.feedPreyCount && this.birthPeriodTimer == 0) {
                             let surrounding = this.checkCoordinates(organisms, maxX, maxY);
                             let position = this.findFreeSpot(surrounding);
-                            console.log("eat prey")
 
                             if (position.x !== this.x || position.y !== this.y) {
                                 let newPredator = new Predator(randomInteger(80, 90),
@@ -92,10 +88,6 @@ export class Predator extends Organism {
             init = [this.x + ar[0], this.y + ar[1]];
             currentDist = this.calculateDistance(init[0], init[1]);
         }
-        console.log(this)
-        console.log(prey)
-        console.log(currentDist)
-        console.log(Predator.range)
         if (prey !== null) {
             if (currentDist <= Predator.range) {
                 this.calculateInstinct(organisms, prey, maxX, maxY);

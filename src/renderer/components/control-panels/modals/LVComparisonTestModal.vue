@@ -137,6 +137,7 @@
         checkNan
     } from "../../../assets/xlsx_utils";
     import {roundArray} from "../../../assets/pdfUtils";
+    import {BasicLotkaVolterra} from "../../../assets/lotkaVolterra";
 
     export default {
         name: "ComparisonTestModal",
@@ -146,22 +147,35 @@
         },
         props: {
             params: {
-                type: Object
+                type: Object,
+                default: {
+                    prey: 10,
+                    predator: 10,
+                    a: 0.6,
+                    g1: 0.014,
+                    b: 0.7,
+                    g2: 0.014,
+                }
             },
             model: {
-                type: Object
+                type: Object,
+                default: () => new BasicLotkaVolterra(0.6, 0.014, 0.7, 0.014)
             },
             prey: {
-                type: Number
+                type: Number,
+                default: 10
             },
             predator: {
-                type: Number
+                type: Number,
+                default: 10
             },
             time: {
-                type: Number
+                type: Number,
+                default: 10
             },
             timeStep: {
-                type: Number
+                type: Number,
+                default: 0.1
             }
         },
         data() {
@@ -198,6 +212,34 @@
                         offsetX: 10,
                         onItemClick: {
                             toggleDataSeries: true
+                        },
+                    },
+                    xaxis: {
+                        title: {
+                            text: "Time",
+                            style: {
+                                color: "#883157",
+                                fontSize: "14px"
+                            }
+                        },
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
+                            }
+                        }
+                    },
+                    yaxis: {
+                        labels: {
+                            formatter: function (value) {
+                                return parseFloat(value).toFixed(2)
+                            }
+                        },
+                        title: {
+                            text: "Population",
+                            style: {
+                                color: "#883157",
+                                fontSize: "14px"
+                            }
                         },
                     },
                     grid: {

@@ -11,13 +11,14 @@
                         </b-col>
                         <b-col sm="8">
                             <b-form-input :state="checkRange(min, 0, 1000)"
-                              aria-describedby="input-msg-1" max="1000.00" min="0.00" placeholder="Start value"
+                                          aria-describedby="input-msg-1" max="1000.00" min="0.00"
+                                          placeholder="Start value"
                                           step="0.0001"
                                           type="number"
                                           v-model.number="min"/>
-                        <b-form-invalid-feedback id="input-msg-1">
-                        {{areaMsg(0, 1000)}}
-                    </b-form-invalid-feedback>
+                            <b-form-invalid-feedback id="input-msg-1">
+                                {{areaMsg(0, 1000)}}
+                            </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                     <b-row>
@@ -26,13 +27,14 @@
                         </b-col>
                         <b-col sm="8">
                             <b-form-input :state="checkRange(max, min, 1000)"
-                              aria-describedby="input-msg-2" max="1000.00" min="0.00" placeholder="Max value"
+                                          aria-describedby="input-msg-2" max="1000.00" min="0.00"
+                                          placeholder="Max value"
                                           step="0.0001"
                                           type="number"
                                           v-model.number="max"/>
-                        <b-form-invalid-feedback id="input-msg-2">
-                        {{areaMsg(min, 1000)}}
-                    </b-form-invalid-feedback>
+                            <b-form-invalid-feedback id="input-msg-2">
+                                {{areaMsg(min, 1000)}}
+                            </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                     <b-row>
@@ -41,13 +43,14 @@
                         </b-col>
                         <b-col sm="8">
                             <b-form-input :state="checkRange(step, min, max)"
-                              aria-describedby="input-msg-6" max="1000.00" min="0.0000" placeholder="step"
+                                          aria-describedby="input-msg-6" max="1000.00" min="0.0000"
+                                          placeholder="step"
                                           step="0.000001"
                                           type="number"
                                           v-model.number="step"/>
-                        <b-form-invalid-feedback id="input-msg-6">
-                        {{areaMsg(min, max)}}
-                    </b-form-invalid-feedback>
+                            <b-form-invalid-feedback id="input-msg-6">
+                                {{areaMsg(min, max)}}
+                            </b-form-invalid-feedback>
                         </b-col>
                     </b-row>
                     <b-col>
@@ -215,17 +218,20 @@
                 this.chartOptionsSI = copyObject(this.chartOptions);
                 this.chartOptionsSR = copyObject(this.chartOptions);
 
-                this.chartOptionsRI.xaxis = this.getAxis("Recovered");
-                this.chartOptionsRI.yaxis = this.getAxis("Infected");
+                this.chartOptionsRI.title.text = "Infected to Recovered phase plane";
+                this.chartOptionsRI.xaxis.title = this.getAxisTitle("Recovered");
+                this.chartOptionsRI.yaxis.title = this.getAxisTitle("Infected");
 
-                this.chartOptionsSI.xaxis = this.getAxis("Susceptible");
-                this.chartOptionsSI.yaxis = this.getAxis("Infected");
+                this.chartOptionsSI.title.text = "Infected to Susceptible phase plane";
+                this.chartOptionsSI.xaxis.title = this.getAxisTitle("Susceptible");
+                this.chartOptionsSI.yaxis.title = this.getAxisTitle("Infected");
 
-                this.chartOptionsSR.xaxis = this.getAxis("Susceptible");
-                this.chartOptionsSR.yaxis = this.getAxis("Recovered");
+                this.chartOptionsSR.title.text = "Recovered to Susceptible phase plane";
+                this.chartOptionsSR.xaxis.title = this.getAxisTitle("Susceptible");
+                this.chartOptionsSR.yaxis.title = this.getAxisTitle("Recovered");
 
-                this.chartOptions.yaxis = this.getAxis("Time");
-                this.chartOptions.xaxis = this.getAxis("Group size");
+                this.chartOptions.yaxis.title = this.getAxisTitle("Time");
+                this.chartOptions.xaxis.title = this.getAxisTitle("Group size");
             },
             calculate() {
                 this.load();
@@ -241,22 +247,22 @@
                 for (let i = this.min; i < this.max; i += this.step) {
                     this.model[this.currentParam] = i;
                     if (this.currentParam === "S") {
-                        this.s = i;
+                        this.s = i.toFixed(2);
                     }
                     if (this.currentParam === "I") {
-                        this.i = i;
+                        this.i = i.toFixed(2);
                     }
                     if (this.currentParam === "R") {
-                        this.r = i;
+                        this.r = i.toFixed(2);
                     }
                     this.info.push([
                         this.s,
                         this.i,
                         this.r,
-                        this.model.b,
-                        this.model.q,
+                        this.model.b.toFixed(2),
+                        this.model.q.toFixed(2),
                         this.model.m,
-                        this.model.getBasicReproductionNumber(this.s),
+                        this.model.getBasicReproductionNumber(this.s).toFixed(2),
                         this.getMessage()
                     ]);
                     this.calculateForTime(i);
@@ -297,7 +303,7 @@
                         i += that.timeStep * res.di;
                         r += that.timeStep * res.dr;
 
-                        if (s <= 0 || i <= 0 || r <= 0) {
+                        if (s <= 0 || i <= 0) {
                             break;
                         }
 
@@ -323,43 +329,44 @@
                         })
                     }
                 }).then(result => {
+                    let indFixed = ind.toFixed(2);
                     this.currentSeries.push({
-                        name: "S - " + ind,
+                        name: "S - " + indFixed,
                         data: result.s
                     });
                     this.currentSeries.push({
-                        name: "I - " + ind,
+                        name: "I - " + indFixed,
                         data: result.i
                     });
                     this.currentSeries.push({
-                        name: "R - " + ind,
+                        name: "R - " + indFixed,
                         data: result.r
                     });
 
                     this.phaseTrajSeries.push({
-                        name: "Behave - I to S -" + ind,
+                        name: "Behave - I to S -" + indFixed,
                         data: result.si
                     });
                     this.phaseTrajSeries.push({
-                        name: "MAX - " + ind,
+                        name: "MAX - " + indFixed,
                         data: result.max
                     });
 
                     this.seriesStoR.push({
-                        name: "Behave - R to S - " + ind,
+                        name: "Behave - R to S - " + indFixed,
                         data: result.sr
                     });
                     this.seriesStoR.push({
-                        name: "MAX - " + ind,
+                        name: "MAX - " + indFixed,
                         data: result.max
                     });
 
                     this.seriesItoR.push({
-                        name: "Behave - I to R -" + ind,
+                        name: "Behave - I to R -" + indFixed,
                         data: result.ir
                     });
                     this.seriesItoR.push({
-                        name: "MAX - " + ind,
+                        name: "MAX - " + indFixed,
                         data: result.max
                     });
                     this.drawPhaseTrajectories(ind);
@@ -393,20 +400,13 @@
                 });*/
 
             },
-            getAxis(txt) {
-                let o = {
-                    title: {
+            getAxisTitle(txt) {
+                let o =  {
                         text: txt,
                         style: {
                             color: "#883157",
                             fontSize: "14px"
                         }
-                    },
-                    labels: {
-                        formatter: function (value) {
-                            return parseFloat(value).toFixed(2)
-                        }
-                    }
                 };
                 return copyObject(o);
             },

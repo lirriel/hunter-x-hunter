@@ -843,8 +843,8 @@
 
                 isPreyBifurcation: true,
 
-                currentModel: null,
-                currentExperimentParams: null,
+                currentModel: new BasicLotkaVolterra(0.6, 0.014, 0.7, 0.014),
+                currentExperimentParams: this.experimentLotkaVolterra,
             }
         },
         watch: {
