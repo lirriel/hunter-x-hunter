@@ -285,9 +285,6 @@
             b = 0.4,
             c1 = 0.4,
             d = 0.2,
-            fx = function (x1, r, y1) {
-                return [r * x1 * (1 - x1) - x1 * (b * y1), y1 * (c1 * x1 - d)];
-            },
             it = function (r) {
                 curModel[that.bifurcationParam] = r;
                 var idx = 0,
@@ -305,14 +302,14 @@
                     if (that.isPreyBifurcation === false) {
                         t = y;
                     }
-                    if (t * h > xMax) {
-                        xMax = t * h;
+                    if (t > xMax) {
+                        xMax = t;
                     }
-                    bd.push([xc, t * h])
+                    bd.push([xc, t])
                 }
                 if (xc >= (w-1)) {
                     var xt = 0.001;
-                    if (xMax > h) {
+                    if (xMax < h) {
                         xt = h/xMax;
                     } else {
                         xt = xMax/h;
@@ -334,7 +331,7 @@
                     ctx.font = "20px Arial";
                     ctx.fillText(xMax.toFixed(2), 1, 20);
                     ctx.fillText(that.bifurcationChartOptions.yaxis[0].title.text, 1, h/2);
-                    ctx.fillText(0, dw, h + dh);
+                    ctx.fillText(that.bifurcationStartValue, dw, h + dh);
                     ctx.fillText(that.bifurcationParam, w/2, h + dh);
                     ctx.fillText(that.bifurcationMaxValue, w - 30, h + dh);
                 }

@@ -124,7 +124,7 @@ export let minMaxChartOptions = {
         x: {},
         y: {}
     },
-    colors: ["#4cffdd", "#FF1654", "#288c6c", "#ffa67f"],
+    colors: ["#c04762", "#458896", "#288c6c", "#ffa67f"],
     yaxis: [
         {
             axisTicks: {

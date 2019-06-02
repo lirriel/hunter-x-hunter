@@ -127,7 +127,7 @@ export class SIRSwithVital extends SIRS {
 
     getFormula() {
         return "\\begin{cases} " +
-            "\\frac{dSusceptible}{dt}=mort*N-\\frac{\\beta*S*I}{N}+\\mu*R-v*S& \\\\ " +
+            "\\frac{dSusceptible}{dt}=m*N-\\frac{\\beta*S*I}{N}+\\mu*R-v*S& \\\\ " +
             "\\frac{dInfected}{dt}=\\frac{\\beta*S*I}{N}-q*I-\\mu*I& \\\\" +
             "\\frac{dRecovered}{dt}=q*I-\\mu*R-v*R& " +
             "\\end{cases}"
@@ -168,7 +168,6 @@ export class KermackMakKendrickSIS extends SIRS {
 
     calculateModel(S, I, R) {
         const N = S + I;
-        console.log("in: " + S + "," + I + "," + R + ",");
         return {
             ds: -this.b * S * I + this.m * (N - S) + this.q * I,
             di: this.b * S * I - this.q * I - this.m * I,

@@ -41,7 +41,6 @@ export class Organism {
             organisms[this.x][this.y] = null;
             this.setPosition(newSpot.x, newSpot.y);
             organisms[newSpot.x][newSpot.y] = this;
-            console.log("move to " + JSON.stringify(newSpot));
         }
     }
 

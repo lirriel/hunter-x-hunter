@@ -57,7 +57,8 @@
                     <label>Impact of predation (Gamma 1)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(experimentLotkaVolterra.g1, 0, 1000)" aria-describedby="input-msg-4" max="1000.00" min="0.00"
+                    <b-form-input :state="checkRange(experimentLotkaVolterra.g1, 0, 1000)"
+                                  aria-describedby="input-msg-4" max="1000.00" min="0.00"
                                   placeholder="Gamma 1"
                                   step="0.01"
                                   type="number"
@@ -73,7 +74,8 @@
                     <label>Predator Death rate (Beta)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(experimentLotkaVolterra.b, 0, 1000)" aria-describedby="input-msg-5" max="1000.00" min="0.00"
+                    <b-form-input :state="checkRange(experimentLotkaVolterra.b, 0, 1000)"
+                                  aria-describedby="input-msg-5" max="1000.00" min="0.00"
                                   placeholder="Beta"
                                   step="0.01"
                                   type="number"
@@ -90,7 +92,8 @@
                     <label>Growth in predator (Gamma 2)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(experimentLotkaVolterra.g2, 0, 1000)" aria-describedby="input-msg-6" max="1000.00" min="0.00"
+                    <b-form-input :state="checkRange(experimentLotkaVolterra.g2, 0, 1000)"
+                                  aria-describedby="input-msg-6" max="1000.00" min="0.00"
                                   placeholder="Gamma 2"
                                   step="0.01"
                                   type="number"
@@ -107,7 +110,8 @@
                     <label>Time</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(time, 0, 1000)" aria-describedby="input-msg-7" max="1000.00" min="0.00"
+                    <b-form-input :state="checkRange(time, 0, 1000)" aria-describedby="input-msg-7"
+                                  max="1000.00" min="0.00"
                                   placeholder="Time"
                                   step="0.01"
                                   type="number"
@@ -124,7 +128,8 @@
                     <label>Time step</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(timeStep, 0, time)" aria-describedby="input-msg-8" max="1000.00"
+                    <b-form-input :state="checkRange(timeStep, 0, time)"
+                                  aria-describedby="input-msg-8" max="1000.00"
                                   min="0.00"
                                   placeholder="Time step"
                                   step="0.00000001"
@@ -160,7 +165,8 @@
                     <label>Predator</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(predator, 0, 1000)" aria-describedby="input-msg-10"
+                    <b-form-input :state="checkRange(predator, 0, 1000)"
+                                  aria-describedby="input-msg-10"
                                   placeholder="Predator"
                                   type="number"
                                   v-model.number="predator">
@@ -176,11 +182,13 @@
                     <label>Prey birth rate (Alpha)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(experimentLotkaVolterraFiniteCapacity.a, 0, 1000)" aria-describedby="input-msg-11" max="1000.00" min="0.00"
-                                  placeholder="Alpha"
-                                  step="0.01"
-                                  type="number"
-                                  v-model.number="experimentLotkaVolterraFiniteCapacity.a"/>
+                    <b-form-input
+                            :state="checkRange(experimentLotkaVolterraFiniteCapacity.a, 0, 1000)"
+                            aria-describedby="input-msg-11" max="1000.00" min="0.00"
+                            placeholder="Alpha"
+                            step="0.01"
+                            type="number"
+                            v-model.number="experimentLotkaVolterraFiniteCapacity.a"/>
                     <b-form-invalid-feedback id="input-msg-11">
                         {{areaMsg(0, 1000)}}
                     </b-form-invalid-feedback>
@@ -192,11 +200,13 @@
                     <label>Impact of predation (Gamma 1)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(experimentLotkaVolterraFiniteCapacity.g1, 0, 1000)" aria-describedby="input-msg-12" max="1000.00" min="0.00"
-                                  placeholder="Gamma 1"
-                                  step="0.01"
-                                  type="number"
-                                  v-model.number="experimentLotkaVolterraFiniteCapacity.g1">
+                    <b-form-input
+                            :state="checkRange(experimentLotkaVolterraFiniteCapacity.g1, 0, 1000)"
+                            aria-describedby="input-msg-12" max="1000.00" min="0.00"
+                            placeholder="Gamma 1"
+                            step="0.01"
+                            type="number"
+                            v-model.number="experimentLotkaVolterraFiniteCapacity.g1">
                         <b-form-invalid-feedback id="input-msg-12">
                             {{areaMsg(0, 1000)}}
                         </b-form-invalid-feedback>
@@ -209,11 +219,13 @@
                     <label>Predator Death rate (Beta)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(experimentLotkaVolterraFiniteCapacity.b, 0, 1000)" aria-describedby="input-msg-13" max="1000.00" min="0.00"
-                                  placeholder="Beta"
-                                  step="0.01"
-                                  type="number"
-                                  v-model.number="experimentLotkaVolterraFiniteCapacity.b">
+                    <b-form-input
+                            :state="checkRange(experimentLotkaVolterraFiniteCapacity.b, 0, 1000)"
+                            aria-describedby="input-msg-13" max="1000.00" min="0.00"
+                            placeholder="Beta"
+                            step="0.01"
+                            type="number"
+                            v-model.number="experimentLotkaVolterraFiniteCapacity.b">
                         <b-form-invalid-feedback id="input-msg-13">
                             {{areaMsg(0, 1000)}}
                         </b-form-invalid-feedback>
@@ -227,11 +239,13 @@
                     <label>Growth in predator (Gamma 2)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(experimentLotkaVolterraFiniteCapacity.g2, 0, 1000)" aria-describedby="input-msg-14" max="1000.00" min="0.00"
-                                  placeholder="Gamma 2"
-                                  step="0.01"
-                                  type="number"
-                                  v-model.number="experimentLotkaVolterraFiniteCapacity.g2">
+                    <b-form-input
+                            :state="checkRange(experimentLotkaVolterraFiniteCapacity.g2, 0, 1000)"
+                            aria-describedby="input-msg-14" max="1000.00" min="0.00"
+                            placeholder="Gamma 2"
+                            step="0.01"
+                            type="number"
+                            v-model.number="experimentLotkaVolterraFiniteCapacity.g2">
                         <b-form-invalid-feedback id="input-msg-14">
                             {{areaMsg(0, 1000)}}
                         </b-form-invalid-feedback>
@@ -243,11 +257,13 @@
                     <label>Predator capacity (K)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(experimentLotkaVolterraFiniteCapacity.K, 0, 1000)" aria-describedby="input-msg-15" max="1000.00"
-                                  min="0.00"
-                                  step="0.01"
-                                  type="number"
-                                  v-model.number="experimentLotkaVolterraFiniteCapacity.K">
+                    <b-form-input
+                            :state="checkRange(experimentLotkaVolterraFiniteCapacity.K, 0, 1000)"
+                            aria-describedby="input-msg-15" max="1000.00"
+                            min="0.00"
+                            step="0.01"
+                            type="number"
+                            v-model.number="experimentLotkaVolterraFiniteCapacity.K">
                         <b-form-invalid-feedback id="input-msg-15">
                             {{areaMsg(0, 1000)}}
                         </b-form-invalid-feedback>
@@ -260,7 +276,8 @@
                     <label>Time</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(time, 0, 1000)" aria-describedby="input-msg-16" max="1000.00" min="0.00"
+                    <b-form-input :state="checkRange(time, 0, 1000)" aria-describedby="input-msg-16"
+                                  max="1000.00" min="0.00"
                                   placeholder="Time"
                                   step="0.01"
                                   type="number"
@@ -277,7 +294,8 @@
                     <label>Time step</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input :state="checkRange(timeStep, 0, time)" aria-describedby="input-msg-17" max="1000.00"
+                    <b-form-input :state="checkRange(timeStep, 0, time)"
+                                  aria-describedby="input-msg-17" max="1000.00"
                                   min="0.00"
                                   placeholder="Time step"
                                   step="0.00000001"
@@ -346,10 +364,10 @@
                     <label>(k)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                    <b-form-input :state="checkRange(experimentLotkaVolterraContTime.k, 0, 1000)" aria-describedby="input-msg-21" max="1000.00"
+                                  min="0.00"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(experimentLotkaVolterraContTime.k, 0, 1000)"
-                                  aria-describedby="input-msg-21"
                                   v-model.number="experimentLotkaVolterraContTime.k">
                         <b-form-invalid-feedback id="input-msg-21">
                             {{areaMsg(0, 1000)}}
@@ -363,10 +381,10 @@
                     <label>(a)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                    <b-form-input :state="checkRange(experimentLotkaVolterraContTime.a, 0, 1000)" aria-describedby="input-msg-22" max="1000.00"
+                                  min="0.00"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(experimentLotkaVolterraContTime.a, 0, 1000)"
-                                  aria-describedby="input-msg-22"
                                   v-model.number="experimentLotkaVolterraContTime.a"/>
                     <b-form-invalid-feedback id="input-msg-22">
                         {{areaMsg(0, 1000)}}
@@ -380,10 +398,10 @@
                     <label>(c)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                    <b-form-input :state="checkRange(experimentLotkaVolterraContTime.c, 0, 1000)" aria-describedby="input-msg-23" max="1000.00"
+                                  min="0.00"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(experimentLotkaVolterraContTime.c, 0, 1000)"
-                                  aria-describedby="input-msg-23"
                                   v-model.number="experimentLotkaVolterraContTime.c"/>
                     <b-form-invalid-feedback id="input-msg-23">
                         {{areaMsg(0, 1000)}}
@@ -396,10 +414,10 @@
                     <label>(b)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                    <b-form-input :state="checkRange(experimentLotkaVolterraContTime.b, 0, 1000)" aria-describedby="input-msg-24" max="1000.00"
+                                  min="0.00"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(experimentLotkaVolterraContTime.b, 0, 1000)"
-                                  aria-describedby="input-msg-24"
                                   v-model.number="experimentLotkaVolterraContTime.b"/>
                     <b-form-invalid-feedback id="input-msg-24">
                         {{areaMsg(0, 1000)}}
@@ -412,10 +430,10 @@
                     <label>(d)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                    <b-form-input :state="checkRange(experimentLotkaVolterraContTime.d, 0, 1000)" aria-describedby="input-msg-25" max="1000.00"
+                                  min="0.00"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(experimentLotkaVolterraContTime.d, 0, 1000)"
-                                  aria-describedby="input-msg-25"
                                   v-model.number="experimentLotkaVolterraContTime.d"/>
                     <b-form-invalid-feedback id="input-msg-25">
                         {{areaMsg(0, 1000)}}
@@ -428,10 +446,10 @@
                     <label>Time</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" placeholder="Time" step="0.01"
+                    <b-form-input :state="checkRange(time, 0, 1000)" aria-describedby="input-msg-26" max="1000.00" min="0.00"
+                                  placeholder="Time"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(time, 0, 1000)"
-                                  aria-describedby="input-msg-26"
                                   v-model.number="time">
                         <b-form-invalid-feedback id="input-msg-26">
                             {{areaMsg(0, 1000)}}
@@ -445,11 +463,11 @@
                     <label>Time step</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" placeholder="Time step"
+                    <b-form-input :state="checkRange(timeStep, 0, time)" aria-describedby="input-msg-27" max="1000.00"
+                                  min="0.00"
+                                  placeholder="Time step"
                                   step="0.00000001"
                                   type="number"
-                                  :state="checkRange(timeStep, 0, time)"
-                                  aria-describedby="input-msg-27"
                                   v-model.number="timeStep">
                         <b-form-invalid-feedback id="input-msg-27">
                             {{areaMsg(0, time)}}
@@ -464,9 +482,9 @@
                     <label>Prey</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input placeholder="Prey" type="number"
-                                  :state="checkRange(prey, 0, 1000)"
-                                  aria-describedby="input-msg-28"
+                    <b-form-input :state="checkRange(prey, 0, 1000)" aria-describedby="input-msg-28"
+                                  placeholder="Prey"
+                                  type="number"
                                   v-model.number="prey">
                         <b-form-invalid-feedback id="input-msg-28">
                             {{areaMsg(0, 1000)}}
@@ -480,10 +498,10 @@
                     <label>Predator</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input placeholder="Predator" type="number"
-                                  v-model.number="predator"
-                                  :state="checkRange(predator, 0, 1000)"
-                                  aria-describedby="input-msg-29">
+                    <b-form-input :state="checkRange(predator, 0, 1000)" aria-describedby="input-msg-29"
+                                  placeholder="Predator"
+                                  type="number"
+                                  v-model.number="predator">
                         <b-form-invalid-feedback id="input-msg-29">
                             {{areaMsg(0, 1000)}}
                         </b-form-invalid-feedback>
@@ -496,9 +514,9 @@
                     <label>(k)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01" type="number"
-                                  :state="checkRange(experimentRosenzweigMacArthur.k, 0, 1000)"
-                                  aria-describedby="input-msg-30"
+                    <b-form-input :state="checkRange(experimentRosenzweigMacArthur.k, 0, 1000)" aria-describedby="input-msg-30" max="1000.00" min="0.00"
+                                  step="0.01"
+                                  type="number"
                                   v-model.number="experimentRosenzweigMacArthur.k">
                         <b-form-invalid-feedback id="input-msg-30">
                             {{areaMsg(0, 1000)}}
@@ -512,10 +530,10 @@
                     <label>(m)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                    <b-form-input :state="checkRange(experimentRosenzweigMacArthur.m, 0, 1000)" aria-describedby="input-msg-31" max="1000.00"
+                                  min="0.00"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(experimentRosenzweigMacArthur.m, 0, 1000)"
-                                  aria-describedby="input-msg-31"
                                   v-model.number="experimentRosenzweigMacArthur.m">
                         <b-form-invalid-feedback id="input-msg-31">
                             {{areaMsg(0, 1000)}}
@@ -529,10 +547,10 @@
                     <label>(c)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                    <b-form-input :state="checkRange(experimentRosenzweigMacArthur.c, 0, 1000)" aria-describedby="input-msg-32" max="1000.00"
+                                  min="0.00"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(experimentRosenzweigMacArthur.c, 0, 1000)"
-                                  aria-describedby="input-msg-32"
                                   v-model.number="experimentRosenzweigMacArthur.c"/>
                     <b-form-invalid-feedback id="input-msg-32">
                         {{areaMsg(0, 1000)}}
@@ -546,10 +564,10 @@
                     <label>Time</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" placeholder="Time" step="0.01"
+                    <b-form-input :state="checkRange(time, 0, 1000)" aria-describedby="input-msg-33" max="1000.00" min="0.00"
+                                  placeholder="Time"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(time, 0, 1000)"
-                                  aria-describedby="input-msg-33"
                                   v-model.number="time">
                         <b-form-invalid-feedback id="input-msg-33">
                             {{areaMsg(0, 1000)}}
@@ -563,11 +581,11 @@
                     <label>Time step</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" placeholder="Time step"
+                    <b-form-input :state="checkRange(timeStep, 0, time)" aria-describedby="input-msg-34" max="1000.00"
+                                  min="0.00"
+                                  placeholder="Time step"
                                   step="0.00000001"
                                   type="number"
-                                  :state="checkRange(timeStep, 0, time)"
-                                  aria-describedby="input-msg-34"
                                   v-model.number="timeStep">
                         <b-form-invalid-feedback id="input-msg-34">
                             {{areaMsg(0, time)}}
@@ -582,10 +600,10 @@
                     <label>Prey</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input placeholder="Prey" type="number"
-                                  v-model.number="prey"
-                                  :state="checkRange(prey, 0, 1000)"
-                                  aria-describedby="input-msg-35">
+                    <b-form-input :state="checkRange(prey, 0, 1000)" aria-describedby="input-msg-35"
+                                  placeholder="Prey"
+                                  type="number"
+                                  v-model.number="prey">
                         <b-form-invalid-feedback id="input-msg-35">
                             {{areaMsg(0, 1000)}}
                         </b-form-invalid-feedback>
@@ -598,10 +616,10 @@
                     <label>Predator</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input placeholder="Predator" type="number"
+                    <b-form-input :state="checkRange(predator, 0, 1000)" aria-describedby="input-msg-36"
+                                  placeholder="Predator"
+                                  type="number"
                                   v-model.number="predator"
-                                  :state="checkRange(predator, 0, 1000)"
-                                  aria-describedby="input-msg-36"
                     >
                         <b-form-invalid-feedback id="input-msg-36">
                             {{areaMsg(0, 1000)}}
@@ -615,9 +633,9 @@
                     <label>(r)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01" type="number"
-                                  :state="checkRange(experimentLotkaVolterraContiniousTimeAlleeEffect.r, 0, 1000)"
-                                  aria-describedby="input-msg-37"
+                    <b-form-input :state="checkRange(experimentLotkaVolterraContiniousTimeAlleeEffect.r, 0, 1000)" aria-describedby="input-msg-37" max="1000.00" min="0.00"
+                                  step="0.01"
+                                  type="number"
                                   v-model.number="experimentLotkaVolterraContiniousTimeAlleeEffect.r">
                         <b-form-invalid-feedback id="input-msg-37">
                             {{areaMsg(0, 1000)}}
@@ -631,10 +649,10 @@
                     <label>(a)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                    <b-form-input :state="checkRange(experimentLotkaVolterraContiniousTimeAlleeEffect.a, 0, 1000)" aria-describedby="input-msg-38" max="1000.00"
+                                  min="0.00"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(experimentLotkaVolterraContiniousTimeAlleeEffect.a, 0, 1000)"
-                                  aria-describedby="input-msg-38"
                                   v-model.number="experimentLotkaVolterraContiniousTimeAlleeEffect.a">
                         <b-form-invalid-feedback id="input-msg-38">
                             {{areaMsg(0, 1000)}}
@@ -648,10 +666,10 @@
                     <label>(b)</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" step="0.01"
+                    <b-form-input :state="checkRange(experimentLotkaVolterraContiniousTimeAlleeEffect.b, 0, 1000)" aria-describedby="input-msg-39" max="1000.00"
+                                  min="0.00"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(experimentLotkaVolterraContiniousTimeAlleeEffect.b, 0, 1000)"
-                                  aria-describedby="input-msg-39"
                                   v-model.number="experimentLotkaVolterraContiniousTimeAlleeEffect.b"/>
                     <b-form-invalid-feedback id="input-msg-39">
                         {{areaMsg(0, 1000)}}
@@ -663,10 +681,10 @@
                     <label>Time</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" placeholder="Time" step="0.01"
+                    <b-form-input :state="checkRange(time, 0, 1000)" aria-describedby="input-msg-40" max="1000.00" min="0.00"
+                                  placeholder="Time"
+                                  step="0.01"
                                   type="number"
-                                  :state="checkRange(time, 0, 1000)"
-                                  aria-describedby="input-msg-40"
                                   v-model.number="time">
                         <b-form-invalid-feedback id="input-msg-40">
                             {{areaMsg(0, 1000)}}
@@ -679,10 +697,10 @@
                     <label>Time step</label>
                 </b-col>
                 <b-col sm="6">
-                    <b-form-input max="1000.00" min="0.00" placeholder="Time step"
+                    <b-form-input :state="checkRange(timeStep, 0, time)" aria-describedby="input-msg-41" max="1000.00"
+                                  min="0.00"
+                                  placeholder="Time step"
                                   step="0.00000001"
-                                  :state="checkRange(timeStep, 0, time)"
-                                  aria-describedby="input-msg-41"
                                   type="number"
                                   v-model.number="timeStep">
                         <b-form-invalid-feedback id="input-msg-41">
@@ -984,31 +1002,31 @@
             calculateForTime(t) {
                 let that = this;
                 return new Promise(resolve => {
-                    let dataPrey = [];
-                    let dataPredator = [];
-                    let dataBehave = [];
+                        let dataPrey = [];
+                        let dataPredator = [];
+                        let dataBehave = [];
 
-                    let x = that.prey;
-                    let y = that.predator;
+                        let x = that.prey;
+                        let y = that.predator;
 
-                    dataPrey.push([0, x]);
-                    dataPredator.push([0, y]);
-                    dataBehave.push([y, x]);
+                        dataPrey.push([0, x]);
+                        dataPredator.push([0, y]);
+                        dataBehave.push([y, x]);
 
-                    for (let i = that.timeStep; i < t; i += that.timeStep) {
-                        let res = that.currentModel.calculateModel(x, y);
-                        x += that.timeStep * res.prey;
-                        y += that.timeStep * res.predator;
+                        for (let i = that.timeStep; i < t; i += that.timeStep) {
+                            let res = that.currentModel.calculateModel(x, y);
+                            x += that.timeStep * res.prey;
+                            y += that.timeStep * res.predator;
 
-                        if (x <= 0 || y <= 0) {
-                            break;
+                            if (x <= 0 || y <= 0) {
+                                break;
+                            }
+
+                            dataPrey.push([i, setNumber(x)]);
+                            dataPredator.push([i, setNumber(y)]);
+                            dataBehave.push([setNumber(x), setNumber(y)])
                         }
-
-                        dataPrey.push([i, setNumber(x)]);
-                        dataPredator.push([i, setNumber(y)]);
-                        dataBehave.push([setNumber(x), setNumber(y)])
-                    }
-                    resolve({prey: dataPrey, predator: dataPredator, behave: dataBehave})
+                        resolve({prey: dataPrey, predator: dataPredator, behave: dataBehave})
                 })
             },
             saveData() {

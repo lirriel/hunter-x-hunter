@@ -87,7 +87,7 @@
                 <b-col>
                     <b-row>
                         <vs-input label="Minimum time threshold" placeholder="0" size="small"
-                                  type="number" v-model="maxTimeThreshold"/>
+                                  type="number" v-model.number="maxTimeThreshold"/>
                     </b-row>
                     <vs-divider/>
                     <b-row>
@@ -97,11 +97,11 @@
                             </b-form-checkbox>
                             <div v-if="p.active">
                                 <vs-input label="Min" placeholder="0" type="number"
-                                          v-model="p.min"/>
+                                          v-model.number="p.min"/>
                                 <vs-input label="Max" placeholder="0" type="number"
-                                          v-model="p.max"/>
+                                          v-model.number="p.max"/>
                                 <vs-input label="Step" placeholder="0" type="number"
-                                          v-model="p.step"/>
+                                          v-model.number="p.step"/>
                             </div>
                         </b-col>
                     </b-row>
@@ -356,10 +356,13 @@
             stopExperiment() {
                 this.experimentRun = false;
                 this.experimentSeries = this.experimentHuman = [];
-                this.experimentMaxCount = this.experimentCount = 0;
+                this.experimentMaxCount = 0;
+                this.experimentCount = 0;
                 this.isExperimentFinished = true;
             },
             start() {
+                this.stopExperiment();
+                this.experimentRun = true;
                 this.showSpinner = true;
                 this.valueArray = [];
                 this.seriesArray = [];
@@ -417,13 +420,12 @@
                 let upd = this.update;
                 let tick = this.maxTick;
                 return new Promise(function (resolve, reject) {
-                    setTimeout(() => {
                         let p = getParamsFunc(i);
                         let dataPrey = [];
                         let dataPredator = [];
                         let organisms = [];
                         organisms = rndSeed(p, organisms);
-                        for (let j = 0; j < tick; j++) {
+                        for (let j = 0; j <= tick; j++) {
                             let update = upd(organisms, p);
                             dataPrey.push([j, update[0]]);
                             dataPredator.push([j, update[1]]);
@@ -433,7 +435,6 @@
                             {name: "Predator population", data: dataPredator}
                         ];
                         resolve(series);
-                    }, 1000);
                 })
             },
             getHumanInteractionEvaluation() {
@@ -449,14 +450,15 @@
                         this.experimentMaxCount *= (this.params[q].max - this.params[q].min + this.params[q].step) / this.params[q].step
                     }
                 }
+                this.experimentMaxCount = Math.round(this.experimentMaxCount);
                 this.getRecParams(0, []);
             },
             getRecParams(i, paramsArr) {
-                if (i === this.params.length - 1) {
+                if (i > this.params.length - 1) {
                     runSimulationExperiment.call(this, this.simulationParams, [...paramsArr]);
                     return;
                 }
-                if (i < this.params.length - 1) {
+                if (i <= this.params.length - 1) {
                     if (this.params[i].active === true) {
                         for (let j = this.params[i].min; j <= this.params[i].max; j += this.params[i].step) {
                             let arr = [...paramsArr];
@@ -586,13 +588,12 @@
         let isAlive = this.experimentRun;
         let that = this;
         let p = new Promise(function (resolve, reject) {
-            setTimeout(() => {
                 let p = parameters1;
                 let dataPrey = [];
                 let dataPredator = [];
                 let organisms = [];
                 organisms = rndSeed(p, organisms);
-                for (let j = 0; j < tick && isAlive; j++) {
+                for (let j = 0; j < tick && that.experimentRun; j++) {
                     let update = upd(organisms, p);
                     dataPrey.push([j, update[0]]);
                     dataPredator.push([j, update[1]]);
@@ -615,7 +616,6 @@
                     data: [[0, that.preyMaxCount], [that.maxTick, that.preyMaxCount]]
                 });
                 resolve(series);
-            }, 500);
         });
         p.then((series) => {
             if (this.experimentRun === true) {
@@ -646,6 +646,7 @@
                     })
                 }
                 this.experimentCount++;
+                console.log(this.experimentCount)
                 if (this.experimentCount >= this.experimentMaxCount) {
                     this.isExperimentFinished = true;
                 }

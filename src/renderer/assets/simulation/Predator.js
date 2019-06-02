@@ -36,7 +36,6 @@ export class Predator extends Organism {
         if (turnPosition.x !== this.x || turnPosition.y !== this.y) {
             organisms[this.x][this.y] = null;
             organisms[turnPosition.x][turnPosition.y] = this;
-            console.log("move to " + JSON.stringify(turnPosition));
             this.setPosition(turnPosition.x, turnPosition.y);
         }
     }
@@ -72,7 +71,6 @@ export class Predator extends Organism {
                                     this.feedPreyCount, position.x, position.y);
                                 organisms[position.x][position.y] = newPredator;
                                 currentPredator.feedPreyTimer %= this.feedPreyCount;
-                                console.log("give birth")
                             }
                         }
                     } else {
