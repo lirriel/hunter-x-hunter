@@ -99,7 +99,7 @@ export class Person extends Organism {
             this.move(organisms, maxX, maxY);
             return;
         }
-        if (minPredatorDist * this.killPreyPriority > minPredatorDist * this.killPredatorPriority) {
+        if (minPreyDist * this.killPreyPriority > minPredatorDist * this.killPredatorPriority) {
             this.hunt(organisms, closestPrey, minPreyDist, maxX, maxY)
         } else {
             this.hunt(organisms, closestPredator, minPredatorDist, maxX, maxY)
@@ -112,10 +112,10 @@ export class Person extends Organism {
                 if (Person.preyNeedCounter === Person.preyNeedLimit) {
                     if (Person.preyNeedStepsLimit === Person.preyNeedStepsCounter) {
                         Person.preyNeedCounter = 0;
-                        Person.preyNeedStepsLimit = 0;
+                        Person.preyNeedStepsCounter = 0;
                         removeOrganism(organisms, o)
                     } else {
-                        Person.preyNeedStepsLimit++;
+                        Person.preyNeedStepsCounter++;
                         this.move(organisms, x, y);
                     }
                 } else {
