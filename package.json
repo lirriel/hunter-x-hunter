@@ -49,7 +49,7 @@
     "vuex": "^3.0.1",
     "vuex-electron": "^1.0.0",
     "xlsx": "^0.14.2",
-    "yarn": "^1.15.2"
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
