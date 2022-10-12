@@ -27,7 +27,7 @@
     "d3": "^5.9.2",
     "electron-packager": "^13.1.1",
     "html2canvas": "^1.0.0-rc.1",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.5.1",
     "katex": "^0.10.2",
     "mathjs": "^5.10.0",
     "timers": "^0.1.1",
